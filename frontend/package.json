@@ -11,8 +11,16 @@
     "prettier": "prettier ./src --write"
   },
   "dependencies": {
+    "@mantine/core": "^7.12.0",
+    "@mantine/dates": "^7.12.0",
+    "@mantine/hooks": "^7.12.0",
+    "@mantine/modals": "^7.12.0",
+    "dayjs": "^1.11.12",
+    "prettier-plugin-organize-imports": "^4.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
+    "styled-components": "^6.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
@@ -26,6 +34,9 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "postcss": "^8.4.41",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.3.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
