@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 const MainLayout = () => {
   const theme = createTheme({
     primaryColor: 'red',
-    fontFamily: 'Roboto, sans-serif'
+    fontFamily: 'Roboto, sans-serif',
   });
   return (
     <MantineProvider theme={theme}>

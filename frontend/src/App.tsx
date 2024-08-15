@@ -2,7 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainLayout from './MainLayout';
 import About from './pages/About';
 import Home from './pages/Home';
-
+import '@mantine/carousel/styles.css';
 const App = () => {
   return (
     <Router>
