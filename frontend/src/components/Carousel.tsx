@@ -1,11 +1,31 @@
 import { Carousel } from '@mantine/carousel';
-
-export function MyCarousel() {
+import { Card, Title } from '@mantine/core';
+import { monthNames } from '../utils/getMonth.ts';
+import CalendarGrid from './CalendarGrid.tsx';
+const MyCarousel = () => {
   return (
-      <Carousel slideSize="70%" height={200} slideGap="lg" controlsOffset="xs" controlSize={34} loop withIndicators>
-        <Carousel.Slide>1</Carousel.Slide>
-        <Carousel.Slide>2</Carousel.Slide>
-        <Carousel.Slide>3</Carousel.Slide>
-      </Carousel>
+    <Carousel
+      slideSize="100%"
+      height={'100vh'}
+      slideGap="sm"
+      controlsOffset="xs"
+      controlSize={100}
+      loop
+      withIndicators
+      initialSlide={2}
+    >
+      {monthNames.map((month, index) => (
+        <Carousel.Slide key={index}>
+          <Card bg={'red'} h={'100%'} px={140} py={50}>
+            <Title ta={'center'} order={1}>
+              {month}
+            </Title>
+            <CalendarGrid />
+          </Card>
+        </Carousel.Slide>
+      ))}
+    </Carousel>
   );
-}
+};
+
+export default MyCarousel;
