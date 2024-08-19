@@ -20,7 +20,7 @@ const MyCarousel = () => {
     >
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>
-          <Card bg={'red'} h={'100%'} px={140} py={50}>
+          <Card bg={theme.colors.months[index]} h={'100%'} px={140} py={50}>
             <Title ta={'center'} order={1} c={theme.white}>
               {month}
             </Title>

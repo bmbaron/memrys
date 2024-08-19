@@ -5,6 +5,22 @@ const MainLayout = () => {
     primaryColor: 'red',
     white: 'white',
     black: 'black',
+    colors: {
+      months: [
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'blue',
+        'indigo',
+        'violet',
+        'purple',
+        'pink',
+        'maroon',
+        'teal',
+        'navy'
+      ]
+    },
     fontFamily: 'Roboto, sans-serif'
   });
   return (
