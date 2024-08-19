@@ -1,35 +1,49 @@
-import { Paper } from '@mantine/core';
+import styled from '@emotion/styled';
+import { Card, CardProps, createPolymorphicComponent, Paper } from '@mantine/core';
+import dayjs from 'dayjs';
 
-type CalendarBlockProps = {
-  day: number;
+const getMonthDays = (index: number) => {
+  const date = dayjs().month(index);
+  return date.daysInMonth();
 };
-const CalendarBlock = ({ day }: CalendarBlockProps) => {
+const CalendarBlock = (arg: { day: number }) => {
   return (
-    <Paper shadow="xs" p="xl" h={100} w={100} m={5}>
-      {day}
-    </Paper>
+    <DayCard shadow="xs" p="xl" h={100} w={100} m={5}>
+      {arg.day}
+    </DayCard>
   );
 };
-
-const CalendarGrid = () => {
-  const daysInMonth = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  //Array.apply(null, Array(dayjs().daysInMonth())).map(() => {});
+const getDayCards = (numDays: number) => {
+  const days = [];
+  for (let i = 0; i < numDays; i++) {
+    days.push(<CalendarBlock key={i} day={i + 1} />);
+  }
+  return days;
+};
+const CalendarGrid = (props: { month: number }) => {
+  const monthDays = getMonthDays(props.month);
   return (
     <Paper
       w={700}
       m={'auto'}
       bg={'inherit'}
       component={'div'}
-      bd={'1px solid black'}
       h={'fit-content'}
       display={'flex'}
       style={{ flexWrap: 'wrap', justifyContent: 'center' }}
     >
-      {daysInMonth.map((empty, index: number) => (
-        <CalendarBlock key={index} day={index + 1} />
-      ))}
+      {getDayCards(monthDays)}
     </Paper>
   );
 };
 
 export default CalendarGrid;
+
+const _DayCard = styled(Card)`
+  opacity: 0.85;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+`;
+const DayCard = createPolymorphicComponent<'div', CardProps>(_DayCard);

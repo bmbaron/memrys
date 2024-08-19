@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 const MainLayout = () => {
   const theme = createTheme({
     primaryColor: 'red',
+    white: 'white',
+    black: 'black',
     fontFamily: 'Roboto, sans-serif'
   });
   return (

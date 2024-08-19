@@ -1,8 +1,12 @@
 import { Carousel } from '@mantine/carousel';
-import { Card, Title } from '@mantine/core';
+import { Card, Title, useMantineTheme } from '@mantine/core';
+import dayjs from 'dayjs';
 import { monthNames } from '../utils/getMonth.ts';
 import CalendarGrid from './CalendarGrid.tsx';
 const MyCarousel = () => {
+  const theme = useMantineTheme();
+  const currentMonth = dayjs().month();
+
   return (
     <Carousel
       slideSize="100%"
@@ -12,15 +16,15 @@ const MyCarousel = () => {
       controlSize={100}
       loop
       withIndicators
-      initialSlide={2}
+      initialSlide={currentMonth}
     >
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>
           <Card bg={'red'} h={'100%'} px={140} py={50}>
-            <Title ta={'center'} order={1}>
+            <Title ta={'center'} order={1} c={theme.white}>
               {month}
             </Title>
-            <CalendarGrid />
+            <CalendarGrid month={index} />
           </Card>
         </Carousel.Slide>
       ))}
