@@ -5,6 +5,7 @@ import {
   CardProps,
   Container,
   createPolymorphicComponent,
+  FocusTrap,
   HoverCard,
   Modal,
   Paper,
@@ -16,7 +17,7 @@ import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import { useState } from 'react';
-import { getMonth } from '../utils/getMonth.ts';
+import { getMonthName } from '../utils/getMonth.ts';
 import DayModal, { DayObject } from './DayModal.tsx';
 import myData from './test-data.json';
 
@@ -30,9 +31,11 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
   const [modalTitle, setModalTitle] = useState('');
   const [modalDate, setModalDate] = useState('');
   const theme = useMantineTheme();
-  const SingleDayCard = (data: { day: number; month: number }) => {
+  const SingleDayCard = (data: { day: number; month: string }) => {
     dayjs.extend(localeData);
-    const dayString = `${dayjs().year()}-${data.month + 1}-${data.day}`;
+    const dayString = `${dayjs().year()}-${data.month}-${data.day}`;
+    const isToday = dayString === dayjs().toISOString().slice(0, 10);
+    console.log(dayString, dayjs().toISOString().slice(0, 10));
     const hasData = myData.find((obj: DayObject) => obj.date === dayString);
     const dayName = dayjs.weekdays()[dayjs(dayString).day()];
     let daySuffix = 'th';
@@ -44,7 +47,7 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
       daySuffix = 'rd';
     }
     const handleClick = () => {
-      setModalTitle(`${dayName}, ${getMonth(data.month)} ${data.day}${daySuffix}`);
+      setModalTitle(`${dayName}, ${getMonthName(Number(data.month))} ${data.day}${daySuffix}`);
       setModalDate(dayString);
       open();
     };
@@ -61,6 +64,7 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
             lh={'40px'}
             is31st={data.day === 31}
             onClick={handleClick}
+            bg={isToday ? 'red.3' : 'auto'}
           >
             {hasData && hasData.texts.length > 0 ? (
               <Badge pos="absolute" top={2} right={2} color="blue" size="md" circle>
@@ -90,9 +94,10 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
     );
   };
   const getDayCards = (numDays: number, month: number) => {
+    const monthTwoDigits = month < 10 ? `0${month + 1}` : `${month + 1}`;
     const days = [];
     for (let i = 0; i < numDays; i++) {
-      days.push(<SingleDayCard key={i} day={i + 1} month={month} />);
+      days.push(<SingleDayCard key={i} day={i + 1} month={monthTwoDigits} />);
     }
     return days;
   };
@@ -111,7 +116,14 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
       >
         {getDayCards(monthDays, data.monthNumber)}
       </Container>
-      <Modal opened={opened} onClose={close} title={modalTitle} centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={modalTitle}
+        centered
+        className="mantine-focus-never"
+      >
+        <FocusTrap.InitialFocus />
         <DayModal data={modalDate} />
       </Modal>
     </Paper>

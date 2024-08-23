@@ -20,11 +20,14 @@ export type DayObject = {
 const DayModal = ({ data }: { data: string }) => {
   const dayData = myData.find((obj: DayObject) => obj.date === data);
   return dayData ? (
-    <List>
-      {dayData.texts.map((text: string, index: number) => (
-        <ListItem key={index}>{text}</ListItem>
-      ))}
-    </List>
+    <Box ta={'center'}>
+      <List mb={20}>
+        {dayData.texts.map((text: string, index: number) => (
+          <ListItem key={index}>{text}</ListItem>
+        ))}
+      </List>
+      <AddButton>add memry</AddButton>
+    </Box>
   ) : (
     <Box ta={'center'}>
       <Text size={'sm'} mt={30} mb={20}>

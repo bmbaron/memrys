@@ -12,6 +12,10 @@ export const monthNames = [
   'November',
   'December'
 ];
-export const getMonth = (index: number) => {
+export const getMonthName = (index: number) => {
   return monthNames[index];
+};
+
+export const getMonthNumber = (name: string) => {
+  return monthNames.indexOf(name) + 1;
 };
