@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  Badge,
   Card,
   CardProps,
   Container,
@@ -16,6 +17,8 @@ import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import { useState } from 'react';
 import { getMonth } from '../utils/getMonth.ts';
+import DayModal, { DayObject } from './DayModal.tsx';
+import myData from './test-data.json';
 
 const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
@@ -24,14 +27,15 @@ const getMonthDays = (index: number) => {
 const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
   const monthDays = getMonthDays(data.monthNumber);
   const [opened, { open, close }] = useDisclosure(false);
-  const [modalContent, setModalContent] = useState('');
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDate, setModalDate] = useState('');
   const theme = useMantineTheme();
-  const CalendarBlock = (data: { day: number; month: number }) => {
+  const SingleDayCard = (data: { day: number; month: number }) => {
     dayjs.extend(localeData);
-    const dayName =
-      dayjs.weekdays()[dayjs(`${dayjs().year()}-${data.month + 1}-${data.day}`).day()];
+    const dayString = `${dayjs().year()}-${data.month + 1}-${data.day}`;
+    const hasData = myData.find((obj: DayObject) => obj.date === dayString);
+    const dayName = dayjs.weekdays()[dayjs(dayString).day()];
     let daySuffix = 'th';
-
     if (data.day % 10 === 1) {
       daySuffix = 'st';
     } else if (data.day % 10 === 2) {
@@ -40,7 +44,8 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
       daySuffix = 'rd';
     }
     const handleClick = () => {
-      setModalContent(`${dayName}, ${getMonth(data.month)} ${data.day}${daySuffix}`);
+      setModalTitle(`${dayName}, ${getMonth(data.month)} ${data.day}${daySuffix}`);
+      setModalDate(dayString);
       open();
     };
     return (
@@ -52,9 +57,26 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
             h={100}
             w={100}
             m={5}
+            ta={'center'}
+            lh={'40px'}
             is31st={data.day === 31}
             onClick={handleClick}
           >
+            {hasData && hasData.texts.length > 0 ? (
+              <Badge pos="absolute" top={2} right={2} color="blue" size="md" circle>
+                {hasData.texts.length}
+              </Badge>
+            ) : null}
+            {hasData && hasData.tags.length > 0 ? (
+              <Badge pos="absolute" top={2} right={24} color="yellow" size="md" circle>
+                {hasData.tags.length}
+              </Badge>
+            ) : null}
+            {hasData && hasData.images.length > 0 ? (
+              <Badge pos="absolute" top={2} right={46} color="red" size="md" circle>
+                {hasData.images.length}
+              </Badge>
+            ) : null}
             {data.day}
           </DayCard>
         </HoverCard.Target>
@@ -70,7 +92,7 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
   const getDayCards = (numDays: number, month: number) => {
     const days = [];
     for (let i = 0; i < numDays; i++) {
-      days.push(<CalendarBlock key={i} day={i + 1} month={month} />);
+      days.push(<SingleDayCard key={i} day={i + 1} month={month} />);
     }
     return days;
   };
@@ -89,8 +111,8 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
       >
         {getDayCards(monthDays, data.monthNumber)}
       </Container>
-      <Modal opened={opened} onClose={close} title={modalContent} centered>
-        {'Daily activity...'}
+      <Modal opened={opened} onClose={close} title={modalTitle} centered>
+        <DayModal data={modalDate} />
       </Modal>
     </Paper>
   );
@@ -98,16 +120,18 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
 
 export default CalendarGrid;
 
-const _DayCard = styled(Card)<{ is31st: boolean }>`
-  flex-basis: ${(props) => (props.is31st ? '100%' : 'auto')};
-  margin-left: ${(props) => (props.is31st ? '7.5px !important' : 'unset')};
-  margin-right: ${(props) => (props.is31st ? '7.5px !important' : 'unset')};
-  opacity: 0.85;
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
+const _DayCard = styled(Card, {
+  shouldForwardProp: (props) => props !== 'is31st'
+})<{ is31st: boolean }>(({ is31st }) => ({
+  flexBasis: is31st ? '100%' : 'auto',
+  marginLeft: is31st ? '7.5px !important' : 'unset',
+  marginRight: is31st ? '7.5px !important' : 'unset',
+  opacity: 0.85,
+  '&:hover': {
+    cursor: 'pointer',
+    opacity: 1
   }
-`;
+}));
 
 type CustomCardProps = CardProps & { is31st: boolean };
 const DayCard = createPolymorphicComponent<'div', CustomCardProps>(_DayCard);
