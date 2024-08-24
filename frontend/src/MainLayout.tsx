@@ -21,7 +21,14 @@ const MainLayout = () => {
         'navy'
       ]
     },
-    fontFamily: 'Roboto, sans-serif'
+    fontFamily: 'Roboto, sans-serif',
+    breakpoints: {
+      xs: '300px',
+      sm: '600px',
+      md: '800px',
+      lg: '1000px',
+      xl: '1440px'
+    }
   });
   return (
     <MantineProvider theme={theme}>

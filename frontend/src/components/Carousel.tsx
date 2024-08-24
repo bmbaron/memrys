@@ -1,11 +1,13 @@
 import { Carousel } from '@mantine/carousel';
 import { Card, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { monthNames } from '../utils/getMonth.ts';
 import CalendarGrid from './CalendarGrid.tsx';
 const MyCarousel = () => {
   const theme = useMantineTheme();
   const currentMonth = dayjs().month();
+  const isMobile = useMediaQuery('(max-width: 800px)');
 
   return (
     <Carousel
@@ -15,7 +17,7 @@ const MyCarousel = () => {
       controlsOffset="xs"
       controlSize={100}
       loop
-      // withIndicators
+      withControls={isMobile ? false : true}
       initialSlide={currentMonth}
     >
       {monthNames.map((month, index) => (
