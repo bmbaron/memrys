@@ -8,6 +8,8 @@ import {
   Text,
   createPolymorphicComponent
 } from '@mantine/core';
+import { useState } from 'react';
+import MemryForm from './MemryForm.tsx';
 import myData from './test-data.json';
 
 export type DayObject = {
@@ -19,21 +21,22 @@ export type DayObject = {
 
 const DayModal = ({ data }: { data: string }) => {
   const dayData = myData.find((obj: DayObject) => obj.date === data);
-  return dayData ? (
+  const [showForm, setShowForm] = useState(false);
+  return (
     <Box ta={'center'}>
-      <List mb={20}>
-        {dayData.texts.map((text: string, index: number) => (
-          <ListItem key={index}>{text}</ListItem>
-        ))}
-      </List>
-      <AddButton>add memry</AddButton>
-    </Box>
-  ) : (
-    <Box ta={'center'}>
-      <Text size={'sm'} mt={30} mb={20}>
-        {"looks like there's nothing here yet"}
-      </Text>
-      <AddButton>add memry</AddButton>
+      {dayData && !showForm ? (
+        <List mb={20}>
+          {dayData.texts.map((text: string, index: number) => (
+            <ListItem key={index}>{text}</ListItem>
+          ))}
+        </List>
+      ) : !showForm ? (
+        <Text size={'sm'} mt={30} mb={20}>
+          {"looks like there's nothing here yet"}
+        </Text>
+      ) : null}
+      {!showForm && <AddButton onClick={() => setShowForm(!showForm)}>add memry</AddButton>}
+      {showForm && <MemryForm setShowForm={setShowForm} />}
     </Box>
   );
 };
