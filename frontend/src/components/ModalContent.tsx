@@ -19,7 +19,7 @@ export type DayObject = {
   images: string[];
 };
 
-const DayModal = ({ data }: { data: string }) => {
+const ModalContent = ({ data }: { data: string }) => {
   const dayData = myData.find((obj: DayObject) => obj.date === data);
   const [showForm, setShowForm] = useState(false);
   return (
@@ -41,7 +41,7 @@ const DayModal = ({ data }: { data: string }) => {
   );
 };
 
-export default DayModal;
+export default ModalContent;
 
 const _AddButton = styled(Button)`
   background-color: ${({ theme }) => `${theme.white} !important`};

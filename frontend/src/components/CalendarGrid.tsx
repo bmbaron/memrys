@@ -2,7 +2,7 @@ import { Container, FocusTrap, Modal, Paper, Title, useMantineTheme } from '@man
 import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import DayModal from './DayModal.tsx';
+import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
 
 export type ModalDataType = {
@@ -59,7 +59,7 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
         className="mantine-focus-never"
       >
         <FocusTrap.InitialFocus />
-        <DayModal data={modalData.date} />
+        <ModalContent data={modalData.date} />
       </Modal>
     </Paper>
   );

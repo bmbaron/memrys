@@ -7,7 +7,7 @@ import React from 'react';
 import { getMonthName } from '../utils/getMonth.ts';
 import { getSuffix } from '../utils/getSuffix.ts';
 import { ModalDataType } from './CalendarGrid.tsx';
-import { DayObject } from './DayModal.tsx';
+import { DayObject } from './ModalContent.tsx';
 import myData from './test-data.json';
 const SingleDayCard = (data: {
   day: number;

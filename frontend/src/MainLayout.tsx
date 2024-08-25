@@ -1,5 +1,6 @@
-import { AppShell, createTheme, MantineProvider } from '@mantine/core';
+import { AppShell, createTheme, Input, MantineProvider } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
+import classes from './Styles.module.css';
 const MainLayout = () => {
   const theme = createTheme({
     primaryColor: 'red',
@@ -28,6 +29,9 @@ const MainLayout = () => {
       md: '800px',
       lg: '1000px',
       xl: '1440px'
+    },
+    components: {
+      Input: Input.extend({ classNames: classes })
     }
   });
   return (
