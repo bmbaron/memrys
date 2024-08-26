@@ -1,7 +1,18 @@
-import { Container, FocusTrap, Modal, Paper, Title, useMantineTheme } from '@mantine/core';
+import {
+  Badge,
+  Container,
+  Flex,
+  FocusTrap,
+  Modal,
+  Paper,
+  Text,
+  Title,
+  useMantineTheme
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useState } from 'react';
+import { MonthObject } from './Carousel.tsx';
 import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
 
@@ -13,8 +24,8 @@ const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
   return date.daysInMonth();
 };
-const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
-  const { monthNumber, monthName } = data;
+const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
+  const { monthNumber, stats } = data;
   const monthDays = getMonthDays(monthNumber);
   const [opened, { open, close }] = useDisclosure(false);
   const [modalData, setModalData] = useState<ModalDataType>({ title: '', date: '' });
@@ -38,9 +49,23 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
   };
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
-      <Title ta={'left'} ml={25} order={1} c={theme.white} mb={20}>
-        {monthName}
-      </Title>
+      <Flex ta={'left'} ml={25} mb={20}>
+        <Title order={1} c={theme.white}>
+          {stats && stats.month}
+        </Title>
+        <Flex>
+          {stats &&
+            stats.stats &&
+            Object.keys(stats.stats).map((oneKey, index) => (
+              <Badge color='red' size='xl' key={index}>
+                <Flex>
+                  <Text c={theme.white}>{stats.stats[oneKey]}</Text>
+                  <Text tt={'none'}>&nbsp;{oneKey}</Text>
+                </Flex>
+              </Badge>
+            ))}
+        </Flex>
+      </Flex>
       <Container
         style={{
           display: 'flex',
@@ -56,7 +81,7 @@ const CalendarGrid = (data: { monthNumber: number; monthName: string }) => {
         onClose={close}
         title={modalData.title}
         centered
-        className="mantine-focus-never"
+        className='mantine-focus-never'
       >
         <FocusTrap.InitialFocus />
         <ModalContent data={modalData.date} />

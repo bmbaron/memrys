@@ -20,7 +20,7 @@ export type DayObject = {
 };
 
 const ModalContent = ({ data }: { data: string }) => {
-  const dayData = myData.find((obj: DayObject) => obj.date === data);
+  const dayData = myData.dateData.find((obj: DayObject) => obj.date === data);
   const [showForm, setShowForm] = useState(false);
   return (
     <Box ta={'center'}>

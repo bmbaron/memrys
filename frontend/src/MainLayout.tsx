@@ -36,7 +36,7 @@ const MainLayout = () => {
   });
   return (
     <MantineProvider theme={theme}>
-      <AppShell padding="md">
+      <AppShell padding='md'>
         <Outlet />
       </AppShell>
     </MantineProvider>
