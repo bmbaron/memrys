@@ -20,7 +20,8 @@ const MainLayout = () => {
         'maroon',
         'teal',
         'navy'
-      ]
+      ],
+      stats: ['red', 'yellow', 'blue', '', '', '', '', '', '', '']
     },
     fontFamily: 'Roboto, sans-serif',
     breakpoints: {

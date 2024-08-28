@@ -16,6 +16,7 @@ const SingleDayCard = (data: {
   open: () => void;
 }) => {
   const { day, month, setModalData, open } = data;
+  const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   const dayString = `${dayjs().year()}-${month}-${day}`;
   const isToday = dayString === dayjs().toISOString().slice(0, 10);
@@ -24,7 +25,7 @@ const SingleDayCard = (data: {
   const isMobile = useMediaQuery('(max-width: 800px)');
   const handleClick = () => {
     setModalData({
-      title: `${dayName}, ${getMonthName(Number(month))} ${day}${getSuffix(day)}`,
+      title: `${dayName}, ${monthName} ${day}${getSuffix(day)}`,
       date: dayString
     });
     open();
@@ -41,8 +42,8 @@ const SingleDayCard = (data: {
       ta={'center'}
       lh={{ xs: '40px', md: '40px' }}
       is31st={isMobile ? false : day === 31}
+      isToday={isToday}
       onClick={handleClick}
-      bg={isToday ? 'red.3' : 'auto'}
     >
       {hasData && hasData.texts.length > 0 ? (
         <Badge pos='absolute' top={2} right={2} color='blue' size='md' circle>
@@ -60,6 +61,17 @@ const SingleDayCard = (data: {
         </Badge>
       ) : null}
       {day}
+      {isToday && (
+        <Badge
+          color='black'
+          display={'flex'}
+          w={40}
+          p={5}
+          style={{ overflow: 'visible', textTransform: 'none', fontSize: 9 }}
+        >
+          {'today'}
+        </Badge>
+      )}
     </DayCard>
     // </HoverCard.Target>
     // <HoverCard.Dropdown w={'fit-content'}>
@@ -75,17 +87,18 @@ const SingleDayCard = (data: {
 export default SingleDayCard;
 
 const _DayCard = styled(Card, {
-  shouldForwardProp: (props) => props !== 'is31st'
-})<{ is31st: boolean }>(({ is31st }) => ({
+  shouldForwardProp: (props) => props !== 'is31st' && props !== 'isToday'
+})<{ is31st: boolean; isToday: boolean }>(({ is31st, isToday }) => ({
   flexBasis: is31st ? '100%' : 'auto',
   marginLeft: is31st ? '7.5px !important' : 'unset',
   marginRight: is31st ? '7.5px !important' : 'unset',
-  opacity: 0.85,
+  background: isToday ? 'yellow' : 'auto',
+  opacity: isToday ? 1 : 0.85,
   '&:hover': {
     cursor: 'pointer',
     opacity: 1
   }
 }));
 
-type CustomCardProps = CardProps & { is31st: boolean };
+type CustomCardProps = CardProps & { is31st: boolean; isToday: boolean };
 const DayCard = createPolymorphicComponent<'div', CustomCardProps>(_DayCard);

@@ -25,7 +25,7 @@ const MyCarousel = () => {
       controlsOffset='xs'
       controlSize={100}
       loop
-      withControls={isMobile}
+      withControls={isMobile ? false : true}
       initialSlide={currentMonth}
     >
       {monthNames.map((month, index) => (

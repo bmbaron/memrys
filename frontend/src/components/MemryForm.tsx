@@ -28,7 +28,7 @@ const MemryForm = ({
           multiple
           clearable
           label='Add photo(s)'
-          description='Upload some photos of the memory'
+          description='Upload some photos'
           placeholder={<FeatherIcon Type={Image} />}
           accept='image/png,image/jpeg'
           key={form.key('photos')}
@@ -37,7 +37,7 @@ const MemryForm = ({
           multiple
           clearable
           label='Add audio file(s)'
-          description='Upload audio'
+          description='Upload some recordings'
           placeholder={<FeatherIcon Type={Headphones} />}
           accept='audio/mpg,audio/ogg,audio/wav'
           key={form.key('audio')}

@@ -49,15 +49,15 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
   };
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
-      <Flex ta={'left'} ml={25} mb={20}>
+      <Flex ta={'left'} ml={25} mb={20} gap={20} justify={'center'}>
         <Title order={1} c={theme.white}>
           {stats && stats.month}
         </Title>
-        <Flex>
+        <Flex gap={10} align={'center'}>
           {stats &&
             stats.stats &&
             Object.keys(stats.stats).map((oneKey, index) => (
-              <Badge color='red' size='xl' key={index}>
+              <Badge color={theme.colors.stats[index]} size='xl' key={index}>
                 <Flex>
                   <Text c={theme.white}>{stats.stats[oneKey]}</Text>
                   <Text tt={'none'}>&nbsp;{oneKey}</Text>

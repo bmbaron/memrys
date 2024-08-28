@@ -2,12 +2,14 @@ import { CloseButton, Combobox, TextInput, useCombobox } from '@mantine/core';
 import { useState } from 'react';
 
 const groceries = [
-  '🍎 Apples',
-  '🍌 Bananas',
-  '🥦 Broccoli',
-  '🥕 Carrots',
-  '🍫 Chocolate',
-  '🍇 Grapes'
+  '🏠 Home',
+  '📚 School',
+  '🌱 Park',
+  '👵 Grandparent`s',
+  '🎲 Game',
+  '💉 Doctor`s',
+  '🎉 Party',
+  '🎂 Birthday'
 ];
 
 export function AutocompleteClearable() {

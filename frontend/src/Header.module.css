@@ -1,0 +1,17 @@
+.header {
+  height: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  font-size: var(--mantine-font-size-sm);
+}

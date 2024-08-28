@@ -17,5 +17,5 @@ export const getMonthName = (index: number) => {
 };
 
 export const getMonthNumber = (name: string) => {
-  return monthNames.indexOf(name) + 1;
+  return monthNames.indexOf(name);
 };
