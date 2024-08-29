@@ -45,9 +45,9 @@ const SingleDayCard = (data: {
       isToday={isToday}
       onClick={handleClick}
     >
-      {hasData && hasData.texts.length > 0 ? (
+      {hasData && hasData.notes.length > 0 ? (
         <Badge pos='absolute' top={2} right={2} color='blue' size='md' circle>
-          {hasData.texts.length}
+          {hasData.notes.length}
         </Badge>
       ) : null}
       {hasData && hasData.tags.length > 0 ? (

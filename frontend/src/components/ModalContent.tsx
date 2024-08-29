@@ -15,7 +15,7 @@ import myData from './test-data.json';
 export type DayObject = {
   date: string;
   tags: string[];
-  texts: string[];
+  notes: string[];
   images: string[];
 };
 
@@ -26,7 +26,7 @@ const ModalContent = ({ data }: { data: string }) => {
     <Box ta={'center'}>
       {dayData && !showForm ? (
         <List mb={20}>
-          {dayData.texts.map((text: string, index: number) => (
+          {dayData.notes.map((text: string, index: number) => (
             <ListItem key={index}>{text}</ListItem>
           ))}
         </List>

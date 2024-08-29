@@ -1,23 +1,29 @@
 {
   "dateData": [
-    { "date": "2024-08-1", "tags": [], "texts": ["helalkjnsdf"], "images": [] },
-    { "date": "2024-08-8", "tags": ["John"], "texts": [], "images": ["./", "./", "./"] },
+    { "date": "2024-08-1", "tags": [], "notes": ["helalkjnsdf"], "images": [] },
+    { "date": "2024-08-8", "tags": ["John"], "notes": [], "images": ["./", "./", "./"] },
     {
       "date": "2024-08-15",
       "tags": ["John"],
-      "texts": ["a", "b", "c"],
+      "notes": ["a", "b", "c"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-08-16",
       "tags": ["Lisa"],
-      "texts": ["d", "e", "f"],
+      "notes": ["d", "e", "f"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-08-17",
       "tags": ["Sam"],
-      "texts": ["g", "h", "i"],
+      "notes": ["g", "h", "i"],
+      "images": ["./", "./", "./"]
+    },
+    {
+      "date": "2024-08-28",
+      "tags": ["Sam"],
+      "notes": ["g", "h", "i"],
       "images": ["./", "./", "./"]
     }
   ],

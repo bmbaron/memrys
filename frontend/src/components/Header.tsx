@@ -1,6 +1,6 @@
 import { Box, Button, Group } from '@mantine/core';
+import { Link } from 'react-router-dom';
 import classes from '../Header.module.css';
-
 const Header = () => {
   return (
     <Box>
@@ -15,8 +15,12 @@ const Header = () => {
             </a>
           </Group>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>
-            <Button variant='default'>Log in</Button>
-            <Button>Sign up</Button>
+            <Link to={'/auth?mode=login'}>
+              <Button variant='default'>Log in</Button>
+            </Link>
+            <Link to={'/auth?mode=register'}>
+              <Button>Sign up</Button>
+            </Link>
           </Group>
         </Group>
       </header>
