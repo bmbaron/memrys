@@ -38,12 +38,15 @@ const Authentication = () => {
       email: '',
       name: '',
       password: '',
+      confirmPassword: '',
       terms: false
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null)
+      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      confirmPassword: (value, values) =>
+        value !== values.password ? 'Passwords did not match' : null
     }
   });
   return (
@@ -75,27 +78,35 @@ const Authentication = () => {
                   radius='md'
                 />
               )}
-
               <TextInput
                 required
                 label='Email'
                 placeholder='hello@mantine.dev'
                 value={form.values.email}
                 onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                error={form.errors.email && 'Invalid email'}
+                error={form.errors.email}
                 radius='md'
               />
-
               <PasswordInput
                 required
                 label='Password'
                 placeholder='Your password'
                 value={form.values.password}
                 onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                error={form.errors.password && 'Password should include at least 6 characters'}
+                error={form.errors.password}
                 radius='md'
               />
-
+              <PasswordInput
+                required
+                label=''
+                placeholder='Confirm your password'
+                value={form.values.confirmPassword}
+                onChange={(event) =>
+                  form.setFieldValue('confirmPassword', event.currentTarget.value)
+                }
+                error={form.errors.confirmPassword}
+                radius='md'
+              />
               {type === 'register' && (
                 <Checkbox
                   label='I accept terms and conditions'
@@ -104,7 +115,6 @@ const Authentication = () => {
                 />
               )}
             </Stack>
-
             <Group justify='space-between' mt='xl'>
               <Anchor component='button' type='button' c='dimmed' onClick={handleChange} size='xs'>
                 {type === 'register'
