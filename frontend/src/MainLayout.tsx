@@ -10,7 +10,7 @@ const MainLayout = () => {
       months: [
         'red',
         'orange',
-        'yellow',
+        'brown',
         'green',
         'blue',
         'indigo',

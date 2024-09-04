@@ -1,28 +1,31 @@
 import { CloseButton, Combobox, TextInput, useCombobox } from '@mantine/core';
 import { useState } from 'react';
 
-const groceries = [
-  '🏠 Home',
-  '📚 School',
-  '🌱 Park',
-  '👵 Grandparent`s',
-  '🎲 Game',
-  '💉 Doctor`s',
-  '🎉 Party',
-  '🎂 Birthday'
+const optionEmojis = ['🏠', `📚`, '🌱', '👵', '🎲', '⚽', '💉', '🎉', '🎂'];
+
+const optionTexts = [
+  'Home',
+  `School`,
+  'Park',
+  'Grandparents',
+  'Game',
+  'Sports',
+  'Doctor',
+  'Party',
+  'Birthday'
 ];
 
 export function AutocompleteClearable() {
   const combobox = useCombobox();
   const [value, setValue] = useState('');
-  const shouldFilterOptions = !groceries.some((item) => item === value);
+  const shouldFilterOptions = !optionTexts.some((item) => item === value);
   const filteredOptions = shouldFilterOptions
-    ? groceries.filter((item) => item.toLowerCase().includes(value.toLowerCase().trim()))
-    : groceries;
+    ? optionTexts.filter((item) => item.toLowerCase().includes(value.toLowerCase().trim()))
+    : optionTexts;
 
-  const options = filteredOptions.map((item) => (
+  const options = filteredOptions.map((item, index) => (
     <Combobox.Option value={item} key={item}>
-      {item}
+      {optionEmojis[index]}&nbsp;&nbsp;{item}
     </Combobox.Option>
   ));
 

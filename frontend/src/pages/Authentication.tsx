@@ -14,13 +14,14 @@ import {
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
 
 const Authentication = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('mode');
   const [type, toggle] = useToggle(['login', 'register']);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (query && type !== query) {
@@ -41,12 +42,13 @@ const Authentication = () => {
       confirmPassword: '',
       terms: false
     },
-
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      password: (value) =>
+        value.length <= 6 ? 'Password should include at least 6 characters' : null,
       confirmPassword: (value, values) =>
-        value !== values.password ? 'Passwords did not match' : null
+        value !== values.password ? 'Passwords did not match' : null,
+      terms: (value) => !value && 'Please accept the terms'
     }
   });
   return (
@@ -67,7 +69,7 @@ const Authentication = () => {
               memrys
             </Text>
           </Flex>
-          <form onSubmit={form.onSubmit(() => {})}>
+          <form onSubmit={() => navigate('/')}>
             <Stack>
               {type === 'register' && (
                 <TextInput
@@ -96,23 +98,26 @@ const Authentication = () => {
                 error={form.errors.password}
                 radius='md'
               />
-              <PasswordInput
-                required
-                label=''
-                placeholder='Confirm your password'
-                value={form.values.confirmPassword}
-                onChange={(event) =>
-                  form.setFieldValue('confirmPassword', event.currentTarget.value)
-                }
-                error={form.errors.confirmPassword}
-                radius='md'
-              />
               {type === 'register' && (
-                <Checkbox
-                  label='I accept terms and conditions'
-                  checked={form.values.terms}
-                  onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-                />
+                <>
+                  <PasswordInput
+                    required
+                    label=''
+                    placeholder='Confirm your password'
+                    value={form.values.confirmPassword}
+                    onChange={(event) =>
+                      form.setFieldValue('confirmPassword', event.currentTarget.value)
+                    }
+                    error={form.errors.confirmPassword}
+                    radius='md'
+                  />
+                  <Checkbox
+                    label='I accept terms and conditions'
+                    checked={form.values.terms}
+                    onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                    error={form.errors.terms}
+                  />
+                </>
               )}
             </Stack>
             <Group justify='space-between' mt='xl'>
