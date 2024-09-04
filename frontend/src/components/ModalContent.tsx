@@ -1,15 +1,8 @@
 import styled from '@emotion/styled';
-import {
-  Box,
-  Button,
-  ButtonProps,
-  List,
-  ListItem,
-  Text,
-  createPolymorphicComponent
-} from '@mantine/core';
+import { Box, Button, ButtonProps, Text, createPolymorphicComponent } from '@mantine/core';
 import { useState } from 'react';
 import MemryForm from './MemryForm.tsx';
+import SavedMemrys from './SavedMemrys.tsx';
 import myData from './test-data.json';
 
 export type DayObject = {
@@ -25,11 +18,7 @@ const ModalContent = ({ data }: { data: string }) => {
   return (
     <Box ta={'center'}>
       {dayData && !showForm ? (
-        <List mb={20}>
-          {dayData.notes.map((text: string, index: number) => (
-            <ListItem key={index}>{text}</ListItem>
-          ))}
-        </List>
+        <SavedMemrys data={dayData} />
       ) : !showForm ? (
         <Text size={'sm'} mt={30} mb={20}>
           {"looks like there's nothing here yet"}

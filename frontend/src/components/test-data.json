@@ -5,7 +5,7 @@
     {
       "date": "2024-08-15",
       "tags": ["John"],
-      "notes": ["a", "b", "c"],
+      "notes": ["we went to the park", "it was really crowded", "not sure if we'll go back again"],
       "images": ["./", "./", "./"]
     },
     {
@@ -28,17 +28,17 @@
     }
   ],
   "monthData": [
-    { "month": "January", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "February", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "March", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "April", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "May", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "June", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "July", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "August", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "September", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "October", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "November", "stats": { "tags": 50, "notes": 100, "photos": 75 } },
-    { "month": "December", "stats": { "tags": 50, "notes": 100, "photos": 75 } }
+    { "month": "January", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "February", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "March", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "April", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "May", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "June", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "July", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "August", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "September", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "October", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "November", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    { "month": "December", "stats": { "tags": 0, "notes": 0, "photos": 0 } }
   ]
 }

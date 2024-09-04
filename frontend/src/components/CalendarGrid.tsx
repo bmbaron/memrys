@@ -12,6 +12,8 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useState } from 'react';
+import { Search } from 'react-feather';
+import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import { MonthObject } from './Carousel.tsx';
 import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
@@ -49,11 +51,17 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
   };
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
-      <Flex ta={'left'} ml={25} mb={20} gap={20} justify={'center'}>
+      <Flex ta={'left'} mx={25} my={20} justify={'space-between'} align={'center'}>
         <Title order={1} c={theme.white}>
           {stats && stats.month}
         </Title>
-        <Flex gap={10} align={'center'}>
+        <Flex
+          gap={10}
+          align={'center'}
+          bg={'rgba(255, 255, 255, 0.85)'}
+          style={{ borderRadius: 50 }}
+          p={10}
+        >
           {stats &&
             stats.stats &&
             Object.keys(stats.stats).map((oneKey, index) => (
@@ -64,6 +72,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
                 </Flex>
               </Badge>
             ))}
+          <FeatherIcon Type={Search} style={{ marginLeft: 20, marginRight: 10 }} />
         </Flex>
       </Flex>
       <Container
@@ -82,6 +91,8 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
         title={modalData.title}
         centered
         className='mantine-focus-never'
+        size={'xl'}
+        padding={'10 10 40 10'}
       >
         <FocusTrap.InitialFocus />
         <ModalContent data={modalData.date} />
