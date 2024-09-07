@@ -1,14 +1,4 @@
-import {
-  Badge,
-  Container,
-  Flex,
-  FocusTrap,
-  Modal,
-  Paper,
-  Text,
-  Title,
-  useMantineTheme
-} from '@mantine/core';
+import { Badge, Container, Flex, Modal, Paper, Text, Title, useMantineTheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useState } from 'react';
@@ -65,14 +55,14 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
           {stats &&
             stats.stats &&
             Object.keys(stats.stats).map((oneKey, index) => (
-              <Badge color={theme.colors.stats[index]} size='xl' key={index}>
+              <Badge color={theme.colors.stats[index]} size={'xl'} key={index}>
                 <Flex>
                   <Text c={theme.white}>{stats.stats[oneKey]}</Text>
                   <Text tt={'none'}>&nbsp;{oneKey}</Text>
                 </Flex>
               </Badge>
             ))}
-          <FeatherIcon Type={Search} style={{ marginLeft: 20, marginRight: 10 }} />
+          <FeatherIcon Type={Search} style={{ marginLeft: 20, marginRight: 10 }} hasHover />
         </Flex>
       </Flex>
       <Container
@@ -85,18 +75,27 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
       >
         {getDayCards(monthDays, monthNumber)}
       </Container>
-      <Modal
+      <Modal.Root
         opened={opened}
         onClose={close}
-        title={modalData.title}
         centered
-        className='mantine-focus-never'
+        className={'mantine-focus-never'}
         size={'xl'}
-        padding={'10 10 40 10'}
+        px={20}
       >
-        <FocusTrap.InitialFocus />
-        <ModalContent data={modalData.date} />
-      </Modal>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Header m={'auto'} style={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}>
+            <Modal.Title>
+              <Title order={1} fw={500}>{modalData.title}</Title>
+            </Modal.Title>
+            <Modal.CloseButton />
+          </Modal.Header>
+          <Modal.Body>
+            <ModalContent data={modalData.date} />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
     </Paper>
   );
 };

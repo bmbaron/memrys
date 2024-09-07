@@ -5,18 +5,18 @@ const Header = () => {
   return (
     <Box>
       <header className={classes.header}>
-        <Group justify='space-between' h='100%'>
-          <Group h='100%' gap={0} visibleFrom='sm'>
-            <a href='#' className={classes.link}>
+        <Group justify={'space-between'} h={'100%'}>
+          <Group h={'100%'} gap={0} visibleFrom={'sm'}>
+            <a href={'#'} className={classes.link}>
               Home
             </a>
-            <a href='#' className={classes.link}>
+            <a href={'#'} className={classes.link}>
               Features
             </a>
           </Group>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>
             <Link to={'/auth?mode=login'}>
-              <Button variant='default'>Log in</Button>
+              <Button variant={"default"}>Log in</Button>
             </Link>
             <Link to={'/auth?mode=register'}>
               <Button>Sign up</Button>

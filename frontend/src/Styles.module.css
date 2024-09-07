@@ -6,3 +6,7 @@
 .InputPlaceholder-placeholder {
   display: flex;
 }
+
+.icon-hover:hover {
+  cursor: pointer;
+}

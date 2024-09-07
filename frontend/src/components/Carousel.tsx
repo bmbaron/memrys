@@ -19,10 +19,10 @@ const MyCarousel = () => {
   const monthData = myData.monthData;
   return (
     <Carousel
-      slideSize='100%'
+      slideSize={'100%'}
       height={'100vh'}
-      slideGap='sm'
-      controlsOffset='xs'
+      slideGap={'sm'}
+      controlsOffset={'xs'}
       controlSize={100}
       loop
       withControls={isMobile ? false : true}

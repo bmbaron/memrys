@@ -18,8 +18,12 @@ const SingleDayCard = (data: {
   const { day, month, setModalData, open } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
-  const dayString = `${dayjs().year()}-${month}-${day}`;
+  let dayString = `${dayjs().year()}-${month}-${day}`;
+  if (day < 10) {
+    dayString = `${dayjs().year()}-${month}-0${day}`;
+  }
   const isToday = dayString === dayjs().toISOString().slice(0, 10);
+  console.log(dayString, dayjs().toISOString().slice(0, 10));
   const hasData = myData.dateData.find((obj: DayObject) => obj.date === dayString);
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
   const isMobile = useMediaQuery('(max-width: 800px)');
@@ -34,7 +38,7 @@ const SingleDayCard = (data: {
     // <HoverCard width={280} shadow="md" zIndex={0}>
     //   <HoverCard.Target>
     <DayCard
-      shadow='sm'
+      shadow={"sm"}
       p={{ xs: 'sm', md: 'xl' }}
       h={{ base: 100, xs: 70, md: 100 }}
       w={{ base: 100, xs: 70, md: 100 }}
@@ -46,30 +50,30 @@ const SingleDayCard = (data: {
       onClick={handleClick}
     >
       {hasData && hasData.notes.length > 0 ? (
-        <Badge pos='absolute' top={2} right={2} color='blue' size='md' circle>
+        <Badge pos={"absolute"} top={2} right={2} color={"blue"} size={"md"} circle>
           {hasData.notes.length}
         </Badge>
       ) : null}
       {hasData && hasData.tags.length > 0 ? (
-        <Badge pos='absolute' top={2} right={24} color='yellow' size='md' circle>
+        <Badge pos={"absolute"} top={2} right={24} color={"yellow"} size={"md"} circle>
           {hasData.tags.length}
         </Badge>
       ) : null}
       {hasData && hasData.images.length > 0 ? (
-        <Badge pos='absolute' top={2} right={46} color='red' size='md' circle>
+        <Badge pos={"absolute"} top={2} right={46} color={"red"} size={"md"} circle>
           {hasData.images.length}
         </Badge>
       ) : null}
       {day}
       {isToday && (
         <Badge
-          color='black'
+          color={"black"}
           display={'flex'}
           w={40}
           p={5}
           style={{ overflow: 'visible', textTransform: 'none', fontSize: 9 }}
         >
-          {'today'}
+          today
         </Badge>
       )}
     </DayCard>

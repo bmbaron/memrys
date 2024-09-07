@@ -21,7 +21,7 @@ const ModalContent = ({ data }: { data: string }) => {
         <SavedMemrys data={dayData} />
       ) : !showForm ? (
         <Text size={'sm'} mt={30} mb={20}>
-          {"looks like there's nothing here yet"}
+          looks like there&apos;s nothing here yet
         </Text>
       ) : null}
       {!showForm && <AddButton onClick={() => setShowForm(!showForm)}>add memry</AddButton>}

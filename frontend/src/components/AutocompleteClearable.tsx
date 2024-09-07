@@ -40,10 +40,10 @@ export function AutocompleteClearable() {
     >
       <Combobox.Target>
         <TextInput
-          label='Tag'
+          label={'Tag'}
           required
           withAsterisk
-          placeholder='Pick value or type anything'
+          placeholder={'Pick value or type anything'}
           value={value}
           onChange={(event) => {
             setValue(event.currentTarget.value);
@@ -56,10 +56,10 @@ export function AutocompleteClearable() {
           rightSection={
             value !== '' && (
               <CloseButton
-                size='sm'
+                size={'sm'}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => setValue('')}
-                aria-label='Clear value'
+                aria-label={'Clear value'}
               />
             )
           }

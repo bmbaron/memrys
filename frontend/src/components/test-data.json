@@ -25,6 +25,39 @@
       "tags": ["Sam"],
       "notes": ["g", "h", "i"],
       "images": ["./", "./", "./"]
+    },
+    { "date": "2024-09-1", "tags": [], "notes": ["helalkjnsdf"], "images": [] },
+    { "date": "2024-09-8", "tags": ["John"], "notes": [], "images": ["./", "./", "./"] },
+    {
+      "date": "2024-09-15",
+      "tags": ["John"],
+      "notes": ["we went to the park", "it was really crowded", "not sure if we'll go back again"],
+      "images": ["./", "./", "./"]
+    },
+    {
+      "date": "2024-09-16",
+      "tags": ["Lisa"],
+      "notes": ["d", "e", "f"],
+      "images": ["./", "./", "./"]
+    },
+    {
+      "date": "2024-09-17",
+      "tags": ["Sam"],
+      "notes": ["g", "h", "i"],
+      "images": ["./", "./", "./"]
+    },
+    {
+      "date": "2024-09-28",
+      "tags": ["Sam"],
+      "notes": ["we went to the park and it was really crowded not sure if we'll go back again", "Lewis was not feeling very well after the chocolate cake, so we decided to go home early", "It was still a good day, the weather was lovely"],
+      "images": [
+        "../../sign-up-image.png",
+        "../../background.png",
+        "../../sign-up-image.png",
+        "../../sign-up-image.png",
+        "../../background.png",
+        "../../background.png"
+      ]
     }
   ],
   "monthData": [

@@ -2,25 +2,29 @@ import {
   Badge,
   Box,
   Flex,
-  SimpleGrid,
+  List,
+  ListItem,
+  Paper,
   Space,
   Stack,
   Text,
   Title,
   useMantineTheme
 } from '@mantine/core';
+import { ArrowRightCircle } from 'react-feather';
+import MemryImage from './MemryImage.tsx';
 import { DayObject } from './ModalContent.tsx';
 
 const SavedMemrys = ({ data }: { data: DayObject }) => {
   const theme = useMantineTheme();
   return (
-    <Box mt={40} mb={40}>
+    <Box pt={20} mb={40}>
       <Flex mb={20} align={'center'}>
         <Title order={5} mr={10}>
           Tagged:
         </Title>
         {...data.tags.map((tag: string, index: number) => (
-          <Badge color={'blue'} size='xl' key={index}>
+          <Badge color={'blue'} size={"xl"} key={index}>
             <Flex>
               <Text tt={'none'} c={theme.white}>
                 {tag}
@@ -33,26 +37,41 @@ const SavedMemrys = ({ data }: { data: DayObject }) => {
       <Box mb={20}>
         <Title ta={'left'} order={5} mr={10}>
           Notes:
-        </Title>
-        {...data.notes.map((note: string, index: number) => (
-          <Text key={index} tt={'none'} c={theme.black}>
-            {note}
-          </Text>
-        ))}
+        </Title>{' '}
+        <List
+          spacing={"sm"}
+          size={"sm"}
+          ta={'left'}
+          icon={<ArrowRightCircle color={'white'} fill={'goldenrod'} />}
+          p={"xl"}
+          bd={'md'}
+        >
+          {...data.notes.map((note: string, index: number) => (
+            <Paper
+              component={ListItem}
+              ta={'left'}
+              shadow={"xs"}
+              p={"lg"}
+              bd={'md'}
+              withBorder
+              key={index}
+            >
+              <Text tt={'none'} c={theme.black}>
+                {note}
+              </Text>
+            </Paper>
+          ))}
+        </List>
       </Box>
       <Stack gap={20}>
         <Title ta={'left'} order={5} mr={10}>
           Photos:
         </Title>
-        <SimpleGrid cols={3} bd={'1px solid red'} mah={'400px'} w={'100%'}>
+        <Flex wrap={'wrap'}>
           {...data.images.map((imgSrc: string, index: number) => (
-            <img
-              src={imgSrc}
-              style={{ height: '200px', border: '1px solid red', objectFit: 'cover' }}
-              key={index}
-            ></img>
+            <MemryImage src={imgSrc} key={index} />
           ))}
-        </SimpleGrid>
+        </Flex>
       </Stack>
     </Box>
   );

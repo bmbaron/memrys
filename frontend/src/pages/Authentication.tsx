@@ -62,7 +62,7 @@ const Authentication = () => {
             <Text
               component={Title}
               fw={900}
-              variant='gradient'
+              variant={"gradient"}
               gradient={{ from: 'orange', to: 'cyan', deg: 90 }}
               style={{ fontSize: 40 }}
             >
@@ -73,46 +73,46 @@ const Authentication = () => {
             <Stack>
               {type === 'register' && (
                 <TextInput
-                  label='Name'
-                  placeholder='Your name'
+                  label={"Name"}
+                  placeholder={"Your name"}
                   value={form.values.name}
                   onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                  radius='md'
+                  radius={"md"}
                 />
               )}
               <TextInput
                 required
-                label='Email'
-                placeholder='hello@mantine.dev'
+                label={"Email"}
+                placeholder={"hello@mantine.dev"}
                 value={form.values.email}
                 onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
                 error={form.errors.email}
-                radius='md'
+                radius={"md"}
               />
               <PasswordInput
                 required
-                label='Password'
-                placeholder='Your password'
+                label={"Password"}
+                placeholder={"Your password"}
                 value={form.values.password}
                 onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
                 error={form.errors.password}
-                radius='md'
+                radius={"md"}
               />
               {type === 'register' && (
                 <>
                   <PasswordInput
                     required
-                    label=''
-                    placeholder='Confirm your password'
+                    label={""}
+                    placeholder={"Confirm your password"}
                     value={form.values.confirmPassword}
                     onChange={(event) =>
                       form.setFieldValue('confirmPassword', event.currentTarget.value)
                     }
                     error={form.errors.confirmPassword}
-                    radius='md'
+                    radius={"md"}
                   />
                   <Checkbox
-                    label='I accept terms and conditions'
+                    label={"I accept terms and conditions"}
                     checked={form.values.terms}
                     onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
                     error={form.errors.terms}
@@ -120,13 +120,13 @@ const Authentication = () => {
                 </>
               )}
             </Stack>
-            <Group justify='space-between' mt='xl'>
-              <Anchor component='button' type='button' c='dimmed' onClick={handleChange} size='xs'>
+            <Group justify={"space-between"} mt={"xl"}>
+              <Anchor component={"button"} type={"button"} c={"dimmed"} onClick={handleChange} size={"xs"}>
                 {type === 'register'
                   ? 'Already have an account? Login'
                   : "Don't have an account? Register"}
               </Anchor>
-              <Button type='submit' radius='xl'>
+              <Button type={"submit"} radius={"xl"}>
                 {upperFirst(type)}
               </Button>
             </Group>
