@@ -87,7 +87,9 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
         <Modal.Content>
           <Modal.Header m={'auto'} style={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}>
             <Modal.Title>
-              <Title order={1} fw={500}>{modalData.title}</Title>
+              <Text size={'xl'} fw={500}>
+                {modalData.title}
+              </Text>
             </Modal.Title>
             <Modal.CloseButton />
           </Modal.Header>

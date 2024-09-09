@@ -24,7 +24,7 @@ const SavedMemrys = ({ data }: { data: DayObject }) => {
           Tagged:
         </Title>
         {...data.tags.map((tag: string, index: number) => (
-          <Badge color={'blue'} size={"xl"} key={index}>
+          <Badge color={'blue'} size={'xl'} key={index}>
             <Flex>
               <Text tt={'none'} c={theme.white}>
                 {tag}
@@ -39,19 +39,19 @@ const SavedMemrys = ({ data }: { data: DayObject }) => {
           Notes:
         </Title>{' '}
         <List
-          spacing={"sm"}
-          size={"sm"}
+          spacing={'sm'}
+          size={'sm'}
           ta={'left'}
           icon={<ArrowRightCircle color={'white'} fill={'goldenrod'} />}
-          p={"xl"}
+          p={'xl'}
           bd={'md'}
         >
           {...data.notes.map((note: string, index: number) => (
             <Paper
               component={ListItem}
               ta={'left'}
-              shadow={"xs"}
-              p={"lg"}
+              shadow={'xs'}
+              p={'lg'}
               bd={'md'}
               withBorder
               key={index}

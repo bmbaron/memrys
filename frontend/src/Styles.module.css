@@ -10,3 +10,8 @@
 .icon-hover:hover {
   cursor: pointer;
 }
+
+.button-image:hover {
+  background-color: white;
+  opacity: 1 !important;
+}

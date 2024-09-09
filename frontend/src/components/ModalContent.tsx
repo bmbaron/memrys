@@ -34,6 +34,9 @@ export default ModalContent;
 
 const _AddButton = styled(Button)`
   background-color: ${({ theme }) => `${theme.white} !important`};
+  width: 160px;
+  height: 50px;
+  font-size: 20px;
   &:hover {
     background-color: ${({ theme }) => `${theme.white} !important`};
   }

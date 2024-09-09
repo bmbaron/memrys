@@ -16,7 +16,7 @@ const Header = () => {
           </Group>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>
             <Link to={'/auth?mode=login'}>
-              <Button variant={"default"}>Log in</Button>
+              <Button variant={'default'}>Log in</Button>
             </Link>
             <Link to={'/auth?mode=register'}>
               <Button>Sign up</Button>

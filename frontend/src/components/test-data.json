@@ -49,7 +49,11 @@
     {
       "date": "2024-09-28",
       "tags": ["Sam"],
-      "notes": ["we went to the park and it was really crowded not sure if we'll go back again", "Lewis was not feeling very well after the chocolate cake, so we decided to go home early", "It was still a good day, the weather was lovely"],
+      "notes": [
+        "we went to the park and it was really crowded not sure if we'll go back again",
+        "Lewis was not feeling very well after the chocolate cake, so we decided to go home early",
+        "It was still a good day, the weather was lovely"
+      ],
       "images": [
         "../../sign-up-image.png",
         "../../background.png",
