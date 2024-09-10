@@ -1,54 +1,98 @@
 {
   "dateData": [
-    { "date": "2024-08-1", "tags": [], "notes": ["helalkjnsdf"], "images": [] },
-    { "date": "2024-08-8", "tags": ["John"], "notes": [], "images": ["./", "./", "./"] },
+    {
+      "date": "2024-08-1",
+      "title": "This is a title",
+      "tags": [],
+      "location": "school",
+      "notes": ["helalkjnsdf"],
+      "images": []
+    },
+    {
+      "date": "2024-08-8",
+      "title": "This is a title",
+      "tags": ["John"],
+      "location": "school",
+      "notes": [],
+      "images": ["./", "./", "./"]
+    },
     {
       "date": "2024-08-15",
+      "title": "This is a title",
       "tags": ["John"],
+      "location": "school",
       "notes": ["we went to the park", "it was really crowded", "not sure if we'll go back again"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-08-16",
+      "title": "This is a title",
       "tags": ["Lisa"],
+      "location": "school",
       "notes": ["d", "e", "f"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-08-17",
+      "title": "This is a title",
       "tags": ["Sam"],
+      "location": "school",
       "notes": ["g", "h", "i"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-08-28",
+      "title": "This is a title",
       "tags": ["Sam"],
+      "location": "school",
       "notes": ["g", "h", "i"],
       "images": ["./", "./", "./"]
     },
-    { "date": "2024-09-1", "tags": [], "notes": ["helalkjnsdf"], "images": [] },
-    { "date": "2024-09-8", "tags": ["John"], "notes": [], "images": ["./", "./", "./"] },
+    {
+      "date": "2024-09-1",
+      "title": "This is a title",
+      "tags": [],
+      "location": "school",
+      "notes": ["helalkjnsdf"],
+      "images": []
+    },
+    {
+      "date": "2024-09-8",
+      "title": "This is a title",
+      "tags": ["John"],
+      "location": "school",
+      "notes": [],
+      "images": ["./", "./", "./"]
+    },
     {
       "date": "2024-09-15",
+      "title": "This is a title",
       "tags": ["John"],
+      "location": "school",
       "notes": ["we went to the park", "it was really crowded", "not sure if we'll go back again"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-09-16",
+      "title": "This is a title",
       "tags": ["Lisa"],
+      "location": "school",
       "notes": ["d", "e", "f"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-09-17",
+      "title": "This is a title",
       "tags": ["Sam"],
+      "location": "school",
       "notes": ["g", "h", "i"],
       "images": ["./", "./", "./"]
     },
     {
       "date": "2024-09-28",
+      "title": "This is a title",
       "tags": ["Sam"],
+      "location": "school",
       "notes": [
         "we went to the park and it was really crowded not sure if we'll go back again",
         "Lewis was not feeling very well after the chocolate cake, so we decided to go home early",
@@ -65,17 +109,50 @@
     }
   ],
   "monthData": [
-    { "month": "January", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "February", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "March", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "April", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
+    {
+      "month": "January",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "February",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "March",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "April",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
     { "month": "May", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "June", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "July", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "August", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "September", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "October", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "November", "stats": { "tags": 0, "notes": 0, "photos": 0 } },
-    { "month": "December", "stats": { "tags": 0, "notes": 0, "photos": 0 } }
+    {
+      "month": "June",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "July",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "August",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "September",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "October",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "November",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    },
+    {
+      "month": "December",
+      "stats": { "tags": 0, "notes": 0, "photos": 0 }
+    }
   ]
 }

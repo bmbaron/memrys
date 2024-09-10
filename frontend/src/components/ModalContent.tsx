@@ -1,44 +1,20 @@
-import styled from '@emotion/styled';
-import { Box, Button, ButtonProps, Text, createPolymorphicComponent } from '@mantine/core';
-import { useState } from 'react';
+import { Box } from '@mantine/core';
 import MemryForm from './MemryForm.tsx';
 import SavedMemrys from './SavedMemrys.tsx';
 import myData from './test-data.json';
 
 export type DayObject = {
   date: string;
+  title: string;
   tags: string[];
+  location: string;
   notes: string[];
   images: string[];
 };
 
 const ModalContent = ({ data }: { data: string }) => {
   const dayData = myData.dateData.find((obj: DayObject) => obj.date === data);
-  const [showForm, setShowForm] = useState(false);
-  return (
-    <Box ta={'center'}>
-      {dayData && !showForm ? (
-        <SavedMemrys data={dayData} />
-      ) : !showForm ? (
-        <Text size={'sm'} mt={30} mb={20}>
-          looks like there&apos;s nothing here yet
-        </Text>
-      ) : null}
-      {!showForm && <AddButton onClick={() => setShowForm(!showForm)}>add memry</AddButton>}
-      {showForm && <MemryForm setShowForm={setShowForm} />}
-    </Box>
-  );
+  return <Box ta={'center'}>{dayData ? <SavedMemrys data={dayData} /> : <MemryForm />}</Box>;
 };
 
 export default ModalContent;
-
-const _AddButton = styled(Button)`
-  background-color: ${({ theme }) => `${theme.white} !important`};
-  width: 160px;
-  height: 50px;
-  font-size: 20px;
-  &:hover {
-    background-color: ${({ theme }) => `${theme.white} !important`};
-  }
-`;
-const AddButton = createPolymorphicComponent<'button', ButtonProps>(_AddButton);

@@ -3,11 +3,9 @@ import {
   Button,
   Center,
   CloseButton,
-  FileInput, Flex,
+  Flex,
   Group,
   Image,
-  MultiSelect,
-  Select,
   Text,
   Textarea,
   TextInput
@@ -15,13 +13,9 @@ import {
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
 import React, { useState } from 'react';
-import { Headphones, Trash2 } from 'react-feather';
-import FeatherIcon from '../utils/getFeatherIcon.tsx';
-const MemryForm = ({
-  setShowForm
-}: {
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+import { Trash2 } from 'react-feather';
+import CreatableAutocomplete from './CreatableAutocomplete.tsx';
+const MemryForm = () => {
   const [addNote, setAddNote] = useState(0);
   const form = useForm({
     mode: 'uncontrolled',
@@ -50,7 +44,13 @@ const MemryForm = ({
             }}
           />
         </Text>
-        <Image key={index} h={200} w={200} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />
+        <Image
+          key={index}
+          h={200}
+          w={200}
+          src={imageUrl}
+          onLoad={() => URL.revokeObjectURL(imageUrl)}
+        />
       </Box>
     );
   });
@@ -65,27 +65,20 @@ const MemryForm = ({
     <form onSubmit={form.onSubmit((values) => console.log(values))}>
       <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
         <TextInput label={'Title'} required />
-        <MultiSelect
-          label={'Who'}
-          placeholder={'Who was there?'}
-          data={['Sam', 'Bi', 'Bong', 'Minh']}
-          required
-        />
-        <Select
+        <CreatableAutocomplete label={'Who'} data={['Sam', 'Bi', 'Bong', 'Minh']} />
+        <CreatableAutocomplete
           label={'Where'}
-          placeholder={'Where did it happen?'}
           data={[
             'Home',
             `School`,
             'Park',
             'Grandparents',
             'Game',
-            'Sports',
+            'Sports Event',
             'Doctor',
             'Party',
             'Birthday'
           ]}
-          required
         />
         <Textarea label={'Notes'} description={'What happened'} key={form.key('notes')} />
         {addNote > 0 &&
@@ -118,8 +111,8 @@ const MemryForm = ({
               cursor: 'pointer',
               padding: theme.spacing.md,
               '&:hover': {
-                backgroundColor: theme.colors.gray[0],
-              },
+                backgroundColor: theme.colors.gray[0]
+              }
             })}
             accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
             onDrop={(acceptedFiles: FileWithPath[]) => {
@@ -144,32 +137,29 @@ const MemryForm = ({
               <Text mb={5} mt={'md'}>
                 Selected files:
               </Text>
-              <Flex gap={40}>
-                {selectedFiles}
-              </Flex>
+              <Flex gap={40}>{selectedFiles}</Flex>
             </>
           )}
         </>
-        <FileInput
-          multiple
-          clearable
-          label={'Add photo(s)'}
-          description={'Upload some photos'}
-          placeholder={<Image />}
-          accept={'image/png,image/jpeg'}
-          key={form.key('photos')}
-        />
-        <FileInput
-          multiple
-          clearable
-          label={'Add audio file(s)'}
-          description={'Upload some recordings'}
-          placeholder={<FeatherIcon Type={Headphones} />}
-          accept={'audio/mpg,audio/ogg,audio/wav'}
-          key={form.key('audio')}
-        />
+        {/*<FileInput*/}
+        {/*    multiple*/}
+        {/*    clearable*/}
+        {/*    label={'Add photo(s)'}*/}
+        {/*    description={'Upload some photos'}*/}
+        {/*    placeholder={<Image />}*/}
+        {/*    accept={'image/png,image/jpeg'}*/}
+        {/*    key={form.key('photos')}*/}
+        {/*/>*/}
+        {/*<FileInput*/}
+        {/*    multiple*/}
+        {/*    clearable*/}
+        {/*    label={'Add audio file(s)'}*/}
+        {/*    description={'Upload some recordings'}*/}
+        {/*    placeholder={<FeatherIcon Type={Headphones} />}*/}
+        {/*    accept={'audio/mpg,audio/ogg,audio/wav'}*/}
+        {/*    key={form.key('audio')}*/}
+        {/*/>*/}
         <Group justify={'flex-end'} mt={'md'}>
-          <Button onClick={() => setShowForm(false)}>Cancel</Button>
           <Button bg={'green.7'} type={'submit'}>
             Submit
           </Button>

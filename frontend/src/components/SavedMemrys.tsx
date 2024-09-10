@@ -19,6 +19,9 @@ const SavedMemrys = ({ data }: { data: DayObject }) => {
   const theme = useMantineTheme();
   return (
     <Box pt={20} mb={40}>
+      <Text size={'xl'} fw={500}>
+        {data.title}
+      </Text>
       <Flex mb={20} align={'center'}>
         <Title order={5} mr={10}>
           Tagged:
@@ -32,6 +35,18 @@ const SavedMemrys = ({ data }: { data: DayObject }) => {
             </Flex>
           </Badge>
         ))}
+      </Flex>
+      <Flex mb={20} align={'center'}>
+        <Title order={5} mr={10}>
+          Location:
+        </Title>
+        <Badge color={'red'} size={'xl'}>
+          <Flex>
+            <Text tt={'none'} c={theme.white}>
+              {data.location}
+            </Text>
+          </Flex>
+        </Badge>
       </Flex>
       <Space h={'xl'} />
       <Box mb={20}>
