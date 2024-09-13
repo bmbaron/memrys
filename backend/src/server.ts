@@ -1,4 +1,5 @@
 import {Client} from 'pg';
+import 'dotenv/config';
 
 const client = new Client({
 	host: process.env.DB_HOST,
@@ -11,7 +12,7 @@ const client = new Client({
 client.connect();
 client.query(`Select * from tags`, (err, res) => {
 	if (!err) {
-		console.log(res.rows);
+		return (res.rows);
 	}
 	else {
 		console.log(err.message);

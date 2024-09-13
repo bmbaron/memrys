@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { monthNames } from '../utils/getMonth.ts';
 import CalendarGrid from './CalendarGrid.tsx';
 import myData from './test-data.json';
+import {useEffect, useState} from "react";
 
 export type MonthObject = {
   month: string;
@@ -17,6 +18,29 @@ const MyCarousel = () => {
   const currentMonth = dayjs().month();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const monthData = myData.monthData;
+
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchAPI();
+    if (error) {
+      console.log(error);
+    }
+  }, [])
+  const fetchAPI = async() => {
+    const url = "http://localhost:3000/tester";
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      console.log(json);
+    } catch (e: unknown) {
+      setError((e as Error).message);
+    }
+  }
+
   return (
     <Carousel
       slideSize={'100%'}

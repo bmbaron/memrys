@@ -73,6 +73,7 @@ const Authentication = () => {
             <Stack>
               {type === 'register' && (
                 <TextInput
+                  required
                   label={'Name'}
                   placeholder={'Your name'}
                   value={form.values.name}
