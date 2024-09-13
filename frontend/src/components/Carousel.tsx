@@ -20,6 +20,7 @@ const MyCarousel = () => {
   const monthData = myData.monthData;
 
   const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState({});
 
   useEffect(() => {
     fetchAPI();
@@ -27,15 +28,18 @@ const MyCarousel = () => {
       console.log(error);
     }
   }, [])
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
   const fetchAPI = async() => {
-    const url = "http://localhost:3000/tester";
+    const url = "http://localhost:3000/Tester";
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-      const json = await response.json();
-      console.log(json);
+      response.json().then((data) => setData(data));
     } catch (e: unknown) {
       setError((e as Error).message);
     }
@@ -55,6 +59,7 @@ const MyCarousel = () => {
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>
           <Card bg={theme.colors.months[index]} h={'100%'} px={140}>
+            {JSON.stringify(data)}
             <CalendarGrid
               monthNumber={index}
               stats={monthData.find((obj: MonthObject) => obj.month === month)}
