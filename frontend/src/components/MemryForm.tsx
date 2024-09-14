@@ -12,11 +12,13 @@ import {
 } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trash2 } from 'react-feather';
+import { getDBTags } from '../utils/getDBTags.ts';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
 const MemryForm = () => {
   const [addNote, setAddNote] = useState(0);
+  const [tags, setTags] = useState(['']);
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
@@ -28,6 +30,20 @@ const MemryForm = () => {
       audio: ['']
     }
   });
+
+  const fetchData = async () => {
+    try {
+      await getDBTags().then((tags: string[]) => {
+        setTags(tags);
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const selectedFiles = form.getValues().files.map((file: FileWithPath, index) => {
     const imageUrl = URL.createObjectURL(file);
@@ -65,7 +81,7 @@ const MemryForm = () => {
     <form onSubmit={form.onSubmit((values) => console.log(values))}>
       <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
         <TextInput label={'Title'} required />
-        <CreatableAutocomplete label={'Who'} data={['Sam', 'Bi', 'Bong', 'Minh']} />
+        <CreatableAutocomplete label={'Who'} data={tags} />
         <CreatableAutocomplete
           label={'Where'}
           data={[
