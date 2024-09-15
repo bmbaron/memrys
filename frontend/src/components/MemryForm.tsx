@@ -20,34 +20,31 @@ const MemryForm = () => {
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: {
+      title: 'hello',
       who: '',
       where: '',
       notes: [''],
-      files: [] as FileWithPath[],
-      photos: [''],
-      audio: ['']
+      photos: [] as FileWithPath[]
     }
   });
 
-  const fetchData = async () => {
-    try {
-      await getDBTags().then((tags: string[]) => {
-        setTags(tags);
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tags = await getDBTags();
+        setTags(tags);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     fetchData();
   }, []);
 
-  const selectedFiles = form.getValues().files.map((file: FileWithPath, index) => {
+  const selectedFiles = form.getValues().photos.map((file: FileWithPath, index) => {
     const imageUrl = URL.createObjectURL(file);
-    console.log(file);
     return (
       <Box key={file.name}>
         <Text>
@@ -55,7 +52,7 @@ const MemryForm = () => {
           <CloseButton
             size={'xs'}
             onClick={() => {
-              const updatedFiles = form.getValues().files.filter((_, i) => i !== index);
+              const updatedFiles = form.getValues().photos.filter((_, i) => i !== index);
               form.setFieldValue('files', updatedFiles); // Only set the updated list
             }}
           />
@@ -77,11 +74,30 @@ const MemryForm = () => {
       parent.remove();
     }
   };
+
+  const handleSubmit = () => {
+    form.onSubmit((values) => console.log(values));
+    if (!tags.includes(form.getValues().who)) {
+      console.log('new')
+    }
+  }
   return (
-    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+    <form onSubmit={handleSubmit}>
       <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
-        <TextInput label={'Title'} required />
-        <CreatableAutocomplete label={'Who'} data={tags} />
+        <TextInput
+          label={'Title'}
+          required
+          key={form.key('title')}
+          value={form.getValues().title}
+          onChange={(e) => form.setFieldValue('title', e.target.value)}
+        />
+        <CreatableAutocomplete
+          label={'Who'}
+          data={tags}
+          key={form.key('who')}
+          formValue={form.getValues().who}
+          updateValue={(value) => form.setFieldValue('who', value)}
+        />
         <CreatableAutocomplete
           label={'Where'}
           data={[
@@ -95,8 +111,11 @@ const MemryForm = () => {
             'Party',
             'Birthday'
           ]}
+          key={form.key('where')}
+          formValue={form.getValues().where}
+          updateValue={(value) => form.setFieldValue('where', value)}
         />
-        <Textarea label={'Notes'} description={'What happened'} key={form.key('notes')} />
+        <Textarea label={'Notes'} description={'What happened'} />
         {addNote > 0 &&
           [...Array(addNote)].map((_, index) => (
             <Box pos={'relative'} key={index}>
@@ -132,7 +151,7 @@ const MemryForm = () => {
             })}
             accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
             onDrop={(acceptedFiles: FileWithPath[]) => {
-              form.setFieldValue('files', [...form.getValues().files, ...acceptedFiles]);
+              form.setFieldValue('files', [...form.getValues().photos, ...acceptedFiles]);
             }}
             onReject={() => form.setFieldError('files', 'Select images only')}
           >
@@ -157,24 +176,6 @@ const MemryForm = () => {
             </>
           )}
         </>
-        {/*<FileInput*/}
-        {/*    multiple*/}
-        {/*    clearable*/}
-        {/*    label={'Add photo(s)'}*/}
-        {/*    description={'Upload some photos'}*/}
-        {/*    placeholder={<Image />}*/}
-        {/*    accept={'image/png,image/jpeg'}*/}
-        {/*    key={form.key('photos')}*/}
-        {/*/>*/}
-        {/*<FileInput*/}
-        {/*    multiple*/}
-        {/*    clearable*/}
-        {/*    label={'Add audio file(s)'}*/}
-        {/*    description={'Upload some recordings'}*/}
-        {/*    placeholder={<FeatherIcon Type={Headphones} />}*/}
-        {/*    accept={'audio/mpg,audio/ogg,audio/wav'}*/}
-        {/*    key={form.key('audio')}*/}
-        {/*/>*/}
         <Group justify={'flex-end'} mt={'md'}>
           <Button bg={'green.7'} type={'submit'}>
             Submit

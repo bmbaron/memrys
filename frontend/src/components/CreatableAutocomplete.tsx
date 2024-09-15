@@ -1,8 +1,22 @@
 import { Autocomplete } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const CreatableAutocomplete = ({ label, data }: { label: string; data: string[] }) => {
-  const [value, setValue] = useState('');
+const CreatableAutocomplete = ({
+  label,
+  data,
+  formValue,
+  updateValue
+}: {
+  label: string;
+  data: string[];
+  formValue: string;
+  updateValue: (value: string) => void;
+}) => {
+  const [value, setValue] = useState(formValue);
+
+  useEffect(() => {
+    updateValue(value);
+  }, [value]);
 
   return (
     <Autocomplete
