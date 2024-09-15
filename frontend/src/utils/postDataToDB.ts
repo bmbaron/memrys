@@ -1,12 +1,12 @@
-export const addNewDBTag = async (tagValue: string) => {
-  const url = `${import.meta.env.VITE_BACKEND_URL}/Tester`;
+export const postDataToDB = async (newValue: string, tableName: string) => {
+  const url = `${import.meta.env.VITE_BACKEND_URL}/${tableName}`;
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ tag: tagValue })
+      body: JSON.stringify({ value: newValue })
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);

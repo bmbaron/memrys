@@ -14,11 +14,13 @@ import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
 import React, { useEffect, useState } from 'react';
 import { Trash2 } from 'react-feather';
-import { getDBTags } from '../utils/getDBTags.ts';
+import {fetchDataFromTable} from '../utils/getDataFromDB.ts';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
+import {postDataToDB} from "../utils/postDataToDB.ts";
 const MemryForm = () => {
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
+  const [locations, setLocations] = useState(['']);
   const form = useForm({
     mode: 'controlled',
     initialValues: {
@@ -30,16 +32,20 @@ const MemryForm = () => {
     }
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tags = await getDBTags();
-        setTags(tags);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const tags = await fetchDataFromTable('tags');
+      setTags(tags);
+      console.log('tags', tags)
+      const locations = await fetchDataFromTable('locations')
+      console.log('locations', locations)
+      setLocations(locations);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -75,12 +81,17 @@ const MemryForm = () => {
     }
   };
 
-  const handleSubmit = () => {
-    form.onSubmit((values) => console.log(values));
-    if (!tags.includes(form.getValues().who)) {
-      console.log('new')
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const tagValue = form.getValues().who;
+    if (!tags.find((item) => item === tagValue)) {
+      postDataToDB(tagValue, 'tags');
     }
-  }
+    const locationValue = form.getValues().where;
+    if (!locations.find((item) => item === locationValue)) {
+      postDataToDB(locationValue, 'locations');
+    }
+  };
   return (
     <form onSubmit={handleSubmit}>
       <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
@@ -100,17 +111,7 @@ const MemryForm = () => {
         />
         <CreatableAutocomplete
           label={'Where'}
-          data={[
-            'Home',
-            `School`,
-            'Park',
-            'Grandparents',
-            'Game',
-            'Sports Event',
-            'Doctor',
-            'Party',
-            'Birthday'
-          ]}
+          data={locations}
           key={form.key('where')}
           formValue={form.getValues().where}
           updateValue={(value) => form.setFieldValue('where', value)}
