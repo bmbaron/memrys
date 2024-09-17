@@ -39,6 +39,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
     }
     return days;
   };
+
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
       <Flex ta={'left'} mx={25} my={20} justify={'space-between'} align={'center'}>
@@ -94,7 +95,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
             <Modal.CloseButton />
           </Modal.Header>
           <Modal.Body>
-            <ModalContent data={modalData.date} />
+            <ModalContent data={modalData.date} onClose={close} />
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>

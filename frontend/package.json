@@ -19,6 +19,7 @@
     "@mantine/form": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
     "@mantine/modals": "^7.12.2",
+    "@mantine/notifications": "^7.12.2",
     "dayjs": "^1.11.12",
     "embla-carousel-react": "^7.1.0",
     "prettier-plugin-organize-imports": "^4.0.0",

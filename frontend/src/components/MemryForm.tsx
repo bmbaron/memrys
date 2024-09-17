@@ -12,12 +12,14 @@ import {
 } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import React, { useEffect, useState } from 'react';
 import { Trash2 } from 'react-feather';
-import {fetchDataFromTable} from '../utils/getDataFromDB.ts';
+import { fetchDataFromTable } from '../utils/getDataFromDB.ts';
+import { postDataToDB } from '../utils/postDataToDB.ts';
+import { postMemryToDB } from '../utils/postMemryToDB.ts';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
-import {postDataToDB} from "../utils/postDataToDB.ts";
-const MemryForm = () => {
+const MemryForm = ({ onClose }: { onClose: () => void }) => {
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
@@ -25,8 +27,8 @@ const MemryForm = () => {
     mode: 'controlled',
     initialValues: {
       title: 'hello',
-      who: '',
-      where: '',
+      tag: 'Person',
+      location: 'school',
       notes: [''],
       photos: [] as FileWithPath[]
     }
@@ -36,9 +38,7 @@ const MemryForm = () => {
     try {
       const tags = await fetchDataFromTable('tags');
       setTags(tags);
-      console.log('tags', tags)
-      const locations = await fetchDataFromTable('locations')
-      console.log('locations', locations)
+      const locations = await fetchDataFromTable('locations');
       setLocations(locations);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -74,7 +74,7 @@ const MemryForm = () => {
     );
   });
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDeleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
     const parent = e.currentTarget.parentElement;
     if (parent) {
       parent.remove();
@@ -83,14 +83,23 @@ const MemryForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const tagValue = form.getValues().who;
+    const tagValue = form.getValues().tag;
     if (!tags.find((item) => item === tagValue)) {
       postDataToDB(tagValue, 'tags');
     }
-    const locationValue = form.getValues().where;
+    const locationValue = form.getValues().location;
     if (!locations.find((item) => item === locationValue)) {
       postDataToDB(locationValue, 'locations');
     }
+    postMemryToDB(form.getValues());
+    setTimeout(() => {
+      notifications.show({
+        color: 'green',
+        message: `Added memry: ${form.getValues().title}`,
+        autoClose: 2000
+      });
+    }, 700);
+    onClose();
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -105,16 +114,16 @@ const MemryForm = () => {
         <CreatableAutocomplete
           label={'Who'}
           data={tags}
-          key={form.key('who')}
-          formValue={form.getValues().who}
-          updateValue={(value) => form.setFieldValue('who', value)}
+          key={form.key('tag')}
+          formValue={form.getValues().tag}
+          updateValue={(value) => form.setFieldValue('tag', value)}
         />
         <CreatableAutocomplete
           label={'Where'}
           data={locations}
-          key={form.key('where')}
-          formValue={form.getValues().where}
-          updateValue={(value) => form.setFieldValue('where', value)}
+          key={form.key('location')}
+          formValue={form.getValues().location}
+          updateValue={(value) => form.setFieldValue('location', value)}
         />
         <Textarea label={'Notes'} description={'What happened'} />
         {addNote > 0 &&
@@ -128,7 +137,7 @@ const MemryForm = () => {
                 w={35}
                 h={35}
                 p={0}
-                onClick={handleDelete}
+                onClick={handleDeleteNote}
               >
                 <Trash2 />
               </Button>
