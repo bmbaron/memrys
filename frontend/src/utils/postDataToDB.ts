@@ -1,4 +1,4 @@
-export const postDataToDB = async (newValue: string, tableName: string) => {
+export const postTagOrLocationToDB = async (newValue: string, tableName: string) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/${tableName}`;
   try {
     const response = await fetch(url, {

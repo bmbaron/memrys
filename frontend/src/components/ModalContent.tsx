@@ -1,25 +1,35 @@
 import { Box } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { fetchMemryFromDB } from '../utils/getDataFromDB.ts';
 import MemryForm from './MemryForm.tsx';
 import SavedMemrys from './SavedMemrys.tsx';
-import myData from './test-data.json';
 
-export type DayObject = {
-  date: string;
+export type MemryObject = {
+  id: number;
+  created_at: string;
   title: string;
-  tags: string[];
+  tag: string;
   location: string;
-  notes: string[];
-  images: string[];
 };
 
-const ModalContent = ({ data, onClose }: { data: string; onClose: () => void }) => {
-  console.log(data);
-  fetchMemryFromDB(data);
-  const dayData = myData.dateData.find((obj: DayObject) => obj.date === data);
+const ModalContent = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void }) => {
+  const [newData, setNewData] = useState({} as MemryObject);
+  const fetchNewData = async () => {
+    try {
+      const newestData = await fetchMemryFromDB(dateUTC);
+      setNewData(newestData);
+    } catch (e: unknown) {
+      console.error((e as Error).message);
+    }
+  };
+
+  useEffect(() => {
+    fetchNewData();
+  }, []);
+
   return (
     <Box ta={'center'}>
-      {dayData ? <SavedMemrys data={dayData} /> : <MemryForm onClose={onClose} />}
+      {newData ? <SavedMemrys data={newData} /> : <MemryForm dateUTC={dateUTC} onClose={onClose} />}
     </Box>
   );
 };

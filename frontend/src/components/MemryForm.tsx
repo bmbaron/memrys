@@ -14,18 +14,19 @@ import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import React, { useEffect, useState } from 'react';
-import { Trash2 } from 'react-feather';
+import { Check, Trash2 } from 'react-feather';
 import { fetchDataFromTable } from '../utils/getDataFromDB.ts';
-import { postDataToDB } from '../utils/postDataToDB.ts';
+import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
 import { postMemryToDB } from '../utils/postMemryToDB.ts';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
-const MemryForm = ({ onClose }: { onClose: () => void }) => {
+const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void }) => {
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
   const form = useForm({
     mode: 'controlled',
     initialValues: {
+      dateUTC: dateUTC,
       title: 'hello',
       tag: 'Person',
       location: 'school',
@@ -81,24 +82,41 @@ const MemryForm = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  const showConfirmation = (response: string) => {
+    const id = notifications.show({
+      loading: true,
+      message: 'Sending data',
+      autoClose: false,
+      withCloseButton: false
+    });
+    setTimeout(() => {
+      notifications.update({
+        id,
+        color: 'teal',
+        title: 'Success!',
+        message: response,
+        icon: <Check style={{ width: 18, height: 18 }} />,
+        loading: false,
+        autoClose: 4000
+      });
+    }, 1000);
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const tagValue = form.getValues().tag;
     if (!tags.find((item) => item === tagValue)) {
-      postDataToDB(tagValue, 'tags');
+      void postTagOrLocationToDB(tagValue, 'tags');
     }
     const locationValue = form.getValues().location;
     if (!locations.find((item) => item === locationValue)) {
-      postDataToDB(locationValue, 'locations');
+      void postTagOrLocationToDB(locationValue, 'locations');
     }
-    postMemryToDB(form.getValues());
-    setTimeout(() => {
-      notifications.show({
-        color: 'green',
-        message: `Added memry: ${form.getValues().title}`,
-        autoClose: 2000
-      });
-    }, 700);
+    postMemryToDB(form.getValues()).then((response) => {
+      if (response.message) {
+        showConfirmation(response.message);
+      }
+      return;
+    });
     onClose();
   };
   return (

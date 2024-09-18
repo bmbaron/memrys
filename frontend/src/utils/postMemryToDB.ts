@@ -19,6 +19,8 @@ export const postMemryToDB = async (data: MemryData) => {
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
+    } else {
+      return response.json();
     }
   } catch (e: unknown) {
     console.error((e as Error).message);

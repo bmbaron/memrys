@@ -24,7 +24,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
   const theme = useMantineTheme();
 
   const getDayCards = (numDays: number, month: number) => {
-    const monthTwoDigits = month < 10 ? `0${month + 1}` : `${month + 1}`;
+    const monthTwoDigits = month < 9 ? `0${month + 1}` : `${month + 1}`;
     const days = [];
     for (let i = 0; i < numDays; i++) {
       days.push(
@@ -34,6 +34,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
           month={monthTwoDigits}
           setModalData={setModalData}
           open={open}
+          refresh={opened}
         />
       );
     }
@@ -95,7 +96,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
             <Modal.CloseButton />
           </Modal.Header>
           <Modal.Body>
-            <ModalContent data={modalData.date} onClose={close} />
+            <ModalContent dateUTC={modalData.date} onClose={close} />
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>

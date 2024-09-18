@@ -1,21 +1,21 @@
 import styled from '@emotion/styled';
-import { Badge, Card, CardProps, createPolymorphicComponent } from '@mantine/core';
+import { Badge, Box, Card, CardProps, createPolymorphicComponent } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchMemryFromDB } from '../utils/getDataFromDB.ts';
 import { getMonthName } from '../utils/getMonth.ts';
 import { getSuffix } from '../utils/getSuffix.ts';
 import { ModalDataType } from './CalendarGrid.tsx';
-import { DayObject } from './ModalContent.tsx';
-import myData from './test-data.json';
 const SingleDayCard = (data: {
   day: number;
   month: string;
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   open: () => void;
+  refresh: boolean;
 }) => {
-  const { day, month, setModalData, open } = data;
+  const { day, month, setModalData, open, refresh } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   let dayString = `${dayjs().year()}-${month}-${day}`;
@@ -23,9 +23,23 @@ const SingleDayCard = (data: {
     dayString = `${dayjs().year()}-${month}-0${day}`;
   }
   const isToday = dayString === dayjs().toISOString().slice(0, 10);
-  const hasData = myData.dateData.find((obj: DayObject) => obj.date === dayString);
+  // const hasData = myData.dateData.find((obj: DayObject) => obj.date === dayString);
+  const [tag, setTag] = useState('');
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const fetchNewData = async () => {
+    try {
+      const dayData = await fetchMemryFromDB(dayString);
+      setTag(dayData.tag);
+    } catch (e: unknown) {
+      console.error((e as Error).message);
+    }
+  };
+
+  useEffect(() => {
+    fetchNewData();
+  }, [refresh]);
+
   const handleClick = () => {
     setModalData({
       title: `${dayName}, ${monthName} ${day}${getSuffix(day)}`,
@@ -48,42 +62,39 @@ const SingleDayCard = (data: {
       isToday={isToday}
       onClick={handleClick}
     >
-      {hasData && hasData.notes.length > 0 ? (
-        <Badge pos={'absolute'} top={2} right={2} color={'blue'} size={'md'} circle>
-          {hasData.notes.length}
-        </Badge>
+      {/*{hasData && hasData.notes.length > 0 ? (*/}
+      {/*  <Badge pos={'absolute'} top={2} right={2} color={'blue'} size={'md'} circle>*/}
+      {/*    {hasData.notes.length}*/}
+      {/*  </Badge>*/}
+      {/*) : null}*/}
+      {tag ? (
+        <Box pos={'absolute'} top={-5} left={0} w={100} ta={'center'}>
+          <Badge bg={'blue'} c={'white'} h={20} maw={60} lh={'25px'} fw={600} size={'xs'}>
+            {tag}
+          </Badge>
+        </Box>
       ) : null}
-      {hasData && hasData.tags.length > 0 ? (
-        <Badge pos={'absolute'} top={2} right={24} color={'yellow'} size={'md'} circle>
-          {hasData.tags.length}
-        </Badge>
-      ) : null}
-      {hasData && hasData.images.length > 0 ? (
-        <Badge pos={'absolute'} top={2} right={46} color={'red'} size={'md'} circle>
-          {hasData.images.length}
-        </Badge>
-      ) : null}
+      {/*{hasData && hasData.images.length > 0 ? (*/}
+      {/*  <Badge pos={'absolute'} top={2} right={46} color={'red'} size={'md'} circle>*/}
+      {/*    {hasData.images.length}*/}
+      {/*  </Badge>*/}
+      {/*) : null}*/}
       {day}
       {isToday && (
         <Badge
-          color={'black'}
+          c={'rgb(255, 255, 0)'}
+          fz={12}
+          bg={'black'}
           display={'flex'}
-          w={40}
-          p={5}
-          style={{ overflow: 'visible', textTransform: 'none', fontSize: 9 }}
+          w={60}
+          p={10}
+          ml={-10}
+          style={{ overflow: 'visible', textTransform: 'none' }}
         >
           today
         </Badge>
       )}
     </DayCard>
-    // </HoverCard.Target>
-    // <HoverCard.Dropdown w={'fit-content'}>
-    //   <Text size="sm">
-    //     {/*from the locale weekdays names, return the name of the current weekday*/}
-    //     {dayName}
-    //   </Text>
-    // </HoverCard.Dropdown>
-    // </HoverCard>
   );
 };
 
@@ -95,7 +106,6 @@ const _DayCard = styled(Card, {
   flexBasis: is31st ? '100%' : 'auto',
   marginLeft: is31st ? '7.5px !important' : 'unset',
   marginRight: is31st ? '7.5px !important' : 'unset',
-  background: isToday ? 'yellow' : 'auto',
   opacity: isToday ? 1 : 0.85,
   '&:hover': {
     cursor: 'pointer',
