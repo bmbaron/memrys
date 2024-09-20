@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Router } from 'express';
 import { PoolClient } from 'pg';
-import pool from '../src/db';
+import pool from '../src/dbConfig';
 
 const router = Router();
 router.get('/', async (req, res) => {

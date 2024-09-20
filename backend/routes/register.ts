@@ -25,28 +25,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  let client: PoolClient | undefined;
-  try {
-    client = await pool.connect();
-    const { dateUTC, title, tag, location } = req.body;
-    if (!title || !tag || !location) {
-      return res.status(400).json({ error: 'Missing title, tag, or location' });
-    }
-    const queryText =
-      'INSERT INTO submissions (created_at, title, tag, location) VALUES ($1, $2, $3, $4) RETURNING title';
-    const values = [dateUTC, title, tag, location];
-    const result = await client.query(queryText, values);
-    res.status(201).json({
-      message: `Added memry: ${result.rows[0].title}`
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Something went wrong' });
-  } finally {
-    if (client) {
-      client.release();
-    }
+router.post('/',  (req, res) => {
+  const { name, email, password, password2 } = req.body;
+  console.log(req.body);
+
+  let errors = [];
+
+  if (!name || !email || !password || !password2) {
+
   }
 });
 export default router;

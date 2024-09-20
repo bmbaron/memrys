@@ -14,14 +14,14 @@ import {
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
 import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
+import {postRegister} from "../utils/postRegister.ts";
 
 const Authentication = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('mode');
   const [type, toggle] = useToggle(['login', 'register']);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (query && type !== query) {
@@ -34,19 +34,19 @@ const Authentication = () => {
     toggle();
   };
 
-  const form = useForm({
+  const myForm = useForm({
     initialValues: {
       email: '',
       name: '',
       password: '',
-      confirmPassword: '',
+      password2: '',
       terms: false
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
       password: (value) =>
         value.length <= 6 ? 'Password should include at least 6 characters' : null,
-      confirmPassword: (value, values) =>
+      password2: (value, values) =>
         value !== values.password ? 'Passwords did not match' : null,
       terms: (value) => !value && 'Please accept the terms'
     }
@@ -69,15 +69,15 @@ const Authentication = () => {
               memrys
             </Text>
           </Flex>
-          <form onSubmit={() => navigate('/')}>
+          <form onSubmit={myForm.onSubmit((values) => postRegister(values))}>
             <Stack>
               {type === 'register' && (
                 <TextInput
                   required
                   label={'Name'}
                   placeholder={'Your name'}
-                  value={form.values.name}
-                  onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                  value={myForm.values.name}
+                  onChange={(event) => myForm.setFieldValue('name', event.currentTarget.value)}
                   radius={'md'}
                 />
               )}
@@ -85,18 +85,18 @@ const Authentication = () => {
                 required
                 label={'Email'}
                 placeholder={'hello@mantine.dev'}
-                value={form.values.email}
-                onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                error={form.errors.email}
+                value={myForm.values.email}
+                onChange={(event) => myForm.setFieldValue('email', event.currentTarget.value)}
+                error={myForm.errors.email}
                 radius={'md'}
               />
               <PasswordInput
                 required
                 label={'Password'}
                 placeholder={'Your password'}
-                value={form.values.password}
-                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                error={form.errors.password}
+                value={myForm.values.password}
+                onChange={(event) => myForm.setFieldValue('password', event.currentTarget.value)}
+                error={myForm.errors.password}
                 radius={'md'}
               />
               {type === 'register' && (
@@ -105,18 +105,18 @@ const Authentication = () => {
                     required
                     label={''}
                     placeholder={'Confirm your password'}
-                    value={form.values.confirmPassword}
+                    value={myForm.values.password2}
                     onChange={(event) =>
-                      form.setFieldValue('confirmPassword', event.currentTarget.value)
+                      myForm.setFieldValue('password2', event.currentTarget.value)
                     }
-                    error={form.errors.confirmPassword}
+                    error={myForm.errors.password2}
                     radius={'md'}
                   />
                   <Checkbox
                     label={'I accept terms and conditions'}
-                    checked={form.values.terms}
-                    onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-                    error={form.errors.terms}
+                    checked={myForm.values.terms}
+                    onChange={(event) => myForm.setFieldValue('terms', event.currentTarget.checked)}
+                    error={myForm.errors.terms}
                   />
                 </>
               )}
