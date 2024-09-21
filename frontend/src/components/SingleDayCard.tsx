@@ -30,14 +30,16 @@ const SingleDayCard = (data: {
   const fetchNewData = async () => {
     try {
       const dayData = await fetchMemryFromDB(dayString);
-      setTag(dayData.tag);
-    } catch (e: unknown) {
-      console.error((e as Error).message);
+      if (dayData && dayData.tag) {
+        setTag(dayData.tag);
+      }
+    } catch (err: unknown) {
+      console.error((err as Error).message);
     }
   };
 
   useEffect(() => {
-    fetchNewData();
+    void fetchNewData();
   }, [refresh]);
 
   const handleClick = () => {

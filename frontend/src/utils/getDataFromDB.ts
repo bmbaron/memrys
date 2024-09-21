@@ -22,8 +22,8 @@ export const fetchMemryFromDB = async (date: string) => {
     }
     const data = await response.json();
     return data[0];
-  } catch (e: unknown) {
-    console.error((e as Error).message);
-    return null;
+  } catch (err: unknown) {
+    console.error((err as Error).message);
+    throw err;
   }
 };

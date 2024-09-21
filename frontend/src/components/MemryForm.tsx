@@ -12,12 +12,12 @@ import {
 } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
-import { notifications } from '@mantine/notifications';
 import React, { useEffect, useState } from 'react';
-import { Check, Trash2 } from 'react-feather';
+import { Trash2 } from 'react-feather';
 import { fetchDataFromTable } from '../utils/getDataFromDB.ts';
 import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
 import { postMemryToDB } from '../utils/postMemryToDB.ts';
+import showConfirmation from '../utils/showConfirmation.tsx';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
 const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void }) => {
   const [addNote, setAddNote] = useState(0);
@@ -81,26 +81,6 @@ const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void 
       parent.remove();
     }
   };
-
-  const showConfirmation = (response: string) => {
-    const id = notifications.show({
-      loading: true,
-      message: 'Sending data',
-      autoClose: false,
-      withCloseButton: false
-    });
-    setTimeout(() => {
-      notifications.update({
-        id,
-        color: 'teal',
-        title: 'Success!',
-        message: response,
-        icon: <Check style={{ width: 18, height: 18 }} />,
-        loading: false,
-        autoClose: 4000
-      });
-    }, 1000);
-  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const tagValue = form.getValues().tag;
@@ -113,7 +93,7 @@ const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void 
     }
     postMemryToDB(form.getValues()).then((response) => {
       if (response.message) {
-        showConfirmation(response.message);
+        showConfirmation(response.message, 2000, 4000);
       }
       return;
     });

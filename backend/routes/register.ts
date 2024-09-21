@@ -1,38 +1,25 @@
+import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import { Router } from 'express';
-import { PoolClient } from 'pg';
 import pool from '../src/dbConfig';
 
 const router = Router();
-router.get('/', async (req, res) => {
-  const date = req.query.date as string;
-  let client: PoolClient | undefined;
-  try {
-    client = await pool.connect();
-    // const query = 'SELECT * FROM submissions WHERE date::date > $1';
-    const query = 'SELECT * FROM submissions WHERE created_at = $1';
-    let now_utc = new Date(date);
-    const values = [now_utc];
-    const result = await client.query(query, values);
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Something went wrong' });
-  } finally {
-    if (client) {
-      client.release();
-    }
-  }
-});
-
-router.post('/',  (req, res) => {
+router.post('/', async (req, res) => {
   const { name, email, password, password2 } = req.body;
-  console.log(req.body);
-
-  let errors = [];
-
+  let newPool = await pool.connect();
   if (!name || !email || !password || !password2) {
-
+    return res.status(400).json({ error: 'Please make sure all fields are filled out' });
+  } else {
+    let hashedPassword = await bcrypt.hash(password, 10);
+    const values = [name, email, hashedPassword];
+    const queryText = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id';
+    const result = await newPool.query(queryText, values);
+    const newTagId = result.rows[0].id;
+    console.log(newTagId);
+    return res.status(201).json({});
+  }
+  if (newPool) {
+    newPool.release();
   }
 });
 export default router;

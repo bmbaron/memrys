@@ -13,44 +13,87 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
-import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { FormEvent, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
-import {postRegister} from "../utils/postRegister.ts";
+import { postLogin, postRegister } from '../utils/postAuth.ts';
+import showConfirmation from '../utils/showConfirmation.tsx';
 
 const Authentication = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('mode');
-  const [type, toggle] = useToggle(['login', 'register']);
+  const [formType, toggle] = useToggle(['login', 'register']);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (query && type !== query) {
+    if (query && formType !== query) {
       toggle(query);
     }
   }, []);
 
   const handleChange = () => {
-    setSearchParams(`mode=${type === 'login' ? 'register' : 'login'}`);
+    setSearchParams(`mode=${formType === 'login' ? 'register' : 'login'}`);
     toggle();
   };
 
   const myForm = useForm({
     initialValues: {
-      email: '',
-      name: '',
-      password: '',
-      password2: '',
-      terms: false
+      name: 'a',
+      email: 'a@a.com',
+      password: '111111',
+      password2: '111111',
+      terms: true
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
       password: (value) =>
-        value.length <= 6 ? 'Password should include at least 6 characters' : null,
-      password2: (value, values) =>
-        value !== values.password ? 'Passwords did not match' : null,
+        value.length < 6 ? 'Password should include at least 6 characters' : null,
+      password2: (value, values) => (value !== values.password ? 'Passwords did not match' : null),
       terms: (value) => !value && 'Please accept the terms'
     }
   });
+
+  const handleRegister = async () => {
+    try {
+      await postRegister(myForm.getValues());
+    } catch (err: unknown) {
+      console.log(err);
+      alert(err as Error);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      await postLogin(myForm.getValues()).then((res) => alert(res.message));
+    } catch (err: unknown) {
+      console.log(err);
+      alert(err as Error);
+    }
+  };
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const loadTime = 2000;
+    const closeTime = 2000;
+    if (formType === 'register') {
+      await handleRegister();
+    } else {
+      await handleLogin();
+    }
+    showConfirmation(
+      formType === 'register' ? 'Please login' : 'You are now logged in',
+      loadTime,
+      closeTime
+    );
+    setTimeout(() => {
+      myForm.reset();
+      if (formType === 'register') {
+        setSearchParams('mode=login');
+        toggle();
+      } else {
+        navigate('/');
+      }
+    }, loadTime + closeTime);
+  };
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30} pt={70}>
@@ -69,9 +112,9 @@ const Authentication = () => {
               memrys
             </Text>
           </Flex>
-          <form onSubmit={myForm.onSubmit((values) => postRegister(values))}>
+          <form onSubmit={handleSubmit}>
             <Stack>
-              {type === 'register' && (
+              {formType === 'register' && (
                 <TextInput
                   required
                   label={'Name'}
@@ -84,7 +127,7 @@ const Authentication = () => {
               <TextInput
                 required
                 label={'Email'}
-                placeholder={'hello@mantine.dev'}
+                placeholder={'hello@test.com'}
                 value={myForm.values.email}
                 onChange={(event) => myForm.setFieldValue('email', event.currentTarget.value)}
                 error={myForm.errors.email}
@@ -99,7 +142,7 @@ const Authentication = () => {
                 error={myForm.errors.password}
                 radius={'md'}
               />
-              {type === 'register' && (
+              {formType === 'register' && (
                 <>
                   <PasswordInput
                     required
@@ -129,12 +172,12 @@ const Authentication = () => {
                 onClick={handleChange}
                 size={'xs'}
               >
-                {type === 'register'
+                {formType === 'register'
                   ? 'Already have an account? Login'
                   : "Don't have an account? Register"}
               </Anchor>
               <Button type={'submit'} radius={'xl'}>
-                {upperFirst(type)}
+                {upperFirst(formType)}
               </Button>
             </Group>
           </form>
