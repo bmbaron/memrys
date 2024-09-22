@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../src/dbConfig';
+import pool from '../dbConfig';
 
 const router = Router();
 router.get('/', async (req, res) => {
-  let newPool = await pool.connect();
+  const newPool = await pool.connect();
   try {
     const result = await newPool.query('SELECT * FROM tags');
     res.json(result.rows);
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  let newPool = await pool.connect();
+  const newPool = await pool.connect();
   try {
     const { value } = req.body;
     if (!value) {

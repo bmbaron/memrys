@@ -34,7 +34,8 @@ const postLogin = async (data: { email: string; password: string }) => {
   const loginURL = url + `?email=${email}&password=${password}`;
   try {
     const response = await fetch(loginURL, {
-      method: 'Get'
+      method: 'Get',
+      credentials: 'include'
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);

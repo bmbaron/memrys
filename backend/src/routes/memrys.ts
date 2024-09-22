@@ -1,14 +1,17 @@
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../src/dbConfig';
+import pool from '../dbConfig';
 
 const router = Router();
 router.get('/', async (req, res) => {
   const date = req.query.date as string;
-  let newPool = await pool.connect();
+  if (req.headers.cookie) {
+    console.log(req.headers.cookie || 'no cookie');
+  } else console.log('no');
+  const newPool = await pool.connect();
   try {
     const query = 'SELECT * FROM submissions WHERE created_at = $1';
-    let now_utc = new Date(date);
+    const now_utc = new Date(date);
     const values = [now_utc];
     const result = await newPool.query(query, values);
     res.json(result.rows);
@@ -23,7 +26,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  let newPool = await pool.connect();
+  const newPool = await pool.connect();
   try {
     const { dateUTC, title, tag, location } = req.body;
     if (!title || !tag || !location) {

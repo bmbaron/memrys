@@ -16,7 +16,7 @@ export const fetchDataFromTable = async (tableName: string) => {
 export const fetchMemryFromDB = async (date: string) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/memrys?date=${date}`;
   try {
-    const response = await fetch(url, { method: 'GET' });
+    const response = await fetch(url, { method: 'GET', credentials: 'include' });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }

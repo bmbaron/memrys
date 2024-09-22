@@ -1,13 +1,15 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../src/dbConfig';
+import jwt from 'jsonwebtoken';
+import pool from '../dbConfig';
 
 const router = Router();
+const isProd = process.env.NODE_ENV === 'production';
 router.get('/', async (req, res) => {
   const email = req.query.email as string;
   const password = req.query.password as string;
-  let newPool = await pool.connect();
+  const newPool = await pool.connect();
   try {
     const values = [email];
     const query = 'SELECT * FROM users WHERE email = $1';
@@ -19,7 +21,27 @@ router.get('/', async (req, res) => {
           throw err;
         }
         if (result) {
-          res.json({ message: `Welcome back ${user.name}!` });
+          jwt.sign(
+            {
+              userID: user.id
+            },
+            process.env.JWT_SECRET!,
+            { expiresIn: '10m' },
+            (err, token) => {
+              if (err) {
+                throw err;
+              }
+              if (token) {
+                res.cookie('token', token, {
+                  httpOnly: true,
+                  secure: isProd,
+                  sameSite: isProd ? 'strict' : 'none',
+                  path: '/'
+                });
+                res.json({ message: `Welcome back ${user.name}!` });
+              }
+            }
+          );
         }
       });
     }

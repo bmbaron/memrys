@@ -1,24 +1,26 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
-import LocationsRoute from '../routes/locations';
-import LoginRoute from '../routes/login';
-import MemrysRoute from '../routes/memrys';
-import RegisterRoute from '../routes/register';
-import TagsRoute from '../routes/tags';
+import LocationsRoute from './routes/locations';
+import LoginRoute from './routes/login';
+import MemrysRoute from './routes/memrys';
+import RegisterRoute from './routes/register';
+import TagsRoute from './routes/tags';
 
 export const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: ['http://localhost:5173']
+    credentials: true,
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173']
   }),
   express.json()
 );
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript Express!');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 });
 
 app.use('/tags', TagsRoute);

@@ -64,7 +64,7 @@ const Authentication = () => {
 
   const handleLogin = async () => {
     try {
-      await postLogin(myForm.getValues()).then((res) => alert(res.message));
+      await postLogin(myForm.getValues()).then((res) => alert(JSON.stringify(res)));
     } catch (err: unknown) {
       console.log(err);
       alert(err as Error);
