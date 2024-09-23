@@ -14,12 +14,20 @@ import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
 import React, { useEffect, useState } from 'react';
 import { Trash2 } from 'react-feather';
-import { fetchDataFromTable } from '../utils/getDataFromDB.ts';
+import { fetchTagOrLocation } from '../utils/getDataFromDB.ts';
 import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
 import { postMemryToDB } from '../utils/postMemryToDB.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
 import CreatableAutocomplete from './CreatableAutocomplete.tsx';
-const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void }) => {
+const MemryForm = ({
+  dateUTC,
+  onClose,
+  onReload
+}: {
+  dateUTC: string;
+  onClose: () => void;
+  onReload: () => void;
+}) => {
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
@@ -37,9 +45,9 @@ const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void 
 
   const fetchData = async () => {
     try {
-      const tags = await fetchDataFromTable('tags');
+      const tags = await fetchTagOrLocation('tags');
       setTags(tags);
-      const locations = await fetchDataFromTable('locations');
+      const locations = await fetchTagOrLocation('locations');
       setLocations(locations);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -95,6 +103,7 @@ const MemryForm = ({ dateUTC, onClose }: { dateUTC: string; onClose: () => void 
       if (response.message) {
         showConfirmation(response.message, 2000, 4000);
       }
+      onReload();
       return;
     });
     onClose();

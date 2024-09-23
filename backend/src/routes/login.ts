@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
               userID: user.id
             },
             process.env.JWT_SECRET!,
-            { expiresIn: '10m' },
+            { expiresIn: '1s' },
             (err, token) => {
               if (err) {
                 throw err;
@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
                 res.cookie('token', token, {
                   httpOnly: true,
                   secure: isProd,
-                  sameSite: isProd ? 'strict' : 'none',
+                  sameSite: isProd ? 'strict' : 'strict',
                   path: '/'
                 });
                 res.json({ message: `Welcome back ${user.name}!` });

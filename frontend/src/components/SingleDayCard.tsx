@@ -4,18 +4,17 @@ import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import React, { useEffect, useState } from 'react';
-import { fetchMemryFromDB } from '../utils/getDataFromDB.ts';
 import { getMonthName } from '../utils/getMonth.ts';
 import { getSuffix } from '../utils/getSuffix.ts';
-import { ModalDataType } from './CalendarGrid.tsx';
+import { dayData, ModalDataType } from './MonthGrid.tsx';
 const SingleDayCard = (data: {
   day: number;
   month: string;
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   open: () => void;
-  refresh: boolean;
+  dayData?: dayData;
 }) => {
-  const { day, month, setModalData, open, refresh } = data;
+  const { day, month, setModalData, open, dayData } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   let dayString = `${dayjs().year()}-${month}-${day}`;
@@ -27,20 +26,12 @@ const SingleDayCard = (data: {
   const [tag, setTag] = useState('');
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const fetchNewData = async () => {
-    try {
-      const dayData = await fetchMemryFromDB(dayString);
-      if (dayData && dayData.tag) {
-        setTag(dayData.tag);
-      }
-    } catch (err: unknown) {
-      console.error((err as Error).message);
-    }
-  };
 
   useEffect(() => {
-    void fetchNewData();
-  }, [refresh]);
+    if (dayData) {
+      setTag(dayData.tag);
+    }
+  }, [dayData]);
 
   const handleClick = () => {
     setModalData({

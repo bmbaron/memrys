@@ -1,8 +1,9 @@
 import { Badge, Container, Flex, Modal, Paper, Text, Title, useMantineTheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'react-feather';
+import { fetchMonthMemrys } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import { MonthObject } from './Carousel.tsx';
 import ModalContent from './ModalContent.tsx';
@@ -12,34 +13,61 @@ export type ModalDataType = {
   title: string;
   date: string;
 };
+
+export type dayData = {
+  created_at: string;
+  location: string;
+  tag: string;
+  title: string;
+};
 const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
   return date.daysInMonth();
 };
-const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
-  const { monthNumber, stats } = data;
+const MonthGrid = (data: { monthNumber: number; stats?: MonthObject; shouldLoad: boolean }) => {
+  const { monthNumber, stats, shouldLoad } = data;
   const monthDays = getMonthDays(monthNumber);
   const [opened, { open, close }] = useDisclosure(false);
   const [modalData, setModalData] = useState<ModalDataType>({ title: '', date: '' });
   const theme = useMantineTheme();
+  const [monthData, setMonthData] = useState<dayData[]>([]);
+  const fetchMonthData = async () => {
+    try {
+      const data = await fetchMonthMemrys(`2024-${monthNumber + 1}-01`);
+      setMonthData(data);
+    } catch (err: unknown) {
+      console.error((err as Error).message);
+    }
+  };
+
+  useEffect(() => {
+    if (shouldLoad) {
+      void fetchMonthData();
+    }
+  }, [shouldLoad]);
 
   const getDayCards = (numDays: number, month: number) => {
     const monthTwoDigits = month < 9 ? `0${month + 1}` : `${month + 1}`;
     const days = [];
-    for (let i = 0; i < numDays; i++) {
+    for (let i = 1; i <= numDays; i++) {
+      const dayData = monthData.find((obj) => dayjs(obj.created_at).date() === i);
       days.push(
         <SingleDayCard
           key={i}
-          day={i + 1}
+          day={i}
           month={monthTwoDigits}
           setModalData={setModalData}
           open={open}
-          refresh={opened}
+          dayData={dayData}
         />
       );
     }
     return days;
   };
+
+  if (!data.shouldLoad) {
+    return;
+  }
 
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
@@ -67,16 +95,18 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
           <FeatherIcon Type={Search} style={{ marginLeft: 20, marginRight: 10 }} hasHover />
         </Flex>
       </Flex>
-      <Container
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        {getDayCards(monthDays, monthNumber)}
-      </Container>
+      {shouldLoad && (
+        <Container
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          {getDayCards(monthDays, monthNumber)}
+        </Container>
+      )}
       <Modal.Root
         opened={opened}
         onClose={close}
@@ -96,7 +126,7 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
             <Modal.CloseButton />
           </Modal.Header>
           <Modal.Body>
-            <ModalContent dateUTC={modalData.date} onClose={close} />
+            <ModalContent dateUTC={modalData.date} onClose={close} onReload={fetchMonthData} />
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>
@@ -104,4 +134,4 @@ const CalendarGrid = (data: { monthNumber: number; stats?: MonthObject }) => {
   );
 };
 
-export default CalendarGrid;
+export default MonthGrid;

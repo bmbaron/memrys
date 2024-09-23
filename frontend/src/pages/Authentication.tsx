@@ -57,7 +57,7 @@ const Authentication = () => {
     try {
       await postRegister(myForm.getValues());
     } catch (err: unknown) {
-      console.log(err);
+      console.error(err);
       alert(err as Error);
     }
   };

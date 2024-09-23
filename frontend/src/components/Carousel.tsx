@@ -2,8 +2,9 @@ import { Carousel } from '@mantine/carousel';
 import { Card, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { monthNames } from '../utils/getMonth.ts';
-import CalendarGrid from './CalendarGrid.tsx';
+import MonthGrid from './MonthGrid.tsx';
 import myData from './test-data.json';
 
 export type MonthObject = {
@@ -14,9 +15,9 @@ export type MonthObject = {
 };
 const MyCarousel = () => {
   const theme = useMantineTheme();
-  const currentMonth = dayjs().month();
   const isMobile = useMediaQuery('(max-width: 800px)');
   const monthData = myData.monthData;
+  const [currentSlide, setCurrentSlide] = useState(dayjs().month());
 
   return (
     <Carousel
@@ -27,14 +28,16 @@ const MyCarousel = () => {
       controlSize={100}
       loop
       withControls={isMobile ? false : true}
-      initialSlide={currentMonth}
+      initialSlide={dayjs().month()}
+      onSlideChange={(index: number) => setCurrentSlide(index)}
     >
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>
           <Card bg={theme.colors.months[index]} h={'100%'} px={140}>
-            <CalendarGrid
+            <MonthGrid
               monthNumber={index}
               stats={monthData.find((obj: MonthObject) => obj.month === month)}
+              shouldLoad={currentSlide === index}
             />
           </Card>
         </Carousel.Slide>

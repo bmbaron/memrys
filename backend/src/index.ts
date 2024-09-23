@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
 import MemrysRoute from './routes/memrys';
+import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import TagsRoute from './routes/tags';
 
@@ -26,6 +27,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/tags', TagsRoute);
 app.use('/locations', LocationsRoute);
 app.use('/memrys', MemrysRoute);
+app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
 
