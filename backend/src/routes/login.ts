@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 import pool from '../dbConfig';
 
 const router = Router();
-const isProd = process.env.NODE_ENV === 'production';
 router.get('/', async (req, res) => {
   const email = req.query.email as string;
   const password = req.query.password as string;
+  console.log(email, password);
   const newPool = await pool.connect();
   try {
     const values = [email];
@@ -18,15 +18,16 @@ router.get('/', async (req, res) => {
       const user = result.rows[0];
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
+          console.log(err);
           throw err;
         }
-        if (result) {
+        if (result === true) {
           jwt.sign(
             {
-              userID: user.id
+              userID: user.id as number
             },
             process.env.JWT_SECRET!,
-            { expiresIn: '1s' },
+            { expiresIn: '2000s' },
             (err, token) => {
               if (err) {
                 throw err;
@@ -34,14 +35,18 @@ router.get('/', async (req, res) => {
               if (token) {
                 res.cookie('token', token, {
                   httpOnly: true,
-                  secure: isProd,
-                  sameSite: isProd ? 'strict' : 'strict',
+                  secure: process.env.NODE_ENV === 'production',
+                  sameSite: 'strict',
                   path: '/'
                 });
                 res.json({ message: `Welcome back ${user.name}!` });
               }
             }
           );
+        } else if (result === false) {
+          res.setHeader('401', 'invalid login');
+          console.log('invalid password');
+          res.send({});
         }
       });
     }

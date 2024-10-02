@@ -1,6 +1,7 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
+import { authenticateUser } from './middlewares/authenticateUser';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
 import MemrysRoute from './routes/memrys';
@@ -8,6 +9,9 @@ import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import TagsRoute from './routes/tags';
 
+export interface RequestWithID extends Request {
+  userID?: string;
+}
 export const app = express();
 const port = process.env.PORT || 3000;
 
@@ -19,9 +23,8 @@ app.use(
   express.json()
 );
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', authenticateUser, (req: RequestWithID, res: Response) => {
   res.send('Hello, TypeScript Express!');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
 });
 
 app.use('/tags', TagsRoute);

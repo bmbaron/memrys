@@ -39,6 +39,7 @@ const postLogin = async (data: { email: string; password: string }) => {
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
+      return;
     }
     const data = await response.json();
     return data;

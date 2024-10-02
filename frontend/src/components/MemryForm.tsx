@@ -35,9 +35,9 @@ const MemryForm = ({
     mode: 'controlled',
     initialValues: {
       dateUTC: dateUTC,
-      title: 'hello',
+      title: 'asfaf',
       tag: 'Person',
-      location: 'school',
+      location: 'home',
       notes: [''],
       photos: [] as FileWithPath[]
     }
@@ -55,7 +55,7 @@ const MemryForm = ({
   };
 
   useEffect(() => {
-    fetchData();
+    void fetchData();
   }, []);
 
   const selectedFiles = form.getValues().photos.map((file: FileWithPath, index) => {
@@ -68,7 +68,7 @@ const MemryForm = ({
             size={'xs'}
             onClick={() => {
               const updatedFiles = form.getValues().photos.filter((_, i) => i !== index);
-              form.setFieldValue('files', updatedFiles); // Only set the updated list
+              form.setFieldValue('photos', updatedFiles); // Only set the updated list
             }}
           />
         </Text>
@@ -89,7 +89,7 @@ const MemryForm = ({
       parent.remove();
     }
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const tagValue = form.getValues().tag;
     if (!tags.find((item) => item === tagValue)) {
@@ -99,15 +99,22 @@ const MemryForm = ({
     if (!locations.find((item) => item === locationValue)) {
       void postTagOrLocationToDB(locationValue, 'locations');
     }
-    postMemryToDB(form.getValues()).then((response) => {
+    try {
+      const response = await postMemryToDB(form.getValues());
       if (response.message) {
         showConfirmation(response.message, 2000, 4000);
       }
+      if (response.error) {
+        console.log(response.error);
+      }
       onReload();
-      return;
-    });
+      return true;
+    } catch {
+      return false;
+    }
     onClose();
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
@@ -168,9 +175,9 @@ const MemryForm = ({
             })}
             accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
             onDrop={(acceptedFiles: FileWithPath[]) => {
-              form.setFieldValue('files', [...form.getValues().photos, ...acceptedFiles]);
+              form.setFieldValue('photos', [...form.getValues().photos, ...acceptedFiles]);
             }}
-            onReject={() => form.setFieldError('files', 'Select images only')}
+            onReject={() => form.setFieldError('photos', 'Select images only')}
           >
             <Center h={120}>
               <Dropzone.Idle>Drop images here</Dropzone.Idle>
@@ -183,13 +190,14 @@ const MemryForm = ({
               {form.errors.files}
             </Text>
           )}
-
           {selectedFiles.length > 0 && (
             <>
               <Text mb={5} mt={'md'}>
                 Selected files:
               </Text>
-              <Flex gap={40}>{selectedFiles}</Flex>
+              <Flex wrap={'wrap'} direction={{ xs: 'column', sm: 'row' }} gap={40}>
+                {selectedFiles}
+              </Flex>
             </>
           )}
         </>

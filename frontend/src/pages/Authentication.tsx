@@ -39,7 +39,7 @@ const Authentication = () => {
   const myForm = useForm({
     initialValues: {
       name: 'a',
-      email: 'a@a.com',
+      email: '',
       password: '111111',
       password2: '111111',
       terms: true
@@ -64,21 +64,24 @@ const Authentication = () => {
 
   const handleLogin = async () => {
     try {
-      await postLogin(myForm.getValues()).then((res) => alert(JSON.stringify(res)));
+      const login = await postLogin(myForm.getValues());
+      const resString = JSON.stringify(login);
+      if (resString !== '{}') {
+        alert(JSON.stringify(login.message));
+        return true;
+      } else {
+        return false;
+      }
     } catch (err: unknown) {
-      console.log(err);
+      console.error(err);
       alert(err as Error);
+      return false;
     }
   };
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+
+  const handleSuccess = () => {
     const loadTime = 2000;
     const closeTime = 2000;
-    if (formType === 'register') {
-      await handleRegister();
-    } else {
-      await handleLogin();
-    }
     showConfirmation(
       formType === 'register' ? 'Please login' : 'You are now logged in',
       loadTime,
@@ -93,6 +96,19 @@ const Authentication = () => {
         navigate('/');
       }
     }, loadTime + closeTime);
+  };
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (formType === 'register') {
+      await handleRegister();
+    } else {
+      const login = await handleLogin();
+      if (login) {
+        handleSuccess();
+      } else {
+        alert('there was a problem logging you in');
+      }
+    }
   };
   return (
     <div className={classes.wrapper}>

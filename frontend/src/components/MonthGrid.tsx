@@ -3,9 +3,9 @@ import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Search } from 'react-feather';
+import { useNavigate } from 'react-router-dom';
 import { fetchMonthMemrys } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
-import { MonthObject } from './Carousel.tsx';
 import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
 
@@ -24,18 +24,22 @@ const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
   return date.daysInMonth();
 };
-const MonthGrid = (data: { monthNumber: number; stats?: MonthObject; shouldLoad: boolean }) => {
-  const { monthNumber, stats, shouldLoad } = data;
+const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boolean }) => {
+  const { monthNumber, month, shouldLoad } = data;
   const monthDays = getMonthDays(monthNumber);
   const [opened, { open, close }] = useDisclosure(false);
   const [modalData, setModalData] = useState<ModalDataType>({ title: '', date: '' });
+  const [tagsTally, setTagsTally] = useState<number>(0);
   const theme = useMantineTheme();
   const [monthData, setMonthData] = useState<dayData[]>([]);
+  const navigate = useNavigate();
   const fetchMonthData = async () => {
     try {
       const data = await fetchMonthMemrys(`2024-${monthNumber + 1}-01`);
       setMonthData(data);
+      setTagsTally(data.length);
     } catch (err: unknown) {
+      navigate('/auth?mode=login');
       console.error((err as Error).message);
     }
   };
@@ -73,7 +77,7 @@ const MonthGrid = (data: { monthNumber: number; stats?: MonthObject; shouldLoad:
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
       <Flex ta={'left'} mx={25} my={20} justify={'space-between'} align={'center'}>
         <Title order={1} c={theme.white}>
-          {stats && stats.month}
+          {month}
         </Title>
         <Flex
           gap={10}
@@ -82,38 +86,44 @@ const MonthGrid = (data: { monthNumber: number; stats?: MonthObject; shouldLoad:
           style={{ borderRadius: 50 }}
           p={10}
         >
-          {stats &&
-            stats.stats &&
-            Object.keys(stats.stats).map((oneKey, index) => (
-              <Badge color={theme.colors.stats[index]} size={'xl'} key={index}>
-                <Flex>
-                  <Text c={theme.white}>{stats.stats[oneKey]}</Text>
-                  <Text tt={'none'}>&nbsp;{oneKey}</Text>
-                </Flex>
-              </Badge>
-            ))}
+          {/*{stats &&*/}
+          {/*  stats.stats &&*/}
+          {/*  Object.keys(stats.stats).map((oneKey, index) => (*/}
+          {/*    <Badge color={theme.colors.stats[index]} size={'xl'} key={index}>*/}
+          {/*      <Flex>*/}
+          {/*        <Text c={theme.white}>{stats.stats[oneKey]}</Text>*/}
+          {/*        <Text tt={'none'}>&nbsp;{oneKey}</Text>*/}
+          {/*      </Flex>*/}
+          {/*    </Badge>*/}
+          {/*  ))}*/}
+          <Badge color={theme.white} size={'xl'}>
+            <Flex>
+              <Text c={theme.black}>{'tags'}</Text>
+              <Text c={theme.black} tt={'none'}>
+                &nbsp;{tagsTally}
+              </Text>
+            </Flex>
+          </Badge>
           <FeatherIcon Type={Search} style={{ marginLeft: 20, marginRight: 10 }} hasHover />
         </Flex>
       </Flex>
-      {shouldLoad && (
-        <Container
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          {getDayCards(monthDays, monthNumber)}
-        </Container>
-      )}
+      <Container
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {getDayCards(monthDays, monthNumber)}
+      </Container>
       <Modal.Root
         opened={opened}
         onClose={close}
         centered
         className={'mantine-focus-never'}
         size={'xl'}
-        px={20}
+        px={0}
       >
         <Modal.Overlay />
         <Modal.Content>

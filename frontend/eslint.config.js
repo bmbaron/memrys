@@ -14,9 +14,9 @@ export default [
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
     "@typescript-eslint/no-empty-object-type": "off",
-      "react/jsx-curly-brace-presence": [
+    "react/jsx-curly-brace-presence": [
         'error',
-        { props: 'always' },
+        { props: "always", children: "ignore"},
       ],
     }},
 ];

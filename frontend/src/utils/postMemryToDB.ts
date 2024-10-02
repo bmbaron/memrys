@@ -12,17 +12,22 @@ export const postMemryToDB = async (data: MemryData) => {
   try {
     const response = await fetch(url, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      console.log('status', response.status);
+      if (response.status === 401) {
+        console.log('is 401');
+        throw new Error('Invalid token. Please login again.');
+      }
     } else {
       return response.json();
     }
   } catch (e: unknown) {
-    console.error((e as Error).message);
+    return { error: (e as Error).message };
   }
 };
