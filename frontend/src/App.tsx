@@ -13,7 +13,6 @@ const App = () => {
     try {
       const response = await fetch(url, { method: 'GET', credentials: 'include' });
       if (!response.ok) {
-        console.log('checked in app.tsx');
         throw new Error(`Response status: ${response.status}`);
       }
       const data = await response;

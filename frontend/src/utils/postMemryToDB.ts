@@ -19,9 +19,7 @@ export const postMemryToDB = async (data: MemryData) => {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      console.log('status', response.status);
       if (response.status === 401) {
-        console.log('is 401');
         throw new Error('Invalid token. Please login again.');
       }
     } else {

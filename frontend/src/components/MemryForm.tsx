@@ -105,7 +105,7 @@ const MemryForm = ({
         showConfirmation(response.message, 2000, 4000);
       }
       if (response.error) {
-        console.log(response.error);
+        console.error(response.error);
       }
       onReload();
       return true;
