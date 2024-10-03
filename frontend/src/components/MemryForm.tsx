@@ -49,8 +49,8 @@ const MemryForm = ({
       setTags(tags);
       const locations = await fetchTagOrLocation('locations');
       setLocations(locations);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    } catch (err: unknown) {
+      console.error((err as Error).message);
     }
   };
 
@@ -102,17 +102,15 @@ const MemryForm = ({
     try {
       const response = await postMemryToDB(form.getValues());
       if (response.message) {
-        showConfirmation(response.message, 2000, 4000);
-      }
-      if (response.error) {
+        await showConfirmation(response.message, 2000, 4000);
+        onClose();
+        onReload();
+      } else if (response.error) {
         console.error(response.error);
       }
-      onReload();
-      return true;
-    } catch {
-      return false;
+    } catch (err: unknown) {
+      console.error(err as Error);
     }
-    onClose();
   };
 
   return (

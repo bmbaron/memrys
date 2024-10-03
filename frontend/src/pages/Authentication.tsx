@@ -57,8 +57,7 @@ const Authentication = () => {
     try {
       await postRegister(myForm.getValues());
     } catch (err: unknown) {
-      console.error(err);
-      alert(err as Error);
+      console.error((err as Error).message);
     }
   };
 
@@ -73,29 +72,26 @@ const Authentication = () => {
         return false;
       }
     } catch (err: unknown) {
-      console.error(err);
-      alert(err as Error);
+      console.error((err as Error).message);
       return false;
     }
   };
 
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
     const loadTime = 2000;
     const closeTime = 2000;
-    showConfirmation(
+    await showConfirmation(
       formType === 'register' ? 'Please login' : 'You are now logged in',
       loadTime,
       closeTime
     );
-    setTimeout(() => {
-      myForm.reset();
-      if (formType === 'register') {
-        setSearchParams('mode=login');
-        toggle();
-      } else {
-        navigate('/');
-      }
-    }, loadTime + closeTime);
+    myForm.reset();
+    if (formType === 'register') {
+      setSearchParams('mode=login');
+      toggle();
+    } else {
+      navigate('/');
+    }
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -104,7 +100,7 @@ const Authentication = () => {
     } else {
       const login = await handleLogin();
       if (login) {
-        handleSuccess();
+        await handleSuccess();
       } else {
         alert('there was a problem logging you in');
       }

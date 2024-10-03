@@ -34,6 +34,7 @@ app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+server.timeout = 1000;

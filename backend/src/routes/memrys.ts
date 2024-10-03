@@ -5,17 +5,18 @@ import { RequestWithID } from '../index';
 import { authenticateUser } from '../middlewares/authenticateUser';
 
 const router = Router();
-router.get('/', async (req, res) => {
+router.get('/', authenticateUser, async (req: RequestWithID, res) => {
   const date = req.query.date as string;
+  const userID = req.userID;
   const newPool = await pool.connect();
   try {
-    const query = 'SELECT * FROM submissions WHERE created_at = $1';
+    const query = 'SELECT * FROM submissions WHERE user_id = $1::BIGINT AND created_at = $2';
     const now_utc = new Date(date);
-    const values = [now_utc];
+    const values = [userID, now_utc];
     const result = await newPool.query(query, values);
     res.json(result.rows);
-  } catch (err) {
-    console.error(err);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {
@@ -43,8 +44,8 @@ router.post('/', authenticateUser, async (req: RequestWithID, res) => {
     res.status(201).json({
       message: `Added memry: ${result.rows[0].title}`
     });
-  } catch (err) {
-    console.error(err);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {

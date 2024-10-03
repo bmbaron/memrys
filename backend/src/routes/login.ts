@@ -37,18 +37,18 @@ router.get('/', async (req, res) => {
                   sameSite: 'strict',
                   path: '/'
                 });
-                res.json({ message: `Welcome back ${user.name}!` });
+                res.json({ message: `Welcome back ${user.name}!`, name: user.name });
               }
             }
           );
-        } else if (result === false) {
+        } else {
           res.setHeader('401', 'invalid login');
           res.send({});
         }
       });
     }
-  } catch (err) {
-    console.error(err);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {

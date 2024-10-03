@@ -8,8 +8,8 @@ router.get('/', async (req, res) => {
   try {
     const result = await newPool.query('SELECT * FROM locations');
     res.json(result.rows);
-  } catch (err) {
-    console.error(err);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {
@@ -30,8 +30,8 @@ router.post('/', async (req, res) => {
     const result = await newPool.query(queryText, values);
     const newTagId = result.rows[0].id;
     res.status(201).send(`Location added with ID: ${newTagId}`);
-  } catch (err) {
-    console.error(err);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {

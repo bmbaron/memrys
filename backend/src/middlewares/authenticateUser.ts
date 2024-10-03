@@ -14,8 +14,8 @@ export const authenticateUser = (req: RequestWithID, res: Response, next: NextFu
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     req.userID = Object(decoded).userID;
     next();
-  } catch (error) {
-    console.error(error);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 };

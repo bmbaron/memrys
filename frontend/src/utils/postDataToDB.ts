@@ -11,7 +11,7 @@ export const postTagOrLocationToDB = async (newValue: string, tableName: string)
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
-  } catch (e: unknown) {
-    console.error((e as Error).message);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
   }
 };
