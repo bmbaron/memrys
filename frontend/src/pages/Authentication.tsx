@@ -7,7 +7,6 @@ import {
   Paper,
   PasswordInput,
   Stack,
-  Text,
   TextInput,
   Title
 } from '@mantine/core';
@@ -16,6 +15,7 @@ import { upperFirst, useToggle } from '@mantine/hooks';
 import { FormEvent, useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
+import { getGradientColorText } from '../utils/gradientColorText.tsx';
 import { postLogin, postRegister } from '../utils/postAuth.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
 import { UserContext } from '../utils/UserContext.tsx';
@@ -99,6 +99,7 @@ const Authentication = () => {
       setSearchParams('mode=login');
       toggle();
     } else {
+      console.log('logged in');
       navigate('/');
     }
   };
@@ -124,19 +125,9 @@ const Authentication = () => {
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30} pt={70}>
         <Flex direction={'column'} gap={20}>
-          <Flex>
-            <Title order={1} size={40}>
-              let&apos;s make&nbsp;
-            </Title>
-            <Text
-              component={Title}
-              fw={900}
-              variant={'gradient'}
-              gradient={{ from: 'orange', to: 'cyan', deg: 90 }}
-              style={{ fontSize: 40 }}
-            >
-              memrys
-            </Text>
+          <Flex style={{ fontSize: 40 }}>
+            <Title order={1}>let&apos;s make&nbsp;</Title>
+            {getGradientColorText('memrys', 'orange', 'cyan', 1)}
           </Flex>
           <form onSubmit={handleSubmit}>
             <Stack>
