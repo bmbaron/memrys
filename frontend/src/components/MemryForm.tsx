@@ -158,7 +158,7 @@ const MemryForm = ({
         <Button onClick={() => setAddNote((prev) => prev + 1)}>Add note</Button>
         <>
           <Dropzone
-            h={120}
+            h={80}
             p={0}
             multiple
             bd={'1 dashed'}
@@ -177,7 +177,7 @@ const MemryForm = ({
             }}
             onReject={() => form.setFieldError('photos', 'Select images only')}
           >
-            <Center h={120}>
+            <Center h={80}>
               <Dropzone.Idle>Drop images here</Dropzone.Idle>
               <Dropzone.Accept>Drop images here</Dropzone.Accept>
               <Dropzone.Reject>Files are invalid</Dropzone.Reject>

@@ -5,18 +5,19 @@ const showConfirmation = async (message: string, loadTime: number, closeTime: nu
     loading: true,
     message: 'Connecting...',
     autoClose: false,
-    withCloseButton: false
+    withCloseButton: false,
+    style: { boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'  }
   });
   await new Promise<void>((resolve) => {
     setTimeout(() => {
       notifications.update({
         id,
+        message,
         color: 'teal',
         title: 'Success!',
-        message,
         icon: <Check style={{ width: 18, height: 18 }} />,
         loading: false,
-        autoClose: closeTime
+        autoClose: closeTime,
       });
       resolve();
     }, loadTime);

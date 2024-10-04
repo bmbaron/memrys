@@ -1,11 +1,9 @@
 import { Box, Button, Flex, Group, Title } from '@mantine/core';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import classes from '../Header.module.css';
-import { UserContext } from '../utils/UserContext.tsx';
 import { getGradientColorText } from '../utils/gradientColorText.tsx';
 const Header = () => {
-  const { currentUser } = useContext(UserContext);
+  const current_user = localStorage.getItem('current_user');
   return (
     <Box>
       <header className={classes.header}>
@@ -20,7 +18,7 @@ const Header = () => {
           </Group>
           <Flex>
             <Title order={3}>{'Welcome back'}&nbsp;</Title>
-            {getGradientColorText(currentUser, 'orange', 'cyan', 3)}
+            {getGradientColorText(current_user || "friend", 'orange', 'cyan', 3)}
             <Title order={3}>{'!'}</Title>
           </Flex>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>

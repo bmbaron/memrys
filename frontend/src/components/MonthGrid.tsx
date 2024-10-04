@@ -86,16 +86,6 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
           style={{ borderRadius: 50 }}
           p={10}
         >
-          {/*{stats &&*/}
-          {/*  stats.stats &&*/}
-          {/*  Object.keys(stats.stats).map((oneKey, index) => (*/}
-          {/*    <Badge color={theme.colors.stats[index]} size={'xl'} key={index}>*/}
-          {/*      <Flex>*/}
-          {/*        <Text c={theme.white}>{stats.stats[oneKey]}</Text>*/}
-          {/*        <Text tt={'none'}>&nbsp;{oneKey}</Text>*/}
-          {/*      </Flex>*/}
-          {/*    </Badge>*/}
-          {/*  ))}*/}
           <Badge color={theme.white} size={'xl'}>
             <Flex>
               <Text c={theme.black}>{'tags'}</Text>
@@ -124,6 +114,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
         className={'mantine-focus-never'}
         size={'xl'}
         px={0}
+        style={{'--modal-y-offset': '50px'}}
       >
         <Modal.Overlay />
         <Modal.Content>
