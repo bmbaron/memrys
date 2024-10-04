@@ -6,8 +6,10 @@ import MainLayout from './MainLayout';
 import About from './pages/About';
 import Authentication from './pages/Authentication.tsx';
 import Home from './pages/Home';
+import { UserContext } from './utils/UserContext.tsx';
 const App = () => {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const [currentUser, setCurrentUser] = useState('');
   const fetchHeader = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/`;
     try {
@@ -43,17 +45,19 @@ const App = () => {
 
   return (
     <Router>
-      <Routes>
-        <Route path={'/'} element={<MainLayout />}>
-          {authorized ? (
-            <Route index element={<Home />} />
-          ) : (
-            <Route path={'/'} element={<Navigate to={'/auth'} replace />} />
-          )}
-          <Route path={'auth'} element={<Authentication />} />
-          <Route path={'about'} element={<About />} />
-        </Route>
-      </Routes>
+      <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <Routes>
+          <Route path={'/'} element={<MainLayout />}>
+            {authorized ? (
+              <Route index element={<Home />} />
+            ) : (
+              <Route path={'/'} element={<Navigate to={'/auth'} replace />} />
+            )}
+            <Route path={'auth'} element={<Authentication />} />
+            <Route path={'about'} element={<About />} />
+          </Route>
+        </Routes>
+      </UserContext.Provider>
     </Router>
   );
 };

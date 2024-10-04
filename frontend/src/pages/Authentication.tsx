@@ -13,17 +13,19 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
 import { postLogin, postRegister } from '../utils/postAuth.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
+import { UserContext } from '../utils/UserContext.tsx';
 
 const Authentication = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('mode');
   const [formType, toggle] = useToggle(['login', 'register']);
   const navigate = useNavigate();
+  const { setCurrentUser } = useContext(UserContext);
 
   useEffect(() => {
     if (query && formType !== query) {
@@ -39,7 +41,7 @@ const Authentication = () => {
   const myForm = useForm({
     initialValues: {
       name: 'a',
-      email: '',
+      email: 'test@tester.com',
       password: '111111',
       password2: '111111',
       terms: true
@@ -55,18 +57,9 @@ const Authentication = () => {
 
   const handleRegister = async () => {
     try {
-      await postRegister(myForm.getValues());
-    } catch (err: unknown) {
-      console.error((err as Error).message);
-    }
-  };
-
-  const handleLogin = async () => {
-    try {
-      const login = await postLogin(myForm.getValues());
-      const resString = JSON.stringify(login);
+      const register = await postRegister(myForm.getValues());
+      const resString = JSON.stringify(register);
       if (resString !== '{}') {
-        alert(JSON.stringify(login.message));
         return true;
       } else {
         return false;
@@ -77,7 +70,23 @@ const Authentication = () => {
     }
   };
 
-  const handleSuccess = async () => {
+  const handleLogin = async () => {
+    try {
+      const login = await postLogin(myForm.getValues());
+      const resString = JSON.stringify(login);
+      if (resString !== '{}') {
+        setCurrentUser(login.name);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err: unknown) {
+      console.error((err as Error).message);
+      return false;
+    }
+  };
+
+  const handleSuccess = async (isRegister?: boolean) => {
     const loadTime = 2000;
     const closeTime = 2000;
     await showConfirmation(
@@ -86,7 +95,7 @@ const Authentication = () => {
       closeTime
     );
     myForm.reset();
-    if (formType === 'register') {
+    if (isRegister) {
       setSearchParams('mode=login');
       toggle();
     } else {
@@ -96,11 +105,16 @@ const Authentication = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (formType === 'register') {
-      await handleRegister();
+      const register = await handleRegister();
+      if (register) {
+        await handleSuccess(true);
+      } else {
+        alert('there was a problem logging you in');
+      }
     } else {
       const login = await handleLogin();
       if (login) {
-        await handleSuccess();
+        await handleSuccess(false);
       } else {
         alert('there was a problem logging you in');
       }

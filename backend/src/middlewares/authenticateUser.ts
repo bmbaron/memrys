@@ -15,7 +15,7 @@ export const authenticateUser = (req: RequestWithID, res: Response, next: NextFu
     req.userID = Object(decoded).userID;
     next();
   } catch (err: unknown) {
-    console.error((err as Error).message);
+    console.error(err as Error);
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 };

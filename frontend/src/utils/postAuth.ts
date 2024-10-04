@@ -9,6 +9,7 @@ const postRegister = async (data: {
   try {
     const response = await fetch(url, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -21,7 +22,10 @@ const postRegister = async (data: {
     });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
+      return;
     }
+    const data = await response.json();
+    return data;
   } catch (err: unknown) {
     console.error((err as Error).message);
     return err;
@@ -34,7 +38,7 @@ const postLogin = async (data: { email: string; password: string }) => {
   const loginURL = url + `?email=${email}&password=${password}`;
   try {
     const response = await fetch(loginURL, {
-      method: 'Get',
+      method: 'GET',
       credentials: 'include'
     });
     if (!response.ok) {

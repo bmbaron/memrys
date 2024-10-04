@@ -10,8 +10,8 @@ router.get('/', async (req, res) => {
   const password = req.query.password as string;
   const newPool = await pool.connect();
   try {
-    const values = [email];
     const query = 'SELECT * FROM users WHERE email = $1';
+    const values = [email];
     const result = await newPool.query(query, values);
     if (result.rows.length > 0) {
       const user = result.rows[0];
@@ -46,10 +46,14 @@ router.get('/', async (req, res) => {
           res.send({});
         }
       });
+    } else {
+      const error = new Error();
+      error.message = "couldn't find user";
+      throw error;
     }
   } catch (err: unknown) {
     console.error((err as Error).message);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err });
   } finally {
     if (newPool) {
       newPool.release();

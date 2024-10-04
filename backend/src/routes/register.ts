@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     const values = [name, email, hashedPassword];
     const queryText = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3)';
     await newPool.query(queryText, values);
-    return res.status(201).json({});
+    return res.status(201).json({ message: 'success' });
   }
   if (newPool) {
     newPool.release();
