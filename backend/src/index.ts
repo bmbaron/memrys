@@ -8,6 +8,8 @@ import MemrysRoute from './routes/memrys';
 import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import TagsRoute from './routes/tags';
+import AboutRoute from './routes/about';
+import {result} from "./text-generation";
 
 export interface RequestWithID extends Request {
   userID?: string;
@@ -33,8 +35,12 @@ app.use('/memrys', MemrysRoute);
 app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
+app.use('/about', AboutRoute);
 
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 server.timeout = 1000;
+
+// const func = async () => await result();
+// func().then((res) => console.log(res.response.text()));

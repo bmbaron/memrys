@@ -1,13 +1,35 @@
-import { Box, Text, Title, useMantineTheme } from '@mantine/core';
+import {Button, Flex, Input, Text, useMantineTheme} from '@mantine/core';
 const About = () => {
   const theme = useMantineTheme();
+  const formData = new FormData();
+  const handleChange = (e: any) => {
+    formData.append('image', e.target.files[0]);
+  }
+  const analyzeImage = async () => {
+    if (formData) {
+      const url = `${import.meta.env.VITE_BACKEND_URL}/about`;
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        });
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+      } catch (err: unknown) {
+        console.error((err as Error).message);
+      }
+    }
+  }
+
   return (
-    <Box c={theme.primaryColor}>
-      <Title order={1}>This is an h1 title</Title>
-      <Title order={2}>This is an h2 title</Title>
-      <Text span>This is some text content</Text>
-      <Text>About</Text>
-    </Box>
+    <Flex direction={'column'} c={theme.primaryColor} p={'xl'} gap={'20px'}>
+      <Text>Get tag from image</Text>
+      <input type={'file'} name={'image'} placeholder={'click to upload image'} onChange={handleChange}/>
+      <Button onClick={analyzeImage}>analyze</Button>
+      <Input type={'text'} placeholder={'Your tag'} />
+    </Flex>
   );
 };
 
