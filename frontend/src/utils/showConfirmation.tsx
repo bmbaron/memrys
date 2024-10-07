@@ -6,7 +6,7 @@ const showConfirmation = async (message: string, loadTime: number, closeTime: nu
     message: 'Connecting...',
     autoClose: false,
     withCloseButton: false,
-    style: { boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'  }
+    style: { boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }
   });
   await new Promise<void>((resolve) => {
     setTimeout(() => {
@@ -17,7 +17,7 @@ const showConfirmation = async (message: string, loadTime: number, closeTime: nu
         title: 'Success!',
         icon: <Check style={{ width: 18, height: 18 }} />,
         loading: false,
-        autoClose: closeTime,
+        autoClose: closeTime
       });
       resolve();
     }, loadTime);

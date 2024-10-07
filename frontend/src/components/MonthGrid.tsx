@@ -114,7 +114,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
         className={'mantine-focus-never'}
         size={'xl'}
         px={0}
-        style={{'--modal-y-offset': '50px'}}
+        style={{ '--modal-y-offset': '50px' }}
       >
         <Modal.Overlay />
         <Modal.Content>

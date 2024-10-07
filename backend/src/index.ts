@@ -2,14 +2,13 @@ import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import { authenticateUser } from './middlewares/authenticateUser';
+import AboutRoute from './routes/about';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
 import MemrysRoute from './routes/memrys';
 import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import TagsRoute from './routes/tags';
-import AboutRoute from './routes/about';
-import {result} from "./text-generation";
 
 export interface RequestWithID extends Request {
   userID?: string;

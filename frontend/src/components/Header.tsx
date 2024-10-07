@@ -18,7 +18,7 @@ const Header = () => {
           </Group>
           <Flex>
             <Title order={3}>{'Welcome back'}&nbsp;</Title>
-            {getGradientColorText(current_user || "friend", 'orange', 'cyan', 3)}
+            {getGradientColorText(current_user || 'friend', 'orange', 'cyan', 3)}
             <Title order={3}>{'!'}</Title>
           </Flex>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>

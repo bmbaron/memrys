@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
-import {FormEvent, useContext, useEffect} from 'react';
+import { FormEvent, useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
 import { getGradientColorText } from '../utils/gradientColorText.tsx';
@@ -28,8 +28,8 @@ const Authentication = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
   useEffect(() => {
-    localStorage.setItem('current_user', currentUser)
-  }, [currentUser])
+    localStorage.setItem('current_user', currentUser);
+  }, [currentUser]);
 
   useEffect(() => {
     if (query && formType !== query) {
