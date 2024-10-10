@@ -21,7 +21,8 @@ const MainLayout = () => {
         'teal',
         'navy'
       ],
-      stats: ['red', 'yellow', 'blue', '', '', '', '', '', '', '']
+      stats: ['red', 'yellow', 'blue', '', '', '', '', '', '', ''],
+      borders: ['rgb(206, 212, 218)', '', '', '', '', '', '', '', '', '']
     },
     fontFamily: 'Roboto, sans-serif',
     breakpoints: {

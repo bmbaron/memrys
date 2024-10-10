@@ -22,6 +22,7 @@ const MyCarousel = () => {
       withControls={isMobile ? false : true}
       initialSlide={dayjs().month()}
       onSlideChange={(index: number) => setCurrentSlide(index)}
+      withKeyboardEvents={false}
     >
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>

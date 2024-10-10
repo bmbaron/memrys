@@ -51,7 +51,10 @@ const App = () => {
             {authorized ? (
               <Route index element={<Home />} />
             ) : (
-              <Route path={'/'} element={<Navigate to={'/auth'} replace />} />
+              <>
+                <Route path={'/'} element={<Navigate to={'/auth'} replace />} />
+                <Route path={'about'} element={<Navigate to={'/auth'} replace />} />
+              </>
             )}
             <Route path={'auth'} element={<Authentication />} />
             <Route path={'about'} element={<About />} />

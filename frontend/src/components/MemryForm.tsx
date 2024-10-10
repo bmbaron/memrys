@@ -6,6 +6,7 @@ import {
   Flex,
   Group,
   Image,
+  Loader,
   Text,
   Textarea,
   TextInput
@@ -18,7 +19,8 @@ import { fetchTagOrLocation } from '../utils/getDataFromDB.ts';
 import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
 import { postMemryToDB } from '../utils/postMemryToDB.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
-import CreatableAutocomplete from './CreatableAutocomplete.tsx';
+import suggestImageLocation from '../utils/suggestImageLocation.ts';
+import CustomTagsInput from './CreatableAutocomplete.tsx';
 const MemryForm = ({
   dateUTC,
   onClose,
@@ -31,15 +33,16 @@ const MemryForm = ({
   const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     mode: 'controlled',
     initialValues: {
       dateUTC: dateUTC,
-      title: 'asfaf',
-      tag: 'Person',
-      location: 'home',
+      title: '',
+      tag: '',
+      location: '',
       notes: [''],
-      photos: [] as FileWithPath[]
+      photo: {} as FileWithPath
     }
   });
 
@@ -58,30 +61,43 @@ const MemryForm = ({
     void fetchData();
   }, []);
 
-  const selectedFiles = form.getValues().photos.map((file: FileWithPath, index) => {
-    const imageUrl = URL.createObjectURL(file);
+  const photoPreview = () => {
+    const photo = form.getValues().photo;
+    if (!photo.name) {
+      return;
+    }
+    const photoURL = URL.createObjectURL(photo);
     return (
-      <Box key={file.name}>
-        <Text>
-          <b>{file.name}</b> ({(file.size / 1024).toFixed(2)} kb)
+      <Box pos={'relative'}>
+        <Text pos={'absolute'}>
+          <b>{photo.name}</b> ({(photo.size / 1024).toFixed(2)} kb)
           <CloseButton
             size={'xs'}
             onClick={() => {
-              const updatedFiles = form.getValues().photos.filter((_, i) => i !== index);
-              form.setFieldValue('photos', updatedFiles); // Only set the updated list
+              form.setFieldValue('photo', {} as FileWithPath);
             }}
           />
         </Text>
         <Image
-          key={index}
-          h={200}
-          w={200}
-          src={imageUrl}
-          onLoad={() => URL.revokeObjectURL(imageUrl)}
+          h={250}
+          w={'100%'}
+          mt={30}
+          style={{ borderRadius: 10 }}
+          src={photoURL}
+          onLoad={() => URL.revokeObjectURL(photoURL)}
         />
       </Box>
     );
-  });
+  };
+  const getSuggestedLocation = async () => {
+    setLoading(true);
+    form.setFieldValue('location', '');
+    const formData = new FormData();
+    formData.set('image', form.getValues().photo);
+    const result = await suggestImageLocation(formData);
+    form.setFieldValue('location', result);
+    setLoading(false);
+  };
 
   const handleDeleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
     const parent = e.currentTarget.parentElement;
@@ -115,27 +131,82 @@ const MemryForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box mt={20} ta={'left'} display={'flex'} style={{ flexDirection: 'column', gap: 20 }}>
+      <Box
+        mx={40}
+        mt={40}
+        ta={'left'}
+        display={'flex'}
+        style={{ flexDirection: 'column', gap: 20 }}
+      >
+        <Flex
+          direction={'column'}
+          gap={30}
+          bd={'1px solid borders.0'}
+          style={{ borderRadius: 10, padding: 20 }}
+        >
+          {!form.getValues().photo.name ? (
+            <Dropzone
+              h={250}
+              p={0}
+              mt={30}
+              bd={'1 dashed'}
+              style={(theme) => ({
+                border: `2px dashed ${theme.colors.gray[4]}`,
+                borderRadius: theme.radius.md,
+                cursor: 'pointer',
+                padding: theme.spacing.md,
+                '&:hover': {
+                  backgroundColor: theme.colors.gray[0]
+                }
+              })}
+              multiple={false}
+              maxFiles={1}
+              accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
+              onDrop={(acceptedFile) => {
+                form.setFieldValue('photo', acceptedFile[0]);
+                getSuggestedLocation();
+              }}
+              onReject={() => form.setFieldError('photo', 'Select image only')}
+            >
+              <Center h={250}>
+                <Dropzone.Idle>Drop image here</Dropzone.Idle>
+                <Dropzone.Accept>Drop image here</Dropzone.Accept>
+                <Dropzone.Reject>File is invalid</Dropzone.Reject>
+              </Center>
+            </Dropzone>
+          ) : (
+            photoPreview()
+          )}
+          {form.errors.photo && (
+            <Text c={'red'} mt={5}>
+              {form.errors.photo}
+            </Text>
+          )}
+          <CustomTagsInput
+            label={loading ? <Loader size={20} color={'blue'} /> : 'Location'}
+            placeholder={loading ? 'Analyzing...' : 'Select an option or write in your own'}
+            data={locations}
+            key={form.key('location')}
+            formValue={form.getValues().location !== '' ? form.getValues().location : undefined}
+            updateValue={(value: string) => form.setFieldValue('location', value)}
+            required={!loading}
+          />
+        </Flex>
+        <CustomTagsInput
+          label={'Who'}
+          placeholder={'Select an option or write in your own'}
+          data={tags}
+          key={form.key('tag')}
+          formValue={form.getValues().tag}
+          updateValue={(value) => form.setFieldValue('tag', value)}
+          required
+        />
         <TextInput
           label={'Title'}
           required
           key={form.key('title')}
           value={form.getValues().title}
           onChange={(e) => form.setFieldValue('title', e.target.value)}
-        />
-        <CreatableAutocomplete
-          label={'Who'}
-          data={tags}
-          key={form.key('tag')}
-          formValue={form.getValues().tag}
-          updateValue={(value) => form.setFieldValue('tag', value)}
-        />
-        <CreatableAutocomplete
-          label={'Where'}
-          data={locations}
-          key={form.key('location')}
-          formValue={form.getValues().location}
-          updateValue={(value) => form.setFieldValue('location', value)}
         />
         <Textarea label={'Notes'} description={'What happened'} />
         {addNote > 0 &&
@@ -156,49 +227,6 @@ const MemryForm = ({
             </Box>
           ))}
         <Button onClick={() => setAddNote((prev) => prev + 1)}>Add note</Button>
-        <>
-          <Dropzone
-            h={80}
-            p={0}
-            multiple
-            bd={'1 dashed'}
-            style={(theme) => ({
-              border: `2px dashed ${theme.colors.gray[4]}`,
-              borderRadius: theme.radius.md,
-              cursor: 'pointer',
-              padding: theme.spacing.md,
-              '&:hover': {
-                backgroundColor: theme.colors.gray[0]
-              }
-            })}
-            accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
-            onDrop={(acceptedFiles: FileWithPath[]) => {
-              form.setFieldValue('photos', [...form.getValues().photos, ...acceptedFiles]);
-            }}
-            onReject={() => form.setFieldError('photos', 'Select images only')}
-          >
-            <Center h={80}>
-              <Dropzone.Idle>Drop images here</Dropzone.Idle>
-              <Dropzone.Accept>Drop images here</Dropzone.Accept>
-              <Dropzone.Reject>Files are invalid</Dropzone.Reject>
-            </Center>
-          </Dropzone>
-          {form.errors.files && (
-            <Text c={'red'} mt={5}>
-              {form.errors.files}
-            </Text>
-          )}
-          {selectedFiles.length > 0 && (
-            <>
-              <Text mb={5} mt={'md'}>
-                Selected files:
-              </Text>
-              <Flex wrap={'wrap'} direction={{ xs: 'column', sm: 'row' }} gap={40}>
-                {selectedFiles}
-              </Flex>
-            </>
-          )}
-        </>
         <Group justify={'flex-end'} mt={'md'}>
           <Button bg={'green.7'} type={'submit'}>
             Submit

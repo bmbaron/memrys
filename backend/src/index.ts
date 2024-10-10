@@ -2,12 +2,12 @@ import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import { authenticateUser } from './middlewares/authenticateUser';
-import AboutRoute from './routes/about';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
 import MemrysRoute from './routes/memrys';
 import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
+import SuggestRoute from './routes/suggest-location';
 import TagsRoute from './routes/tags';
 
 export interface RequestWithID extends Request {
@@ -34,12 +34,9 @@ app.use('/memrys', MemrysRoute);
 app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
-app.use('/about', AboutRoute);
+app.use('/suggest-location', SuggestRoute);
 
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-server.timeout = 1000;
-
-// const func = async () => await result();
-// func().then((res) => console.log(res.response.text()));
+server.timeout = 5000;

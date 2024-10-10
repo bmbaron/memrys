@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
               userID: user.id as number
             },
             process.env.JWT_SECRET!,
-            { expiresIn: '2000s' },
+            { expiresIn: '20000s' },
             (err, token) => {
               if (err) {
                 throw err;

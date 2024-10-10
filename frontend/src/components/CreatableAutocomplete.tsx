@@ -1,33 +1,62 @@
-import { Autocomplete } from '@mantine/core';
-import { useEffect, useState } from 'react';
-
-const CreatableAutocomplete = ({
+import styled from '@emotion/styled';
+import { TagsInput } from '@mantine/core';
+import { ReactElement, useEffect, useState } from 'react';
+const CustomTagsInput = ({
   label,
+  placeholder,
   data,
   formValue,
-  updateValue
+  updateValue,
+  required
 }: {
-  label: string;
+  label: string | ReactElement;
+  placeholder: string;
   data: string[];
-  formValue: string;
+  formValue: string | undefined;
   updateValue: (value: string) => void;
+  required: boolean;
 }) => {
-  const [value, setValue] = useState(formValue);
+  const [value, setValue] = useState<string>('');
+  const [placeholderCustom, setPlaceholderCustom] = useState(placeholder);
 
   useEffect(() => {
     updateValue(value);
   }, [value]);
 
+  useEffect(() => {
+    if (formValue) {
+      setValue(formValue);
+    } else setValue('');
+  }, [formValue]);
+
   return (
-    <Autocomplete
+    <StyledTagsInput
       label={label}
-      placeholder={'Select an option or write in your own'}
+      variant={'unstyled'}
+      placeholder={!formValue ? placeholderCustom : ''}
       data={data}
-      value={value}
-      onChange={setValue}
-      required
+      onOptionSubmit={(val) => {
+        if (val) {
+          setPlaceholderCustom('');
+          setValue(val);
+        }
+      }}
+      value={value ? [value] : []}
+      onRemove={() => {
+        setPlaceholderCustom(placeholder);
+        setValue('');
+      }}
+      required={required}
+      maxTags={1}
     />
   );
 };
 
-export default CreatableAutocomplete;
+const StyledTagsInput = styled(TagsInput)`
+  & .mantine-TagsInput-pill {
+    background: var(--mantine-color-pink-3);
+    font-size: 14px;
+  }
+`;
+
+export default CustomTagsInput;

@@ -3,18 +3,29 @@ import { Router } from 'express';
 import pool from '../dbConfig';
 
 const router = Router();
-router.get('/', async (req, res) => {
+export const getLocations = async () => {
   const newPool = await pool.connect();
   try {
     const result = await newPool.query('SELECT * FROM locations');
-    res.json(result.rows);
+    return result;
   } catch (err: unknown) {
     console.error((err as Error).message);
-    res.status(500).json({ error: 'Something went wrong' });
   } finally {
     if (newPool) {
       newPool.release();
     }
+  }
+};
+router.get('/', async (req, res) => {
+  try {
+    const locations = await getLocations();
+    if (!locations) {
+      throw new Error();
+    }
+    res.json(locations.rows);
+  } catch (err: unknown) {
+    console.error((err as Error).message);
+    res.status(500).json({ error: 'Something went wrong' });
   }
 });
 
