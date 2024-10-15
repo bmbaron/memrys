@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   CloseButton,
   Flex,
   Group,
@@ -13,14 +14,15 @@ import {
 } from '@mantine/core';
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
-import React, { useEffect, useState } from 'react';
-import { Trash2 } from 'react-feather';
+import React, { useEffect, useRef, useState } from 'react';
+import { Edit } from 'react-feather';
 import { fetchTagOrLocation } from '../utils/getDataFromDB.ts';
+import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
 import { postMemryToDB } from '../utils/postMemryToDB.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
 import suggestImageLocation from '../utils/suggestImageLocation.ts';
-import CustomTagsInput from './CreatableAutocomplete.tsx';
+import CustomTagsInput from './CustomTagsInput.tsx';
 const MemryForm = ({
   dateUTC,
   onClose,
@@ -30,10 +32,13 @@ const MemryForm = ({
   onClose: () => void;
   onReload: () => void;
 }) => {
-  const [addNote, setAddNote] = useState(0);
+  // const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
   const [loading, setLoading] = useState(false);
+  const openRef = useRef<() => void>(null);
+  const checkboxRef = useRef<HTMLInputElement[]>([]);
+
   const form = useForm({
     mode: 'controlled',
     initialValues: {
@@ -45,6 +50,35 @@ const MemryForm = ({
       photo: {} as FileWithPath
     }
   });
+  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    form.setFieldValue('tag', e.currentTarget.value);
+    checkboxRef.current.forEach((c) => {
+      if (
+        c.labels &&
+        c.labels[0] &&
+        c.labels[0].textContent &&
+        c.labels[0].textContent !== e.currentTarget.value
+      ) {
+        c.checked = false;
+      } else {
+        c.checked = true;
+      }
+    });
+  };
+  const handleCheckbox = (index: number) => {
+    const clickedValue = checkboxRef.current[index].labels![0].textContent!;
+    if (clickedValue === form.getValues().tag) {
+      form.setFieldValue('tag', '');
+      return;
+    } else {
+      form.setFieldValue('tag', clickedValue);
+      checkboxRef.current.forEach((c, i) => {
+        if (i !== index) {
+          c.checked = false;
+        }
+      });
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -67,16 +101,27 @@ const MemryForm = ({
       return;
     }
     const photoURL = URL.createObjectURL(photo);
+    const handleClick = () => {
+      form.setFieldValue('photo', {} as FileWithPath);
+      form.setFieldValue('location', '');
+      setTimeout(() => {
+        openRef.current?.();
+      }, 100);
+    };
     return (
       <Box pos={'relative'}>
-        <Text pos={'absolute'}>
-          <b>{photo.name}</b> ({(photo.size / 1024).toFixed(2)} kb)
-          <CloseButton
-            size={'xs'}
-            onClick={() => {
-              form.setFieldValue('photo', {} as FileWithPath);
-            }}
-          />
+        <CloseButton
+          pos={'absolute'}
+          right={-35}
+          top={-80}
+          onClick={() => {
+            form.setFieldValue('photo', {} as FileWithPath);
+            form.setFieldValue('location', '');
+          }}
+        />
+        <Text pos={'absolute'} right={0} top={-5}>
+          <b style={{ marginRight: 10, fontSize: 15 }}>{photo.name}</b>
+          <FeatherIcon Type={Edit} hasHover onClick={handleClick} />
         </Text>
         <Image
           h={250}
@@ -99,12 +144,12 @@ const MemryForm = ({
     setLoading(false);
   };
 
-  const handleDeleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const parent = e.currentTarget.parentElement;
-    if (parent) {
-      parent.remove();
-    }
-  };
+  // const handleDeleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const parent = e.currentTarget.parentElement;
+  //   if (parent) {
+  //     parent.remove();
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const tagValue = form.getValues().tag;
@@ -129,18 +174,58 @@ const MemryForm = ({
     }
   };
 
+  const labelStyle = {
+    padding: '8px 15px 6px 15px',
+    background: '#7AD1DD',
+    borderRadius: 20,
+    marginBottom: 10,
+    fontSize: 15
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <Box
-        mx={40}
+      <Flex
+        direction={'column'}
+        gap={50}
+        mx={{ xs: 0, sm: 20 }}
         mt={40}
         ta={'left'}
         display={'flex'}
-        style={{ flexDirection: 'column', gap: 20 }}
       >
+        <TextInput
+          label={'Title'}
+          required
+          key={form.key('title')}
+          value={form.getValues().title}
+          onChange={(e) => form.setFieldValue('title', e.target.value)}
+          labelProps={{ style: labelStyle }}
+        />
+        <Flex direction={'column'} gap={20}>
+          <TextInput
+            required
+            label={'Who'}
+            labelProps={{ style: labelStyle }}
+            placeholder={'Select an option or write in your own'}
+            key={form.key('tag')}
+            value={form.getValues().tag}
+            onChange={handleTagChange}
+          />
+          <Flex gap={20}>
+            {tags.map((tag, index) => (
+              <Checkbox
+                defaultChecked={false}
+                ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
+                key={index}
+                label={tag}
+                onClick={() => handleCheckbox(index)}
+              />
+            ))}
+          </Flex>
+        </Flex>
         <Flex
           direction={'column'}
           gap={30}
+          pt={50}
           bd={'1px solid borders.0'}
           style={{ borderRadius: 10, padding: 20 }}
         >
@@ -150,6 +235,7 @@ const MemryForm = ({
               p={0}
               mt={30}
               bd={'1 dashed'}
+              openRef={openRef}
               style={(theme) => ({
                 border: `2px dashed ${theme.colors.gray[4]}`,
                 borderRadius: theme.radius.md,
@@ -184,55 +270,44 @@ const MemryForm = ({
           )}
           <CustomTagsInput
             label={loading ? <Loader size={20} color={'blue'} /> : 'Location'}
+            labelProps={labelStyle}
             placeholder={loading ? 'Analyzing...' : 'Select an option or write in your own'}
             data={locations}
             key={form.key('location')}
             formValue={form.getValues().location !== '' ? form.getValues().location : undefined}
             updateValue={(value: string) => form.setFieldValue('location', value)}
-            required={!loading}
+            loading={loading}
           />
         </Flex>
-        <CustomTagsInput
-          label={'Who'}
-          placeholder={'Select an option or write in your own'}
-          data={tags}
-          key={form.key('tag')}
-          formValue={form.getValues().tag}
-          updateValue={(value) => form.setFieldValue('tag', value)}
-          required
+        <Textarea
+          label={'Notes'}
+          labelProps={{ style: labelStyle }}
+          placeholder={'What happened'}
         />
-        <TextInput
-          label={'Title'}
-          required
-          key={form.key('title')}
-          value={form.getValues().title}
-          onChange={(e) => form.setFieldValue('title', e.target.value)}
-        />
-        <Textarea label={'Notes'} description={'What happened'} />
-        {addNote > 0 &&
-          [...Array(addNote)].map((_, index) => (
-            <Box pos={'relative'} key={index}>
-              <Textarea description={'What else happened'} pr={50} />
-              <Button
-                pos={'absolute'}
-                right={10}
-                top={30}
-                w={35}
-                h={35}
-                p={0}
-                onClick={handleDeleteNote}
-              >
-                <Trash2 />
-              </Button>
-            </Box>
-          ))}
-        <Button onClick={() => setAddNote((prev) => prev + 1)}>Add note</Button>
+        {/*{addNote > 0 &&*/}
+        {/*  [...Array(addNote)].map((_, index) => (*/}
+        {/*    <Box pos={'relative'} key={index}>*/}
+        {/*      <Textarea placeholder={'What else happened'} pr={50} />*/}
+        {/*      <Button*/}
+        {/*        pos={'absolute'}*/}
+        {/*        right={10}*/}
+        {/*        top={30}*/}
+        {/*        w={35}*/}
+        {/*        h={35}*/}
+        {/*        p={0}*/}
+        {/*        onClick={handleDeleteNote}*/}
+        {/*      >*/}
+        {/*        <Trash2 />*/}
+        {/*      </Button>*/}
+        {/*    </Box>*/}
+        {/*  ))}*/}
+        {/*<Button onClick={() => setAddNote((prev) => prev + 1)}>Add note</Button>*/}
         <Group justify={'flex-end'} mt={'md'}>
           <Button bg={'green.7'} type={'submit'}>
             Submit
           </Button>
         </Group>
-      </Box>
+      </Flex>
     </form>
   );
 };

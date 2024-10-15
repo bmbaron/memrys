@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Badge, Box, Card, CardProps, createPolymorphicComponent } from '@mantine/core';
+import { Badge, Box, Card, CardProps, createPolymorphicComponent, Flex, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
@@ -13,8 +13,9 @@ const SingleDayCard = (data: {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   open: () => void;
   dayData?: dayData;
+  filtering: string | undefined;
 }) => {
-  const { day, month, setModalData, open, dayData } = data;
+  const { day, month, setModalData, open, dayData, filtering } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   let dayString = `${dayjs().year()}-${month}-${day}`;
@@ -24,12 +25,14 @@ const SingleDayCard = (data: {
   const isToday = dayString === dayjs().toISOString().slice(0, 10);
   // const hasData = myData.dateData.find((obj: DayObject) => obj.date === dayString);
   const [tag, setTag] = useState('');
+  const [location, setLocation] = useState('');
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
   const isMobile = useMediaQuery('(max-width: 800px)');
 
   useEffect(() => {
     if (dayData) {
       setTag(dayData.tag);
+      setLocation(dayData.location);
     }
   }, [dayData]);
 
@@ -41,52 +44,52 @@ const SingleDayCard = (data: {
     open();
   };
   return (
-    // <HoverCard width={280} shadow="md" zIndex={0}>
-    //   <HoverCard.Target>
     <DayCard
       shadow={'sm'}
-      p={{ xs: 'sm', md: 'xl' }}
+      p={{ xs: 'sm', md: 0 }}
       h={{ base: 100, xs: 70, md: 100 }}
       w={{ base: 100, xs: 70, md: 100 }}
       m={5}
       ta={'center'}
-      lh={{ xs: '40px', md: '40px' }}
-      is31st={isMobile ? false : day === 31}
+      lh={{ xs: '40px', md: 'unset' }}
+      is31st={isMobile ? false : day === 31 && !filtering}
       isToday={isToday}
       onClick={handleClick}
     >
-      {/*{hasData && hasData.notes.length > 0 ? (*/}
-      {/*  <Badge pos={'absolute'} top={2} right={2} color={'blue'} size={'md'} circle>*/}
-      {/*    {hasData.notes.length}*/}
-      {/*  </Badge>*/}
-      {/*) : null}*/}
-      {tag ? (
-        <Box pos={'absolute'} top={-5} left={0} w={100} ta={'center'}>
-          <Badge bg={'blue'} c={'white'} h={20} maw={60} lh={'25px'} fw={600} size={'xs'}>
+      <Flex
+        direction={'column'}
+        w={100}
+        ta={'center'}
+        justify={'space-evenly'}
+        align={'center'}
+        mt={20}
+        h={'100%'}
+        my={5}
+        mx={'auto'}
+      >
+        <Box pos={'absolute'} top={0} right={5}>
+          {day}
+        </Box>
+        {dayData && (
+          <Badge bg={'blue'} c={'white'} h={20} maw={100} lh={'10px'} fw={600} size={'md'}>
             {tag}
           </Badge>
-        </Box>
-      ) : null}
-      {/*{hasData && hasData.images.length > 0 ? (*/}
-      {/*  <Badge pos={'absolute'} top={2} right={46} color={'red'} size={'md'} circle>*/}
-      {/*    {hasData.images.length}*/}
-      {/*  </Badge>*/}
-      {/*) : null}*/}
-      {day}
-      {isToday && (
-        <Badge
-          c={'rgb(255, 255, 0)'}
-          fz={12}
-          bg={'black'}
-          display={'flex'}
-          w={60}
-          p={10}
-          ml={-10}
-          style={{ overflow: 'visible', textTransform: 'none' }}
-        >
-          today
-        </Badge>
-      )}
+        )}
+        {dayData && (
+          <Text
+            c={'black'}
+            h={20}
+            lh={'14px'}
+            fw={600}
+            maw={90}
+            size={'sm'}
+            truncate={'end'}
+            style={{ wordBreak: 'break-word' }}
+          >
+            @{location}
+          </Text>
+        )}
+      </Flex>
     </DayCard>
   );
 };
@@ -99,7 +102,8 @@ const _DayCard = styled(Card, {
   flexBasis: is31st ? '100%' : 'auto',
   marginLeft: is31st ? '7.5px !important' : 'unset',
   marginRight: is31st ? '7.5px !important' : 'unset',
-  opacity: isToday ? 1 : 0.85,
+  background: isToday ? 'lightgreen' : 'auto',
+  opacity: 0.85,
   '&:hover': {
     cursor: 'pointer',
     opacity: 1

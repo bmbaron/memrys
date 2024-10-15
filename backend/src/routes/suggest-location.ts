@@ -18,7 +18,8 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
         throw new Error();
       }
       const locationList = locations.rows.map((loc) => loc.value);
-      const prompt = `Respond with an appropriate option that describes the image: ${locationList}. If none, suggest a category of one to two word`;
+      console.log(locationList)
+      const prompt = `Respond with the most appropriate tag option which best describes the image from this list, with no other formatting: ${locationList}. If none fit, respond with "no suggestion"`;
       const inlineData = {
         data: req.file.buffer.toString('base64'),
         mimeType: req.file.mimetype
@@ -39,12 +40,15 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
           temperature: 0.0
         }
       });
-      const trimmedResult = result.response.text().trim();
-      res.status(201).json({ result: trimmedResult });
+      const rawSuggestion = result.response.text().trim();
+      console.log(rawSuggestion);
+      const suggestion = locationList.find(loc => rawSuggestion.includes(loc)) || rawSuggestion;
+      res.status(201).json({ result: suggestion });
     } catch (err: unknown) {
       console.log('error');
       console.error((err as Error).message);
-      res.status(500);
+      res.status(201).json({ result: (err as Error).message });
+      // res.status(500);
     }
   }
 });

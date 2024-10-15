@@ -1,5 +1,6 @@
 import { Button, Flex, Input, Text, useMantineTheme } from '@mantine/core';
 import { useState } from 'react';
+import { sendImage } from '../utils/sendImageTest.ts';
 const About = () => {
   const theme = useMantineTheme();
   const formData = new FormData();
@@ -45,7 +46,14 @@ const About = () => {
       <Flex direction={'row'} c={theme.primaryColor} gap={'20px'}>
         <Text>{`Your result is: ${result}`}</Text>
       </Flex>
-      <Button onClick={analyzeImage}>analyze</Button>
+      <Button
+        onClick={() => {
+          sendImage(formData);
+          analyzeImage();
+        }}
+      >
+        analyze
+      </Button>
       <Input type={'text'} value={result} />
     </Flex>
   );

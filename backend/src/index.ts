@@ -9,6 +9,7 @@ import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import SuggestRoute from './routes/suggest-location';
 import TagsRoute from './routes/tags';
+import ImageRoute from './routes/imageUpload'
 
 export interface RequestWithID extends Request {
   userID?: string;
@@ -35,8 +36,9 @@ app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
 app.use('/suggest-location', SuggestRoute);
+app.use('/imageUpload', ImageRoute);
 
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-server.timeout = 5000;
+server.timeout = 10000;

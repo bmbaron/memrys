@@ -1,22 +1,25 @@
 import styled from '@emotion/styled';
 import { TagsInput } from '@mantine/core';
-import { ReactElement, useEffect, useState } from 'react';
+import { CSSProperties, ReactElement, useEffect, useState } from 'react';
 const CustomTagsInput = ({
   label,
   placeholder,
   data,
   formValue,
   updateValue,
-  required
+  loading,
+  labelProps
 }: {
   label: string | ReactElement;
   placeholder: string;
   data: string[];
   formValue: string | undefined;
   updateValue: (value: string) => void;
-  required: boolean;
+  loading: boolean;
+  labelProps: CSSProperties;
 }) => {
   const [value, setValue] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [placeholderCustom, setPlaceholderCustom] = useState(placeholder);
 
   useEffect(() => {
@@ -32,21 +35,27 @@ const CustomTagsInput = ({
   return (
     <StyledTagsInput
       label={label}
+      labelProps={{ style: labelProps }}
       variant={'unstyled'}
-      placeholder={!formValue ? placeholderCustom : ''}
+      placeholder={!formValue ? (loading ? 'Analyzing...' : placeholderCustom) : ''}
       data={data}
+      onClick={() => setIsOpen(true)}
       onOptionSubmit={(val) => {
         if (val) {
           setPlaceholderCustom('');
           setValue(val);
+          setIsOpen(false);
         }
       }}
+      onBlur={() => setIsOpen(false)}
+      dropdownOpened={isOpen}
       value={value ? [value] : []}
       onRemove={() => {
         setPlaceholderCustom(placeholder);
         setValue('');
+        setIsOpen(true);
       }}
-      required={required}
+      required={!loading}
       maxTags={1}
     />
   );
