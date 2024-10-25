@@ -63,9 +63,18 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
     for (let i = 1; i <= numDays; i++) {
       const dayData = monthData.find((obj) => dayjs(obj.created_at).date() === i);
       if (filterWord && dayData) {
-        const hasTag = dayData?.tag.toLowerCase().includes(filterWord.toLowerCase());
-        const hasLocation = dayData?.location.toLowerCase().includes(filterWord.toLowerCase());
-        if (hasTag || hasLocation) {
+        const filterArray = filterWord.toLowerCase().trim().split(' ');
+        const hasMatches = new Array(filterArray.length).fill(false);
+        filterArray.forEach((substr, index) => {
+          if (
+            dayData?.tag.toLowerCase().includes(substr) ||
+            dayData?.location.toLowerCase().includes(substr) ||
+            dayData?.title.toLowerCase().includes(substr)
+          ) {
+            hasMatches[index] = true;
+          }
+        });
+        if (!hasMatches.includes(false)) {
           days.push(
             <SingleDayCard
               key={i}
@@ -74,11 +83,11 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
               setModalData={setModalData}
               open={open}
               dayData={dayData}
-              filtering={filterWord}
+              filtered
             />
           );
         }
-      } else if (filterWord === '') {
+      } else if (!filterWord) {
         days.push(
           <SingleDayCard
             key={i}
@@ -87,7 +96,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
             setModalData={setModalData}
             open={open}
             dayData={dayData}
-            filtering={filterWord}
+            filtered={false}
           />
         );
       }
@@ -145,19 +154,19 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
             <Transition
               mounted={showSearch}
               transition={'fade'}
-              duration={600}
-              enterDelay={100}
-              exitDuration={20}
+              duration={1000}
+              exitDuration={0}
               timingFunction={'ease'}
+              keepMounted={false}
             >
               {(styles) => (
                 <TextInput
                   style={styles}
                   autoFocus
                   value={filterWord}
-                  w={200}
+                  w={210}
                   variant={'filled'}
-                  placeholder={'filter by person or location'}
+                  placeholder={'title name location (any order)'}
                   onChange={(text) => setFilterWord(text.currentTarget.value)}
                 />
               )}
@@ -177,7 +186,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'center',
+          justifyContent: 'left',
           alignItems: 'center'
         }}
       >

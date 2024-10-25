@@ -4,6 +4,8 @@ import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import React, { useEffect, useState } from 'react';
+import { PlusCircle } from 'react-feather';
+import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import { getMonthName } from '../utils/getMonth.ts';
 import { getSuffix } from '../utils/getSuffix.ts';
 import { dayData, ModalDataType } from './MonthGrid.tsx';
@@ -13,9 +15,9 @@ const SingleDayCard = (data: {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   open: () => void;
   dayData?: dayData;
-  filtering: string | undefined;
+  filtered: boolean;
 }) => {
-  const { day, month, setModalData, open, dayData, filtering } = data;
+  const { day, month, setModalData, open, dayData, filtered } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   let dayString = `${dayjs().year()}-${month}-${day}`;
@@ -26,6 +28,7 @@ const SingleDayCard = (data: {
   // const hasData = myData.dateData.find((obj: DayObject) => obj.date === dayString);
   const [tag, setTag] = useState('');
   const [location, setLocation] = useState('');
+  const [showTitle, setShowTitle] = useState(false);
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
   const isMobile = useMediaQuery('(max-width: 800px)');
 
@@ -52,10 +55,41 @@ const SingleDayCard = (data: {
       m={5}
       ta={'center'}
       lh={{ xs: '40px', md: 'unset' }}
-      is31st={isMobile ? false : day === 31 && !filtering}
+      is31st={isMobile ? false : day === 31 && !filtered}
       isToday={isToday}
       onClick={handleClick}
+      onMouseOver={() => setShowTitle(true)}
+      onMouseLeave={() => setShowTitle(false)}
     >
+      {showTitle && (
+        <Card
+          pos={'absolute'}
+          h={{ base: 100, xs: 70, md: 100 }}
+          w={{ base: 100, xs: 70, md: 100 }}
+          p={10}
+          m={'auto'}
+          ta={'center'}
+          display={'flex'}
+          style={{ justifyContent: 'center' }}
+          c={'#FF00A1'}
+        >
+          {dayData && dayData.title ? (
+            <Text
+              fz={14}
+              fw={700}
+              truncate={'end'}
+              lineClamp={3}
+              style={{ whiteSpace: 'pre-wrap' }}
+            >
+              {dayData.title}
+            </Text>
+          ) : (
+            <Box h={100} pt={10}>
+              <FeatherIcon Type={PlusCircle} height={50} style={{ width: 50 }} />
+            </Box>
+          )}
+        </Card>
+      )}
       <Flex
         direction={'column'}
         w={100}

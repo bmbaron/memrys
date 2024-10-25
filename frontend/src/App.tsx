@@ -6,7 +6,7 @@ import MainLayout from './MainLayout';
 import About from './pages/About';
 import Authentication from './pages/Authentication.tsx';
 import Home from './pages/Home';
-import Search from './pages/Search.tsx';
+import Search from './pages/Search';
 import { UserContext } from './utils/UserContext.tsx';
 const App = () => {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -55,6 +55,7 @@ const App = () => {
               <>
                 <Route path={'/'} element={<Navigate to={'/auth'} replace />} />
                 <Route path={'about'} element={<Navigate to={'/auth'} replace />} />
+                <Route path={'search'} element={<Navigate to={'/auth'} replace />} />
               </>
             )}
             <Route path={'auth'} element={<Authentication />} />
