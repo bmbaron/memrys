@@ -46,7 +46,7 @@ const MemryForm = ({
       title: '',
       tag: '',
       location: '',
-      notes: [''],
+      notes: '',
       photo: {} as FileWithPath
     }
   });
@@ -143,13 +143,6 @@ const MemryForm = ({
     form.setFieldValue('location', result);
     setLoading(false);
   };
-
-  // const handleDeleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   const parent = e.currentTarget.parentElement;
-  //   if (parent) {
-  //     parent.remove();
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const tagValue = form.getValues().tag;
@@ -283,6 +276,9 @@ const MemryForm = ({
           label={'Notes'}
           labelProps={{ style: labelStyle }}
           placeholder={'What happened'}
+          key={form.key('notes')}
+          value={form.getValues().notes}
+          onChange={(e) => form.setFieldValue('notes', e.currentTarget.value)}
         />
         {/*{addNote > 0 &&*/}
         {/*  [...Array(addNote)].map((_, index) => (*/}

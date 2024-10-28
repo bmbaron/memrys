@@ -30,6 +30,7 @@ export type dayData = {
   location: string;
   tag: string;
   title: string;
+  notes?: string;
 };
 const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
@@ -83,7 +84,6 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
               setModalData={setModalData}
               open={open}
               dayData={dayData}
-              filtered
             />
           );
         }
@@ -96,7 +96,6 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
             setModalData={setModalData}
             open={open}
             dayData={dayData}
-            filtered={false}
           />
         );
       }
@@ -133,20 +132,22 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
           gap={10}
           align={'center'}
           justify={'space-around'}
-          bg={'rgba(255, 255, 255, 0.85)'}
+          bg={'rgba(255, 255, 255)'}
           h={55}
           style={{
             borderRadius: 50,
             transition: 'width 100ms linear',
-            width: showSearch ? 400 : 170
+            width: showSearch ? 400 : 180
           }}
           p={10}
         >
-          <Badge color={theme.white} size={'xl'}>
+          <Badge color={'#FF00A1'} size={'xl'}>
             <Flex>
-              <Text c={theme.black}>{dayCards ? dayCards.length : 0}&nbsp;</Text>
-              <Text c={theme.black} tt={'lowercase'}>
-                {'days'}
+              <Text c={theme.white} fw={700}>
+                {dayCards ? dayCards.length : 0}&nbsp;
+              </Text>
+              <Text c={theme.white} tt={'lowercase'}>
+                {dayCards?.length === 1 ? 'day' : 'days'}
               </Text>
             </Flex>
           </Badge>
@@ -209,7 +210,6 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
                 {modalData.title}
               </Text>
             </Modal.Title>
-            {/*<Modal.CloseButton />*/}
           </Modal.Header>
           <Modal.Body>
             <ModalContent dateUTC={modalData.date} onClose={close} onReload={fetchMonthData} />

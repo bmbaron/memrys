@@ -29,7 +29,7 @@ router.post('/', authenticateUser, async (req: RequestWithID, res) => {
   // const userID = req.userID;
   const newPool = await pool.connect();
   try {
-    const { dateUTC, title, tag, location } = req.body;
+    const { dateUTC, title, tag, location, notes } = req.body;
     const userID = req.userID;
     if (!title || !tag || !location) {
       return res.status(400).json({ error: 'Missing title, tag, location' });
@@ -38,8 +38,8 @@ router.post('/', authenticateUser, async (req: RequestWithID, res) => {
       return res.status(400).json({ error: 'User is not authenticated' });
     }
     const queryText =
-      'INSERT INTO submissions (created_at, title, tag, location, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING title';
-    const values = [dateUTC, title, tag, location, userID];
+      'INSERT INTO submissions (created_at, title, tag, location, notes, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING title';
+    const values = [dateUTC, title, tag, location, notes, userID];
     const result = await newPool.query(queryText, values);
     res.status(201).json({
       message: `Added memry: ${result.rows[0].title}`

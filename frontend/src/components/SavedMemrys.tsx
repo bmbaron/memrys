@@ -2,10 +2,11 @@ import {
   Badge,
   Box,
   Flex,
+  Paper,
+  Space,
   // List,
   // ListItem,
   // Paper,
-  Space,
   // Stack,
   Text,
   Title,
@@ -19,7 +20,7 @@ const SavedMemrys = ({ data }: { data: MemryObject }) => {
   const theme = useMantineTheme();
   return (
     <Box pt={20} mb={40}>
-      <Text size={'xl'} fw={500}>
+      <Text size={'xl'} fw={700} mt={20} mb={40}>
         {data.title}
       </Text>
       <Flex mb={20} align={'center'}>
@@ -49,35 +50,24 @@ const SavedMemrys = ({ data }: { data: MemryObject }) => {
         </Badge>
       </Flex>
       <Space h={'xl'} />
-      {/*<Box mb={20}>*/}
-      {/*  <Title ta={'left'} order={5} mr={10}>*/}
-      {/*    Notes:*/}
-      {/*  </Title>{' '}*/}
-      {/*<List*/}
-      {/*  spacing={'sm'}*/}
-      {/*  size={'sm'}*/}
-      {/*  ta={'left'}*/}
-      {/*  icon={<ArrowRightCircle color={'white'} fill={'goldenrod'} />}*/}
-      {/*  p={'xl'}*/}
-      {/*  bd={'md'}*/}
-      {/*>*/}
-      {/*{...data.notes.map((note: string, index: number) => (*/}
-      {/*  <Paper*/}
-      {/*    component={ListItem}*/}
-      {/*    ta={'left'}*/}
-      {/*    shadow={'xs'}*/}
-      {/*    p={'lg'}*/}
-      {/*    bd={'md'}*/}
-      {/*    withBorder*/}
-      {/*    key={index}*/}
-      {/*  >*/}
-      {/*    <Text tt={'none'} c={theme.black}>*/}
-      {/*      {note}*/}
-      {/*    </Text>*/}
-      {/*  </Paper>*/}
-      {/*))}*/}
-      {/*</List>*/}
-      {/*</Box>*/}
+      <Flex mb={20} w={'100%'}>
+        <Title ta={'left'} order={5} mr={10}>
+          Notes:
+        </Title>{' '}
+        <Paper
+          ta={'left'}
+          shadow={'xs'}
+          p={'lg'}
+          bd={'md'}
+          withBorder
+          w={'100%'}
+          bg={!data.notes ? 'lightgrey' : 'none'}
+        >
+          <Text tt={'none'} c={theme.black}>
+            {data.notes || '...nothing yet'}
+          </Text>
+        </Paper>
+      </Flex>
       {/*<Stack gap={20}>*/}
       {/*  <Title ta={'left'} order={5} mr={10}>*/}
       {/*    Photos:*/}

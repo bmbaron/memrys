@@ -10,6 +10,7 @@ export type MemryObject = {
   title: string;
   tag: string;
   location: string;
+  notes?: string;
 };
 
 const ModalContent = ({

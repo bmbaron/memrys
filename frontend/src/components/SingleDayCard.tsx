@@ -1,6 +1,14 @@
 import styled from '@emotion/styled';
-import { Badge, Box, Card, CardProps, createPolymorphicComponent, Flex, Text } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import {
+  Badge,
+  Box,
+  Card,
+  CardProps,
+  createPolymorphicComponent,
+  Flex,
+  Text,
+  Transition
+} from '@mantine/core';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import React, { useEffect, useState } from 'react';
@@ -15,9 +23,8 @@ const SingleDayCard = (data: {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   open: () => void;
   dayData?: dayData;
-  filtered: boolean;
 }) => {
-  const { day, month, setModalData, open, dayData, filtered } = data;
+  const { day, month, setModalData, open, dayData } = data;
   const monthName = getMonthName(Number(month) - 1);
   dayjs.extend(localeData);
   let dayString = `${dayjs().year()}-${month}-${day}`;
@@ -29,8 +36,8 @@ const SingleDayCard = (data: {
   const [tag, setTag] = useState('');
   const [location, setLocation] = useState('');
   const [showTitle, setShowTitle] = useState(false);
+  const [animate, setAnimate] = useState(false);
   const dayName = dayjs.weekdays()[dayjs(dayString).day()];
-  const isMobile = useMediaQuery('(max-width: 800px)');
 
   useEffect(() => {
     if (dayData) {
@@ -55,7 +62,6 @@ const SingleDayCard = (data: {
       m={5}
       ta={'center'}
       lh={{ xs: '40px', md: 'unset' }}
-      is31st={isMobile ? false : day === 31 && !filtered}
       isToday={isToday}
       onClick={handleClick}
       onMouseOver={() => setShowTitle(true)}
@@ -72,22 +78,35 @@ const SingleDayCard = (data: {
           display={'flex'}
           style={{ justifyContent: 'center' }}
           c={'#FF00A1'}
+          onMouseOver={() => setAnimate(true)}
+          onMouseLeave={() => setAnimate(false)}
         >
-          {dayData && dayData.title ? (
-            <Text
-              fz={14}
-              fw={700}
-              truncate={'end'}
-              lineClamp={3}
-              style={{ whiteSpace: 'pre-wrap' }}
-            >
-              {dayData.title}
-            </Text>
-          ) : (
-            <Box h={100} pt={10}>
-              <FeatherIcon Type={PlusCircle} height={50} style={{ width: 50 }} />
-            </Box>
-          )}
+          <Transition
+            mounted={animate}
+            transition={'scale-y'}
+            duration={150}
+            exitDuration={0}
+            timingFunction={'ease'}
+            keepMounted={false}
+          >
+            {(styles) =>
+              dayData && dayData.title ? (
+                <Text
+                  fz={14}
+                  fw={700}
+                  truncate={'end'}
+                  lineClamp={3}
+                  style={{ ...styles, whiteSpace: 'pre-wrap' }}
+                >
+                  {dayData.title}
+                </Text>
+              ) : (
+                <Box h={100} pt={20} style={styles}>
+                  <FeatherIcon Type={PlusCircle} height={35} style={{ width: 50 }} />
+                </Box>
+              )
+            }
+          </Transition>
         </Card>
       )}
       <Flex
@@ -131,18 +150,15 @@ const SingleDayCard = (data: {
 export default SingleDayCard;
 
 const _DayCard = styled(Card, {
-  shouldForwardProp: (props) => props !== 'is31st' && props !== 'isToday'
-})<{ is31st: boolean; isToday: boolean }>(({ is31st, isToday }) => ({
-  flexBasis: is31st ? '100%' : 'auto',
-  marginLeft: is31st ? '7.5px !important' : 'unset',
-  marginRight: is31st ? '7.5px !important' : 'unset',
+  shouldForwardProp: (props) => props !== 'isToday'
+})<{ isToday: boolean }>(({ isToday }) => ({
   background: isToday ? 'lightgreen' : 'auto',
-  opacity: 0.85,
+  opacity: isToday ? 1 : 0.85,
   '&:hover': {
     cursor: 'pointer',
     opacity: 1
   }
 }));
 
-type CustomCardProps = CardProps & { is31st: boolean; isToday: boolean };
+type CustomCardProps = CardProps & { isToday: boolean };
 const DayCard = createPolymorphicComponent<'div', CustomCardProps>(_DayCard);

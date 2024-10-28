@@ -4,7 +4,7 @@ type MemryData = {
   title: string;
   tag: string;
   location: string;
-  notes?: string[];
+  notes?: string;
   photos?: FileWithPath[];
 };
 export const postMemryToDB = async (data: MemryData) => {
