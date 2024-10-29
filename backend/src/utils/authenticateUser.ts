@@ -11,7 +11,7 @@ export const authenticateUser = (req: RequestWithID, res: Response, next: NextFu
     return res.status(401).json({ message: 'Authentication token not found' });
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET ?? '');
     req.userID = Object(decoded).userID;
     next();
   } catch (err: unknown) {

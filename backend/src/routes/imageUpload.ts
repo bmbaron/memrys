@@ -1,6 +1,6 @@
 // import { Router } from 'express';
 // import multer from 'multer';
-// import { authenticateUser } from '../middlewares/authenticateUser';
+// import { authenticateUser } from '../utils/authenticateUser';
 //
 // const router = Router();
 // const API_URL =

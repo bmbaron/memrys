@@ -55,18 +55,20 @@ const MemryForm = ({
     checkboxRef.current.forEach((c) => {
       if (
         c.labels &&
-        c.labels[0] &&
         c.labels[0].textContent &&
-        c.labels[0].textContent !== e.currentTarget.value
+        c.labels[0].textContent.toLowerCase() === e.currentTarget.value.toLowerCase()
       ) {
-        c.checked = false;
-      } else {
         c.checked = true;
+      } else {
+        c.checked = false;
       }
     });
   };
   const handleCheckbox = (index: number) => {
-    const clickedValue = checkboxRef.current[index].labels![0].textContent!;
+    let clickedValue = '';
+    if (checkboxRef.current[index].labels && checkboxRef.current[index].labels[0].textContent) {
+      clickedValue = checkboxRef.current[index].labels[0].textContent;
+    }
     if (clickedValue === form.getValues().tag) {
       form.setFieldValue('tag', '');
       return;

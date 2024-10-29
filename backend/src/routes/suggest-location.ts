@@ -1,17 +1,25 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Router } from 'express';
 import multer from 'multer';
-import { authenticateUser } from '../middlewares/authenticateUser';
+import { RequestWithID } from '../index';
+import { authenticateUser } from '../utils/authenticateUser';
 import { getLocations } from './locations';
+import {getImageFromS3, uploadToS3} from "../utils/imageOperations";
 
 const router = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '');
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
+router.post('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
   if (req.file) {
+    // TODO
+    // Apply the below code with image functions to the form submission of a memry
+    let userID = req.userID;
+    const uploadURL = await uploadToS3(userID || '0', req.file.buffer);
+    const imageETag = await getImageFromS3(uploadURL)
+    console.log('image ETag:', imageETag)
     try {
       const locations = await getLocations();
       if (!locations) {
