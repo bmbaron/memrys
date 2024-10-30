@@ -1,22 +1,26 @@
-import { FileWithPath } from '@mantine/dropzone';
-
 type MemryData = {
+  dateUTC: string;
   title: string;
   tag: string;
   location: string;
   notes?: string;
-  photos?: FileWithPath[];
+  image?: any;
 };
 export const postMemryToDB = async (data: MemryData) => {
+  console.log(JSON.stringify(data));
   const url = `${import.meta.env.VITE_BACKEND_URL}/memrys`;
+  const formData = new FormData();
+  formData.append('dateUTC', data.dateUTC);
+  formData.append('title', data.title);
+  formData.append('tag', data.tag);
+  formData.append('location', data.location);
+  formData.append('notes', data.notes || '');
+  formData.append('image', data.image);
   try {
     const response = await fetch(url, {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      body: formData
     });
     if (!response.ok) {
       if (response.status === 401) {

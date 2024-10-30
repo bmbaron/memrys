@@ -1,7 +1,7 @@
 import {
   Badge,
-  Box,
-  Flex,
+  Box, Button, Center,
+  Flex, Image,
   Paper,
   Space,
   // List,
@@ -15,6 +15,8 @@ import {
 // import { ArrowRightCircle } from 'react-feather';
 // import MemryImage from './MemryImage.tsx';
 import { MemryObject } from './ModalContent.tsx';
+import FeatherIcon from "../utils/getFeatherIcon.tsx";
+import {Edit} from "react-feather";
 
 const SavedMemrys = ({ data }: { data: MemryObject }) => {
   const theme = useMantineTheme();
@@ -23,6 +25,9 @@ const SavedMemrys = ({ data }: { data: MemryObject }) => {
       <Text size={'xl'} fw={700} mt={20} mb={40}>
         {data.title}
       </Text>
+      <Button pos={'absolute'} top={90} right={20} bg={'white'} variant={'default'} c={'pink'} w={50} px={'2 0'} py={'0 6'}>
+        <FeatherIcon Type={Edit} />
+      </Button>
       <Flex mb={20} align={'center'}>
         <Title order={5} mr={10}>
           Tagged:
@@ -68,6 +73,11 @@ const SavedMemrys = ({ data }: { data: MemryObject }) => {
           </Text>
         </Paper>
       </Flex>
+      {data.preSignedImageURL &&
+        <Center>
+					<Image h={400} w={'auto'} src={data.preSignedImageURL} />
+        </Center>
+      }
       {/*<Stack gap={20}>*/}
       {/*  <Title ta={'left'} order={5} mr={10}>*/}
       {/*    Photos:*/}

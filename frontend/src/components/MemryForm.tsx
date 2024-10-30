@@ -47,7 +47,7 @@ const MemryForm = ({
       tag: '',
       location: '',
       notes: '',
-      photo: {} as FileWithPath
+      image: {} as FileWithPath
     }
   });
   const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,14 +97,14 @@ const MemryForm = ({
     void fetchData();
   }, []);
 
-  const photoPreview = () => {
-    const photo = form.getValues().photo;
-    if (!photo.name) {
+  const imagePreview = () => {
+    const image = form.getValues().image;
+    if (!image.name) {
       return;
     }
-    const photoURL = URL.createObjectURL(photo);
+    const imageURL = URL.createObjectURL(image);
     const handleClick = () => {
-      form.setFieldValue('photo', {} as FileWithPath);
+      form.setFieldValue('image', {} as FileWithPath);
       form.setFieldValue('location', '');
       setTimeout(() => {
         openRef.current?.();
@@ -117,12 +117,12 @@ const MemryForm = ({
           right={-35}
           top={-80}
           onClick={() => {
-            form.setFieldValue('photo', {} as FileWithPath);
+            form.setFieldValue('image', {} as FileWithPath);
             form.setFieldValue('location', '');
           }}
         />
         <Text pos={'absolute'} right={0} top={-5}>
-          <b style={{ marginRight: 10, fontSize: 15 }}>{photo.name}</b>
+          <b style={{ marginRight: 10, fontSize: 15 }}>{image.name}</b>
           <FeatherIcon Type={Edit} hasHover onClick={handleClick} />
         </Text>
         <Image
@@ -130,8 +130,8 @@ const MemryForm = ({
           w={'100%'}
           mt={30}
           style={{ borderRadius: 10 }}
-          src={photoURL}
-          onLoad={() => URL.revokeObjectURL(photoURL)}
+          src={imageURL}
+          onLoad={() => URL.revokeObjectURL(imageURL)}
         />
       </Box>
     );
@@ -140,7 +140,7 @@ const MemryForm = ({
     setLoading(true);
     form.setFieldValue('location', '');
     const formData = new FormData();
-    formData.set('image', form.getValues().photo);
+    formData.set('image', form.getValues().image);
     const result = await suggestImageLocation(formData);
     form.setFieldValue('location', result);
     setLoading(false);
@@ -224,7 +224,7 @@ const MemryForm = ({
           bd={'1px solid borders.0'}
           style={{ borderRadius: 10, padding: 20 }}
         >
-          {!form.getValues().photo.name ? (
+          {!form.getValues().image.name ? (
             <Dropzone
               h={250}
               p={0}
@@ -242,12 +242,13 @@ const MemryForm = ({
               })}
               multiple={false}
               maxFiles={1}
+              maxSize={5000000}
               accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
               onDrop={(acceptedFile) => {
-                form.setFieldValue('photo', acceptedFile[0]);
+                form.setFieldValue('image', acceptedFile[0]);
                 getSuggestedLocation();
               }}
-              onReject={() => form.setFieldError('photo', 'Select image only')}
+              onReject={(err) => form.setFieldError('image', err[0].errors[0].message + '. ' + 'Please upload a smaller file')}
             >
               <Center h={250}>
                 <Dropzone.Idle>Drop image here</Dropzone.Idle>
@@ -256,11 +257,11 @@ const MemryForm = ({
               </Center>
             </Dropzone>
           ) : (
-            photoPreview()
+            imagePreview()
           )}
-          {form.errors.photo && (
+          {form.errors.image && (
             <Text c={'red'} mt={5}>
-              {form.errors.photo}
+              {form.errors.image}
             </Text>
           )}
           <CustomTagsInput

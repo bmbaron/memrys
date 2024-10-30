@@ -11,6 +11,7 @@ export type MemryObject = {
   tag: string;
   location: string;
   notes?: string;
+  preSignedImageURL?: string;
 };
 
 const ModalContent = ({
@@ -26,6 +27,7 @@ const ModalContent = ({
   const fetchNewData = async () => {
     try {
       const newestData = await fetchMemry(dateUTC);
+      console.log(newestData)
       setNewData(newestData);
     } catch (e: unknown) {
       console.error((e as Error).message);

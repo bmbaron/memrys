@@ -3,8 +3,12 @@ import { Router } from 'express';
 import pool from '../dbConfig';
 import { RequestWithID } from '../index';
 import { authenticateUser } from '../utils/authenticateUser';
+import {getImageFromS3, uploadToS3} from "../utils/imageOperations";
+import multer from "multer";
 
 const router = Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 router.get('/', authenticateUser, async (req: RequestWithID, res) => {
   const date = req.query.date as string;
   const userID = req.userID;
@@ -14,6 +18,9 @@ router.get('/', authenticateUser, async (req: RequestWithID, res) => {
     const now_utc = new Date(date);
     const values = [userID, now_utc];
     const result = await newPool.query(query, values);
+    if (result && result.rows[0] && result.rows[0].image_key) {
+      result.rows[0].preSignedImageURL = await getImageFromS3(result.rows[0].image_key);
+    }
     res.json(result.rows);
   } catch (err: unknown) {
     console.error((err as Error).message);
@@ -25,8 +32,7 @@ router.get('/', authenticateUser, async (req: RequestWithID, res) => {
   }
 });
 
-router.post('/', authenticateUser, async (req: RequestWithID, res) => {
-  // const userID = req.userID;
+router.post('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
   const newPool = await pool.connect();
   try {
     const { dateUTC, title, tag, location, notes } = req.body;
@@ -37,9 +43,13 @@ router.post('/', authenticateUser, async (req: RequestWithID, res) => {
     if (!userID) {
       return res.status(400).json({ error: 'User is not authenticated' });
     }
+    let imageKey = null;
+    if (req.file) {
+      imageKey = await uploadToS3(userID, req.file);
+    }
     const queryText =
-      'INSERT INTO submissions (created_at, title, tag, location, notes, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING title';
-    const values = [dateUTC, title, tag, location, notes, userID];
+      'INSERT INTO submissions (created_at, title, tag, location, image_key, notes, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING title';
+    const values = [dateUTC, title, tag, location, imageKey, notes || null, userID];
     const result = await newPool.query(queryText, values);
     res.status(201).json({
       message: `Added memry: ${result.rows[0].title}`
