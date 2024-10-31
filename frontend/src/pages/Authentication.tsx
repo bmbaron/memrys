@@ -96,7 +96,8 @@ const Authentication = () => {
     await showConfirmation(
       formType === 'register' ? 'Please login' : 'You are now logged in',
       loadTime,
-      closeTime
+      closeTime,
+      false
     );
     myForm.reset();
     if (isRegister) {

@@ -1,6 +1,11 @@
 import { notifications } from '@mantine/notifications';
-import { Check } from 'react-feather';
-const showConfirmation = async (message: string, loadTime: number, closeTime: number) => {
+import { Check, UploadCloud } from 'react-feather';
+const showConfirmation = async (
+  message: string,
+  loadTime: number,
+  closeTime: number,
+  pending: boolean
+) => {
   const id = notifications.show({
     loading: true,
     message: 'Connecting...',
@@ -14,8 +19,12 @@ const showConfirmation = async (message: string, loadTime: number, closeTime: nu
         id,
         message,
         color: 'teal',
-        title: 'Success!',
-        icon: <Check style={{ width: 18, height: 18 }} />,
+        title: pending ? '' : 'Success!',
+        icon: pending ? (
+          <UploadCloud style={{ width: 18, height: 18 }} />
+        ) : (
+          <Check style={{ width: 18, height: 18 }} />
+        ),
         loading: false,
         autoClose: closeTime
       });

@@ -4,9 +4,9 @@ type MemryData = {
   tag: string;
   location: string;
   notes?: string;
-  image?: any;
+  image?: {};
 };
-export const postMemryToDB = async (data: MemryData) => {
+export const sendMemryToDB = async (data: MemryData, updated: boolean) => {
   console.log(JSON.stringify(data));
   const url = `${import.meta.env.VITE_BACKEND_URL}/memrys`;
   const formData = new FormData();
@@ -18,7 +18,7 @@ export const postMemryToDB = async (data: MemryData) => {
   formData.append('image', data.image);
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: updated ? 'PUT' : 'POST',
       credentials: 'include',
       body: formData
     });

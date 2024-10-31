@@ -1,4 +1,4 @@
-export const fetchTagOrLocation = async (tableName: string) => {
+export const fetchOptionsFromDB = async (tableName: string) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/${tableName}`;
   try {
     const response = await fetch(url, { method: 'GET', credentials: 'include' });

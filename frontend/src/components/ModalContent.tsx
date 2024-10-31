@@ -11,7 +11,8 @@ export type MemryObject = {
   tag: string;
   location: string;
   notes?: string;
-  preSignedImageURL?: string;
+  thumbnailURL?: string;
+  mainURL?: string;
 };
 
 const ModalContent = ({
@@ -24,10 +25,12 @@ const ModalContent = ({
   onReload: () => void;
 }) => {
   const [newData, setNewData] = useState({} as MemryObject);
+  const [loading, setLoading] = useState<boolean>(true);
   const fetchNewData = async () => {
     try {
+      setLoading(true);
       const newestData = await fetchMemry(dateUTC);
-      console.log(newestData)
+      setLoading(false);
       setNewData(newestData);
     } catch (e: unknown) {
       console.error((e as Error).message);
@@ -41,7 +44,7 @@ const ModalContent = ({
   return (
     <Box ta={'center'}>
       {newData ? (
-        <SavedMemrys data={newData} />
+        <SavedMemrys data={newData} loading={loading} />
       ) : (
         <MemryForm dateUTC={dateUTC} onClose={onClose} onReload={onReload} />
       )}

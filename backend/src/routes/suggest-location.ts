@@ -1,10 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Router } from 'express';
 import multer from 'multer';
-import { RequestWithID } from '../index';
 import { authenticateUser } from '../utils/authenticateUser';
 import { getLocations } from './locations';
-import {getImageFromS3, uploadToS3} from "../utils/imageOperations";
 
 const router = Router();
 

@@ -16,38 +16,43 @@ import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
 import React, { useEffect, useRef, useState } from 'react';
 import { Edit } from 'react-feather';
-import { fetchTagOrLocation } from '../utils/getDataFromDB.ts';
+import { fetchOptionsFromDB } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import { postTagOrLocationToDB } from '../utils/postDataToDB.ts';
-import { postMemryToDB } from '../utils/postMemryToDB.ts';
+import { sendMemryToDB } from '../utils/sendMemryToDB.ts';
 import showConfirmation from '../utils/showConfirmation.tsx';
 import suggestImageLocation from '../utils/suggestImageLocation.ts';
 import CustomTagsInput from './CustomTagsInput.tsx';
+import { SeedData } from './SavedMemrys.tsx';
 const MemryForm = ({
   dateUTC,
   onClose,
-  onReload
+  onReload,
+  seedData
 }: {
   dateUTC: string;
-  onClose: () => void;
-  onReload: () => void;
+  onClose?: () => void;
+  onReload?: () => void;
+  seedData?: SeedData;
 }) => {
   // const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
   const [loading, setLoading] = useState(false);
+  // const [imageCleared, setImageCleared] = useState(false);
   const openRef = useRef<() => void>(null);
   const checkboxRef = useRef<HTMLInputElement[]>([]);
 
   const form = useForm({
     mode: 'controlled',
     initialValues: {
-      dateUTC: dateUTC,
+      dateUTC,
       title: '',
       tag: '',
       location: '',
       notes: '',
-      image: {} as FileWithPath
+      image: {} as FileWithPath,
+      imageURL: ''
     }
   });
   const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,11 +87,11 @@ const MemryForm = ({
     }
   };
 
-  const fetchData = async () => {
+  const fetchDropdownOptions = async () => {
     try {
-      const tags = await fetchTagOrLocation('tags');
+      const tags = await fetchOptionsFromDB('tags');
       setTags(tags);
-      const locations = await fetchTagOrLocation('locations');
+      const locations = await fetchOptionsFromDB('locations');
       setLocations(locations);
     } catch (err: unknown) {
       console.error((err as Error).message);
@@ -94,17 +99,28 @@ const MemryForm = ({
   };
 
   useEffect(() => {
-    void fetchData();
+    if (seedData) {
+      for (const [key, value] of Object.entries(seedData)) {
+        form.setFieldValue(key, value);
+      }
+    }
+    void fetchDropdownOptions();
   }, []);
 
   const imagePreview = () => {
     const image = form.getValues().image;
-    if (!image.name) {
+    const imageURL = form.getValues().imageURL;
+    if (!imageURL && !image.name) {
       return;
     }
-    const imageURL = URL.createObjectURL(image);
-    const handleClick = () => {
+    const imageSRC = imageURL || URL.createObjectURL(image);
+
+    const clearImage = () => {
       form.setFieldValue('image', {} as FileWithPath);
+      form.setFieldValue('imageURL', '');
+    };
+    const updateImage = () => {
+      clearImage();
       form.setFieldValue('location', '');
       setTimeout(() => {
         openRef.current?.();
@@ -112,26 +128,18 @@ const MemryForm = ({
     };
     return (
       <Box pos={'relative'}>
-        <CloseButton
-          pos={'absolute'}
-          right={-35}
-          top={-80}
-          onClick={() => {
-            form.setFieldValue('image', {} as FileWithPath);
-            form.setFieldValue('location', '');
-          }}
-        />
+        <CloseButton pos={'absolute'} right={-35} top={-80} onClick={clearImage} />
         <Text pos={'absolute'} right={0} top={-5}>
-          <b style={{ marginRight: 10, fontSize: 15 }}>{image.name}</b>
-          <FeatherIcon Type={Edit} hasHover onClick={handleClick} />
+          <b style={{ marginRight: 10, fontSize: 15 }}>{image.name || 'existing image'}</b>
+          <FeatherIcon Type={Edit} hasHover onClick={updateImage} />
         </Text>
         <Image
           h={250}
           w={'100%'}
           mt={30}
           style={{ borderRadius: 10 }}
-          src={imageURL}
-          onLoad={() => URL.revokeObjectURL(imageURL)}
+          src={imageSRC}
+          onLoad={() => URL.revokeObjectURL(imageSRC)}
         />
       </Box>
     );
@@ -145,8 +153,8 @@ const MemryForm = ({
     form.setFieldValue('location', result);
     setLoading(false);
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const updateOptions = () => {
     const tagValue = form.getValues().tag;
     if (!tags.find((item) => item === tagValue)) {
       void postTagOrLocationToDB(tagValue, 'tags');
@@ -155,18 +163,29 @@ const MemryForm = ({
     if (!locations.find((item) => item === locationValue)) {
       void postTagOrLocationToDB(locationValue, 'locations');
     }
+  };
+  const handleSubmit = async (e: React.FormEvent, updated: boolean) => {
+    e.preventDefault();
+    updateOptions();
+    console.log(form.getValues());
     try {
-      const response = await postMemryToDB(form.getValues());
+      await showConfirmation('Working on it...', 0, 2000, true);
+      const response = await sendMemryToDB(form.getValues(), updated);
       if (response.message) {
-        await showConfirmation(response.message, 2000, 4000);
-        onClose();
-        onReload();
+        await showConfirmation(response.message, 2500, 4000, false);
+        // TODO
+        if (!seedData) {
+          onClose();
+          onReload();
+        }
       } else if (response.error) {
         console.error(response.error);
       }
     } catch (err: unknown) {
       console.error(err as Error);
     }
+    // TODO
+    // change to the view mode and reload with latest values
   };
 
   const labelStyle = {
@@ -177,8 +196,19 @@ const MemryForm = ({
     fontSize: 15
   };
 
+  const checkChanged = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formValues = form.getValues();
+    if (JSON.stringify(formValues) !== JSON.stringify(seedData)) {
+      if (confirm('Are you sure you want to update this memry?')) {
+        await handleSubmit(e, true);
+      } else return;
+    }
+    return;
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={seedData ? checkChanged : (e) => handleSubmit(e, false)}>
       <Flex
         direction={'column'}
         gap={50}
@@ -208,7 +238,7 @@ const MemryForm = ({
           <Flex gap={20}>
             {tags.map((tag, index) => (
               <Checkbox
-                defaultChecked={false}
+                defaultChecked={form.getValues().tag !== '' && form.getValues().tag === tag}
                 ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
                 key={index}
                 label={tag}
@@ -224,7 +254,7 @@ const MemryForm = ({
           bd={'1px solid borders.0'}
           style={{ borderRadius: 10, padding: 20 }}
         >
-          {!form.getValues().image.name ? (
+          {!form.getValues().image.name && !form.getValues().imageURL ? (
             <Dropzone
               h={250}
               p={0}
@@ -246,9 +276,14 @@ const MemryForm = ({
               accept={[MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg]}
               onDrop={(acceptedFile) => {
                 form.setFieldValue('image', acceptedFile[0]);
-                getSuggestedLocation();
+                void getSuggestedLocation();
               }}
-              onReject={(err) => form.setFieldError('image', err[0].errors[0].message + '. ' + 'Please upload a smaller file')}
+              onReject={(err) =>
+                form.setFieldError(
+                  'image',
+                  err[0].errors[0].message + '. ' + 'Please upload a smaller file'
+                )
+              }
             >
               <Center h={250}>
                 <Dropzone.Idle>Drop image here</Dropzone.Idle>
@@ -280,30 +315,12 @@ const MemryForm = ({
           labelProps={{ style: labelStyle }}
           placeholder={'What happened'}
           key={form.key('notes')}
-          value={form.getValues().notes}
+          value={form.getValues().notes || ''}
           onChange={(e) => form.setFieldValue('notes', e.currentTarget.value)}
         />
-        {/*{addNote > 0 &&*/}
-        {/*  [...Array(addNote)].map((_, index) => (*/}
-        {/*    <Box pos={'relative'} key={index}>*/}
-        {/*      <Textarea placeholder={'What else happened'} pr={50} />*/}
-        {/*      <Button*/}
-        {/*        pos={'absolute'}*/}
-        {/*        right={10}*/}
-        {/*        top={30}*/}
-        {/*        w={35}*/}
-        {/*        h={35}*/}
-        {/*        p={0}*/}
-        {/*        onClick={handleDeleteNote}*/}
-        {/*      >*/}
-        {/*        <Trash2 />*/}
-        {/*      </Button>*/}
-        {/*    </Box>*/}
-        {/*  ))}*/}
-        {/*<Button onClick={() => setAddNote((prev) => prev + 1)}>Add note</Button>*/}
         <Group justify={'flex-end'} mt={'md'}>
-          <Button bg={'green.7'} type={'submit'}>
-            Submit
+          <Button bg={seedData ? 'yellow.7' : 'green.7'} type={'submit'}>
+            {seedData ? 'Update' : 'Submit'}
           </Button>
         </Group>
       </Flex>

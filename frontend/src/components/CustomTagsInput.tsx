@@ -13,7 +13,7 @@ const CustomTagsInput = ({
   label: string | ReactElement;
   placeholder: string;
   data: string[];
-  formValue: string | undefined;
+  formValue?: string;
   updateValue: (value: string) => void;
   loading: boolean;
   labelProps: CSSProperties;
