@@ -174,7 +174,7 @@ const MemryForm = ({
       if (response.message) {
         await showConfirmation(response.message, 2500, 4000, false);
         // TODO
-        if (!seedData) {
+        if (!seedData && onClose && onReload) {
           onClose();
           onReload();
         }
