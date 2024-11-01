@@ -8,7 +8,8 @@ const CustomTagsInput = ({
   formValue,
   updateValue,
   loading,
-  labelProps
+  labelProps,
+  analyzeErrorText
 }: {
   label: string | ReactElement;
   placeholder: string;
@@ -17,6 +18,7 @@ const CustomTagsInput = ({
   updateValue: (value: string) => void;
   loading: boolean;
   labelProps: CSSProperties;
+  analyzeErrorText?: string;
 }) => {
   const [value, setValue] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -34,6 +36,8 @@ const CustomTagsInput = ({
 
   return (
     <StyledTagsInput
+      withErrorStyles={false}
+      error={analyzeErrorText}
       label={label}
       labelProps={{ style: labelProps }}
       variant={'unstyled'}

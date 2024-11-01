@@ -31,20 +31,22 @@ const MemryForm = ({
   seedData
 }: {
   dateUTC: string;
-  onClose?: () => void;
-  onReload?: () => void;
+  onClose: () => void;
+  onReload: () => void;
   seedData?: SeedData;
 }) => {
   // const [addNote, setAddNote] = useState(0);
   const [tags, setTags] = useState(['']);
   const [locations, setLocations] = useState(['']);
+  const [analyzeErrorText, setAnalyzeErrorText] = useState('');
+  const [savedTag, setSavedTag] = useState('');
   const [loading, setLoading] = useState(false);
   // const [imageCleared, setImageCleared] = useState(false);
   const openRef = useRef<() => void>(null);
   const checkboxRef = useRef<HTMLInputElement[]>([]);
 
   const form = useForm({
-    mode: 'controlled',
+    mode: 'uncontrolled',
     initialValues: {
       dateUTC,
       title: '',
@@ -102,6 +104,11 @@ const MemryForm = ({
     if (seedData) {
       for (const [key, value] of Object.entries(seedData)) {
         form.setFieldValue(key, value);
+        if (key === 'tag') {
+          setTimeout(() => {
+            setSavedTag(value.toString());
+          }, 500);
+        }
       }
     }
     void fetchDropdownOptions();
@@ -150,7 +157,11 @@ const MemryForm = ({
     const formData = new FormData();
     formData.set('image', form.getValues().image);
     const result = await suggestImageLocation(formData);
-    form.setFieldValue('location', result);
+    if (result === "Can't analyze this image") {
+      setAnalyzeErrorText("Can't analyze this image");
+    } else {
+      form.setFieldValue('location', result);
+    }
     setLoading(false);
   };
 
@@ -169,15 +180,12 @@ const MemryForm = ({
     updateOptions();
     console.log(form.getValues());
     try {
-      await showConfirmation('Working on it...', 0, 2000, true);
+      await showConfirmation('Working on it...', 0, 2500, true);
       const response = await sendMemryToDB(form.getValues(), updated);
       if (response.message) {
         await showConfirmation(response.message, 2500, 4000, false);
-        // TODO
-        if (!seedData && onClose && onReload) {
-          onClose();
-          onReload();
-        }
+        onClose();
+        onReload();
       } else if (response.error) {
         console.error(response.error);
       }
@@ -196,7 +204,7 @@ const MemryForm = ({
     fontSize: 15
   };
 
-  const checkChanged = async (e: React.FormEvent) => {
+  const compareData = async (e: React.FormEvent) => {
     e.preventDefault();
     const formValues = form.getValues();
     if (JSON.stringify(formValues) !== JSON.stringify(seedData)) {
@@ -208,7 +216,7 @@ const MemryForm = ({
   };
 
   return (
-    <form onSubmit={seedData ? checkChanged : (e) => handleSubmit(e, false)}>
+    <form onSubmit={seedData ? compareData : (e) => handleSubmit(e, false)}>
       <Flex
         direction={'column'}
         gap={50}
@@ -235,16 +243,18 @@ const MemryForm = ({
             value={form.getValues().tag}
             onChange={handleTagChange}
           />
-          <Flex gap={20}>
-            {tags.map((tag, index) => (
-              <Checkbox
-                defaultChecked={form.getValues().tag !== '' && form.getValues().tag === tag}
-                ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
-                key={index}
-                label={tag}
-                onClick={() => handleCheckbox(index)}
-              />
-            ))}
+          <Flex gap={20} h={20}>
+            {seedData &&
+              savedTag !== '' &&
+              tags.map((tag, index) => (
+                <Checkbox
+                  defaultChecked={savedTag !== '' && savedTag === tag}
+                  ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
+                  key={index}
+                  label={tag}
+                  onClick={() => handleCheckbox(index)}
+                />
+              ))}
           </Flex>
         </Flex>
         <Flex
@@ -306,8 +316,12 @@ const MemryForm = ({
             data={locations}
             key={form.key('location')}
             formValue={form.getValues().location !== '' ? form.getValues().location : undefined}
-            updateValue={(value: string) => form.setFieldValue('location', value)}
+            updateValue={(value: string) => {
+              setAnalyzeErrorText('');
+              form.setFieldValue('location', value);
+            }}
             loading={loading}
+            analyzeErrorText={loading ? '' : analyzeErrorText}
           />
         </Flex>
         <Textarea
@@ -319,7 +333,16 @@ const MemryForm = ({
           onChange={(e) => form.setFieldValue('notes', e.currentTarget.value)}
         />
         <Group justify={'flex-end'} mt={'md'}>
-          <Button bg={seedData ? 'yellow.7' : 'green.7'} type={'submit'}>
+          <Button
+            bg={'red.7'}
+            onClick={() => {
+              onClose();
+              onReload();
+            }}
+          >
+            {'Cancel'}
+          </Button>
+          <Button bg={'green.7'} type={'submit'}>
             {seedData ? 'Update' : 'Submit'}
           </Button>
         </Group>

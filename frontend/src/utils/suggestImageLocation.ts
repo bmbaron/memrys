@@ -8,12 +8,13 @@ const suggestImageLocation = async (formData: FormData) => {
         body: formData
       });
       if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+        console.log(`Response status: ${response.status}`);
       }
       const data = await response.json();
       return data.result;
     } catch (err: unknown) {
       console.error((err as Error).message);
+      return err as Error;
     }
   } else {
     console.log('no data');

@@ -44,7 +44,7 @@ const ModalContent = ({
   return (
     <Box ta={'center'}>
       {newData ? (
-        <SavedMemrys data={newData} loading={loading} />
+        <SavedMemrys data={newData} loading={loading} onClose={onClose} onReload={onReload} />
       ) : (
         <MemryForm dateUTC={dateUTC} onClose={onClose} onReload={onReload} />
       )}

@@ -4,10 +4,10 @@ type MemryData = {
   tag: string;
   location: string;
   notes?: string;
-  image?: {};
+  image?: string | Blob;
+  imageURL?: string;
 };
 export const sendMemryToDB = async (data: MemryData, updated: boolean) => {
-  console.log(JSON.stringify(data));
   const url = `${import.meta.env.VITE_BACKEND_URL}/memrys`;
   const formData = new FormData();
   formData.append('dateUTC', data.dateUTC);
@@ -15,7 +15,10 @@ export const sendMemryToDB = async (data: MemryData, updated: boolean) => {
   formData.append('tag', data.tag);
   formData.append('location', data.location);
   formData.append('notes', data.notes || '');
-  formData.append('image', data.image);
+  if (data.image) {
+    console.log(data.image);
+    formData.append('image', data.image);
+  }
   try {
     const response = await fetch(url, {
       method: updated ? 'PUT' : 'POST',

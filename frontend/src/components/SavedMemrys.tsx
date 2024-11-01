@@ -27,7 +27,17 @@ export type SeedData = {
   image: {};
   imageURL?: string;
 };
-const SavedMemrys = ({ data, loading }: { data: MemryObject; loading: boolean }) => {
+const SavedMemrys = ({
+  data,
+  loading,
+  onClose,
+  onReload
+}: {
+  data: MemryObject;
+  loading: boolean;
+  onClose: () => void;
+  onReload: () => void;
+}) => {
   const seedData: SeedData = {
     dateUTC: data.created_at,
     title: data.title,
@@ -56,7 +66,12 @@ const SavedMemrys = ({ data, loading }: { data: MemryObject; loading: boolean })
         <FeatherIcon Type={editMode ? CornerUpLeft : Edit} />
       </Button>
       {editMode ? (
-        <MemryForm dateUTC={data.created_at} seedData={seedData} />
+        <MemryForm
+          dateUTC={data.created_at}
+          seedData={seedData}
+          onClose={onClose}
+          onReload={onReload}
+        />
       ) : (
         <>
           <LoadingOverlay

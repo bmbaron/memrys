@@ -41,14 +41,15 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
         }
       });
       const rawSuggestion = result.response.text().trim();
+      if (rawSuggestion.includes('GoogleGenerativeAI Error') || rawSuggestion.includes('no suggestion')){
+        throw new Error("Can't analyze this image")
+      }
       console.log(rawSuggestion);
       const suggestion = locationList.find((loc) => rawSuggestion.includes(loc)) || rawSuggestion;
       res.status(201).json({ result: suggestion });
     } catch (err: unknown) {
-      console.log('error');
       console.error((err as Error).message);
-      res.status(201).json({ result: (err as Error).message });
-      // res.status(500);
+      res.status(422).json({ result: (err as Error).message });
     }
   }
 });
