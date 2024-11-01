@@ -9,7 +9,7 @@ const MainLayout = () => {
     colors: {
       months: [
         'red',
-        'orange',
+        '#B65302',
         'brown',
         'green',
         'blue',
@@ -18,8 +18,8 @@ const MainLayout = () => {
         'purple',
         'pink',
         'maroon',
-        'teal',
-        'navy'
+        '#0077FF',
+        '#008175'
       ],
       stats: ['red', 'yellow', 'blue', '', '', '', '', '', '', ''],
       borders: ['rgb(206, 212, 218)', '', '', '', '', '', '', '', '', '']

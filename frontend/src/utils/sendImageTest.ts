@@ -1,6 +1,5 @@
 export const sendImage = async (data: FormData) => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/imageUpload`;
-  console.log(data);
   try {
     const response = await fetch(url, {
       method: 'POST',

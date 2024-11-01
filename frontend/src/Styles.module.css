@@ -3,6 +3,10 @@
   border: unset;
 }
 
+.input:focus-within {
+  outline: none;
+}
+
 .InputPlaceholder-placeholder {
   display: flex;
 }

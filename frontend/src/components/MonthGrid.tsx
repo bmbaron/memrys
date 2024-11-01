@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 import { ReactElement, useEffect, useState } from 'react';
 import { Search, X } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
+import classes from '../Styles.module.css';
 import { fetchMonthMemrys } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import ModalContent from './ModalContent.tsx';
@@ -125,14 +126,14 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
       <Flex ta={'left'} mx={25} my={20} justify={'space-between'} align={'center'}>
-        <Title order={1} c={theme.white}>
+        <Title order={1} c={theme.black}>
           {month}
         </Title>
         <Flex
           gap={10}
           align={'center'}
           justify={'space-around'}
-          bg={'rgba(255, 255, 255)'}
+          bg={'#FF00A1'}
           h={55}
           style={{
             borderRadius: 50,
@@ -141,12 +142,12 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
           }}
           p={10}
         >
-          <Badge color={'#FF00A1'} size={'xl'}>
+          <Badge color={'white'} size={'xl'}>
             <Flex>
-              <Text c={theme.white} fw={700}>
+              <Text c={theme.black} fw={700}>
                 {dayCards ? dayCards.length : 0}&nbsp;
               </Text>
-              <Text c={theme.white} tt={'lowercase'}>
+              <Text c={theme.black} tt={'lowercase'}>
                 {dayCards?.length === 1 ? 'day' : 'days'}
               </Text>
             </Flex>
@@ -163,10 +164,11 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
               {(styles) => (
                 <TextInput
                   style={styles}
+                  classNames={classes}
                   autoFocus
                   value={filterWord}
                   w={210}
-                  variant={'filled'}
+                  variant={'default'}
                   placeholder={'title name location (any order)'}
                   onChange={(text) => setFilterWord(text.currentTarget.value)}
                 />
@@ -176,6 +178,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
           <FeatherIcon
             Type={showSearch ? X : Search}
             hasHover
+            style={{ color: 'white' }}
             onClick={() => {
               setShowSearch(!showSearch);
               setFilterWord('');

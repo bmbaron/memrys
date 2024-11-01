@@ -18,7 +18,6 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
         throw new Error();
       }
       const locationList = locations.rows.map((loc) => loc.value);
-      console.log(locationList);
       const prompt = `Respond with the most appropriate tag option which best describes the image from this list, with no other formatting: ${locationList}. If none fit, respond with "no suggestion"`;
       const inlineData = {
         data: req.file.buffer.toString('base64'),
@@ -41,10 +40,12 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
         }
       });
       const rawSuggestion = result.response.text().trim();
-      if (rawSuggestion.includes('GoogleGenerativeAI Error') || rawSuggestion.includes('no suggestion')){
-        throw new Error("Can't analyze this image")
+      if (
+        rawSuggestion.includes('GoogleGenerativeAI Error') ||
+        rawSuggestion.includes('no suggestion')
+      ) {
+        throw new Error("Can't analyze this image");
       }
-      console.log(rawSuggestion);
       const suggestion = locationList.find((loc) => rawSuggestion.includes(loc)) || rawSuggestion;
       res.status(201).json({ result: suggestion });
     } catch (err: unknown) {

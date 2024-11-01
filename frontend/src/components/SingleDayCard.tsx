@@ -77,7 +77,7 @@ const SingleDayCard = (data: {
           ta={'center'}
           display={'flex'}
           style={{ justifyContent: 'center' }}
-          c={'#FF00A1'}
+          c={'#E0008E'}
           onMouseOver={() => setAnimate(true)}
           onMouseLeave={() => setAnimate(false)}
         >
@@ -152,8 +152,9 @@ export default SingleDayCard;
 const _DayCard = styled(Card, {
   shouldForwardProp: (props) => props !== 'isToday'
 })<{ isToday: boolean }>(({ isToday }) => ({
-  background: isToday ? 'lightgreen' : 'auto',
-  opacity: isToday ? 1 : 0.85,
+  background: isToday ? '#FF00A1' : '#EBEBEB',
+  color: isToday ? 'white' : 'black',
+  opacity: 1,
   '&:hover': {
     cursor: 'pointer',
     opacity: 1

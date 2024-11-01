@@ -46,7 +46,7 @@ const MemryForm = ({
   const checkboxRef = useRef<HTMLInputElement[]>([]);
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: {
       dateUTC,
       title: '',
@@ -58,7 +58,7 @@ const MemryForm = ({
     }
   });
   const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    form.setFieldValue('tag', e.currentTarget.value);
+    let doesExist = false;
     checkboxRef.current.forEach((c) => {
       if (
         c.labels &&
@@ -66,10 +66,15 @@ const MemryForm = ({
         c.labels[0].textContent.toLowerCase() === e.currentTarget.value.toLowerCase()
       ) {
         c.checked = true;
+        doesExist = true;
+        form.setFieldValue('tag', c.labels[0].textContent);
       } else {
         c.checked = false;
       }
     });
+    if (!doesExist) {
+      form.setFieldValue('tag', e.currentTarget.value);
+    }
   };
   const handleCheckbox = (index: number) => {
     let clickedValue = '';
@@ -137,7 +142,7 @@ const MemryForm = ({
       <Box pos={'relative'}>
         <CloseButton pos={'absolute'} right={-35} top={-80} onClick={clearImage} />
         <Text pos={'absolute'} right={0} top={-5}>
-          <b style={{ marginRight: 10, fontSize: 15 }}>{image.name || 'existing image'}</b>
+          <b style={{ marginRight: 10, fontSize: 15 }}>{image.name || 'Original Image'}</b>
           <FeatherIcon Type={Edit} hasHover onClick={updateImage} />
         </Text>
         <Image
@@ -244,8 +249,18 @@ const MemryForm = ({
             onChange={handleTagChange}
           />
           <Flex gap={20} h={20}>
+            {!seedData &&
+              tags.map((tag, index) => (
+                <Checkbox
+                  defaultChecked={false}
+                  ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
+                  key={index}
+                  label={tag}
+                  onClick={() => handleCheckbox(index)}
+                />
+              ))}
             {seedData &&
-              savedTag !== '' &&
+              savedTag &&
               tags.map((tag, index) => (
                 <Checkbox
                   defaultChecked={savedTag !== '' && savedTag === tag}

@@ -4,7 +4,7 @@ import multer from 'multer';
 import pool from '../dbConfig';
 import { RequestWithID } from '../index';
 import { authenticateUser } from '../utils/authenticateUser';
-import { getURLsFromS3, uploadToS3 } from '../utils/imageOperations';
+import { getURLsFromS3, removeOldImage, uploadToS3 } from '../utils/imageOperations';
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -37,10 +37,10 @@ router.get('/', authenticateUser, async (req: RequestWithID, res) => {
 });
 
 router.post('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
+  const { dateUTC, title, tag, location, notes } = req.body;
+  const userID = req.userID;
   const newPool = await pool.connect();
   try {
-    const { dateUTC, title, tag, location, notes } = req.body;
-    const userID = req.userID;
     if (!title || !tag || !location) {
       return res.status(400).json({ error: 'Missing title, tag, location' });
     }
@@ -69,12 +69,22 @@ router.post('/', authenticateUser, upload.single('image'), async (req: RequestWi
 });
 
 router.put('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
+  const { dateUTC, title, tag, location, notes } = req.body;
+  const dateFixed = new Date(dateUTC);
+  const userID = req.userID;
   const newPool = await pool.connect();
+
   try {
-    console.log(req.body);
-    const { dateUTC, title, tag, location, notes } = req.body;
-    const dateFixed = new Date(dateUTC);
-    const userID = req.userID;
+    //only delete existing image if a new one was sent
+    if (userID && req.file) {
+      const deletedImageKey = await removeOldImage(userID, dateFixed);
+      console.log(deletedImageKey);
+    }
+  } catch (err: unknown) {
+    console.error((err as Error).message);
+  }
+
+  try {
     if (!title || !tag || !location) {
       return res.status(400).json({ error: 'Missing title, tag, location' });
     }
@@ -85,11 +95,26 @@ router.put('/', authenticateUser, upload.single('image'), async (req: RequestWit
     if (req.file) {
       imageKey = await uploadToS3(userID, req.file);
     }
-    const queryText =
-      'UPDATE submissions SET title = $2, tag = $3, location = $4, image_key = $5, notes = $6 WHERE created_at = $1 AND user_id = $7';
-    const values = [dateFixed, title, tag, location, imageKey, notes || null, userID];
-    const result = await newPool.query(queryText, values);
-    console.log(result);
+    let queryUpdateMemry = '';
+    if (imageKey) {
+      queryUpdateMemry =
+        'UPDATE submissions SET title = $2, tag = $3, location = $4, image_key = $5, notes = $6 WHERE created_at = $1 AND user_id = $7';
+      const valuesUpdateWithImage = [
+        dateFixed,
+        title,
+        tag,
+        location,
+        imageKey,
+        notes || null,
+        userID
+      ];
+      await newPool.query(queryUpdateMemry, valuesUpdateWithImage);
+    } else {
+      queryUpdateMemry =
+        'UPDATE submissions SET title = $2, tag = $3, location = $4, notes = $5 WHERE created_at = $1 AND user_id = $6';
+      const valuesUpdate = [dateFixed, title, tag, location, notes || null, userID];
+      await newPool.query(queryUpdateMemry, valuesUpdate);
+    }
     res.status(201).json({
       message: `Updated memry`
     });

@@ -120,6 +120,9 @@ const SavedMemrys = ({
               </Text>
             </Paper>
           </Flex>
+          <Title ta={'left'} order={5} mr={10}>
+            Low res image:
+          </Title>
           <Center h={400} p={0}>
             {data.thumbnailURL && (
               <Image loading={'eager'} h={'100%'} w={'100%'} src={data.thumbnailURL} />
