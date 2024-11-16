@@ -4,7 +4,7 @@ import classes from '../Header.module.css';
 const Header = () => {
   const current_user = localStorage.getItem('current_user');
   return (
-    <Card shadow={'lg'} style={{ zIndex: 1000 }}>
+    <Card shadow={'lg'} style={{ zIndex: 1 }}>
       <header className={classes.header}>
         <Group justify={'space-between'} h={'100%'}>
           <Group h={'100%'} gap={0} visibleFrom={'sm'}>

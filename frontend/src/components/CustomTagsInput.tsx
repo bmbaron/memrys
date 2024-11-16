@@ -9,7 +9,8 @@ const CustomTagsInput = ({
   updateValue,
   loading,
   labelProps,
-  analyzeErrorText
+  analyzeErrorText,
+  setAnalyzeErrorText
 }: {
   label: string | ReactElement;
   placeholder: string;
@@ -19,6 +20,7 @@ const CustomTagsInput = ({
   loading: boolean;
   labelProps: CSSProperties;
   analyzeErrorText?: string;
+  setAnalyzeErrorText?: (value: string) => void;
 }) => {
   const [value, setValue] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -36,6 +38,7 @@ const CustomTagsInput = ({
 
   return (
     <StyledTagsInput
+      hasError={analyzeErrorText === '' ? false : true}
       withErrorStyles={false}
       error={analyzeErrorText}
       label={label}
@@ -49,6 +52,9 @@ const CustomTagsInput = ({
           setPlaceholderCustom('');
           setValue(val);
           setIsOpen(false);
+          if (setAnalyzeErrorText) {
+            setAnalyzeErrorText('');
+          }
         }
       }}
       onBlur={() => setIsOpen(false)}
@@ -65,11 +71,15 @@ const CustomTagsInput = ({
   );
 };
 
-const StyledTagsInput = styled(TagsInput)`
-  & .mantine-TagsInput-pill {
-    background: var(--mantine-color-pink-3);
-    font-size: 14px;
+const StyledTagsInput = styled(TagsInput, {
+  shouldForwardProp: (props) => props !== 'hasError'
+})<{ hasError: boolean }>(({ hasError }) => ({
+  '& .mantine-TagsInput-pill': {
+    background: hasError ? 'var(--mantine-color-red-7)' : 'var(--mantine-color-blue-3)',
+    fontSize: '14px',
+    padding: '5px 10px 5px 15px',
+    height: 'fit-content'
   }
-`;
+}));
 
 export default CustomTagsInput;

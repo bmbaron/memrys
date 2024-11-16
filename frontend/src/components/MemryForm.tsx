@@ -47,6 +47,7 @@ const MemryForm = ({
 
   const form = useForm({
     mode: 'controlled',
+    validateInputOnChange: true,
     initialValues: {
       dateUTC,
       title: '',
@@ -55,6 +56,9 @@ const MemryForm = ({
       notes: '',
       image: {} as FileWithPath,
       imageURL: ''
+    },
+    validate: {
+      location: (value) => (value === 'error' ? 'Please choose a valid location' : null)
     }
   });
   const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,6 +134,8 @@ const MemryForm = ({
     const clearImage = () => {
       form.setFieldValue('image', {} as FileWithPath);
       form.setFieldValue('imageURL', '');
+      form.setFieldValue('location', '');
+      setAnalyzeErrorText('');
     };
     const updateImage = () => {
       clearImage();
@@ -162,8 +168,9 @@ const MemryForm = ({
     const formData = new FormData();
     formData.set('image', form.getValues().image);
     const result = await suggestImageLocation(formData);
-    if (result === "Can't analyze this image") {
+    if (result instanceof Error) {
       setAnalyzeErrorText("Can't analyze this image");
+      form.setFieldValue('location', 'error');
     } else {
       form.setFieldValue('location', result);
     }
@@ -182,8 +189,11 @@ const MemryForm = ({
   };
   const handleSubmit = async (e: React.FormEvent, updated: boolean) => {
     e.preventDefault();
+    if (form.errors.location) {
+      alert(form.errors.location);
+      return;
+    }
     updateOptions();
-    console.log(form.getValues());
     try {
       await showConfirmation('Working on it...', 0, 2500, true);
       const response = await sendMemryToDB(form.getValues(), updated);
@@ -332,12 +342,18 @@ const MemryForm = ({
             key={form.key('location')}
             formValue={form.getValues().location !== '' ? form.getValues().location : undefined}
             updateValue={(value: string) => {
-              setAnalyzeErrorText('');
               form.setFieldValue('location', value);
             }}
             loading={loading}
             analyzeErrorText={loading ? '' : analyzeErrorText}
+            setAnalyzeErrorText={setAnalyzeErrorText}
+            {...form.getInputProps('location')}
           />
+          {form.errors.location && (
+            <Text c={'red'} mt={5}>
+              {form.errors.location}
+            </Text>
+          )}
         </Flex>
         <Textarea
           label={'Notes'}

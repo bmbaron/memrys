@@ -49,8 +49,8 @@ router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
       const suggestion = locationList.find((loc) => rawSuggestion.includes(loc)) || rawSuggestion;
       res.status(201).json({ result: suggestion });
     } catch (err: unknown) {
-      console.error((err as Error).message);
-      res.status(422).json({ result: (err as Error).message });
+      //TODO find a better way to show that the model is unavailable, error.status = 503
+      console.error(err as Error);
     }
   }
 });

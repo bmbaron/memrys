@@ -77,7 +77,8 @@ const SingleDayCard = (data: {
           ta={'center'}
           display={'flex'}
           style={{ justifyContent: 'center' }}
-          c={'#E0008E'}
+          c={isToday ? 'white' : '#E0008E'}
+          bg={isToday ? '#FF00A1' : '#EBEBEB'}
           onMouseOver={() => setAnimate(true)}
           onMouseLeave={() => setAnimate(false)}
         >

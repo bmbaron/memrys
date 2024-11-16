@@ -13,11 +13,10 @@ const suggestImageLocation = async (formData: FormData) => {
       const data = await response.json();
       return data.result;
     } catch (err: unknown) {
-      console.error((err as Error).message);
       return err as Error;
     }
   } else {
-    console.log('no data');
+    console.log('no suggestion');
   }
 };
 export default suggestImageLocation;
