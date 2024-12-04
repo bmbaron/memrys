@@ -1,10 +1,10 @@
 # memrys
 
-Memories preserved, moments cherished with memrys.com.
+Memories preserved, moments cherished
 
 ## Description
 
-A full-stack web application for parents to create, view, and manage memories of their children. Focus is on an intuitive and beautiful timeline layout and extensive filtering and sharing features.
+A full-stack web application to create, view, and manage memories. Emphasis on an intuitive and beautiful layout and extensive filtering features.
  
 ## Getting Started
 
@@ -13,21 +13,15 @@ A full-stack web application for parents to create, view, and manage memories of
 * Frontend
   * React
   * Styled Components
-  * styling library such as MUI
+  * Mantine UI (styling library)
 
 * Backend
   * NodeJS
-  * maybe Express?
+  * Express
 
 * Database
-  * MongoDB
+  * Postgres
  
 * Cloud Infra
-  * possibly AWS
+  * AWS - S3 and Lambda
 
-```
-code blocks for commands
-```
-
-Inspiration, code snippets, etc.
-* [example link](https://www.google.com)
