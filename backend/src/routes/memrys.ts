@@ -36,7 +36,25 @@ router.get('/', authenticateUser, async (req: RequestWithID, res) => {
   }
 });
 
-router.post('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
+// @ts-expect-error TODO: troubleshoot this
+const uploadFile = (req, res, next) => {
+  const multerUpload = upload.single('image');
+  multerUpload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred
+      console.log('Multer error:', err);
+      next(err);
+    } else if (err) {
+      // An unknown error occurred
+      console.log('Error:', err);
+      next(err);
+    }
+    // Everything went fine, proceed
+    next();
+  });
+};
+
+router.post('/', authenticateUser, uploadFile, async (req: RequestWithID, res) => {
   const { dateUTC, title, tag, location, notes } = req.body;
   const userID = req.userID;
   const newPool = await pool.connect();

@@ -36,7 +36,7 @@ const MemryForm = ({
   seedData?: SeedData;
 }) => {
   // const [addNote, setAddNote] = useState(0);
-  const [tags, setTags] = useState(['']);
+  const [tags, setTags] = useState<string[] | [null]>([null]);
   const [locations, setLocations] = useState(['']);
   const [analyzeErrorText, setAnalyzeErrorText] = useState('');
   const [savedTag, setSavedTag] = useState('');
@@ -197,7 +197,8 @@ const MemryForm = ({
     try {
       await showConfirmation('Working on it...', 0, 2500, true);
       const response = await sendMemryToDB(form.getValues(), updated);
-      if (response.message) {
+      console.log(response);
+      if (response && response.message) {
         await showConfirmation(response.message, 2500, 4000, false);
         onClose();
         onReload();
@@ -256,31 +257,37 @@ const MemryForm = ({
             placeholder={'Select an option or write in your own'}
             key={form.key('tag')}
             value={form.getValues().tag}
-            onChange={handleTagChange}
+            onChange={
+              tags.length > 0
+                ? handleTagChange
+                : (e) => form.setFieldValue('tag', e.currentTarget.value)
+            }
           />
-          <Flex gap={20} h={20}>
-            {!seedData &&
-              tags.map((tag, index) => (
-                <Checkbox
-                  defaultChecked={false}
-                  ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
-                  key={index}
-                  label={tag}
-                  onClick={() => handleCheckbox(index)}
-                />
-              ))}
-            {seedData &&
-              savedTag &&
-              tags.map((tag, index) => (
-                <Checkbox
-                  defaultChecked={savedTag !== '' && savedTag === tag}
-                  ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
-                  key={index}
-                  label={tag}
-                  onClick={() => handleCheckbox(index)}
-                />
-              ))}
-          </Flex>
+          {tags[0] && (
+            <Flex gap={20} h={20}>
+              {!seedData &&
+                tags.map((tag, index) => (
+                  <Checkbox
+                    defaultChecked={false}
+                    ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
+                    key={index}
+                    label={tag}
+                    onClick={() => handleCheckbox(index)}
+                  />
+                ))}
+              {seedData &&
+                savedTag &&
+                tags.map((tag, index) => (
+                  <Checkbox
+                    defaultChecked={savedTag !== '' && savedTag === tag}
+                    ref={(el) => (checkboxRef.current[index] = el as HTMLInputElement)}
+                    key={index}
+                    label={tag}
+                    onClick={() => handleCheckbox(index)}
+                  />
+                ))}
+            </Flex>
+          )}
         </Flex>
         <Flex
           direction={'column'}
