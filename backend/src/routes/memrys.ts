@@ -37,7 +37,7 @@ router.get('/', authenticateUser, async (req: RequestWithID, res) => {
 });
 
 // @ts-expect-error TODO: troubleshoot this
-const uploadFile = (req, res, next) => {
+export const uploadFile = (req, res, next) => {
   const multerUpload = upload.single('image');
   multerUpload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
@@ -86,7 +86,7 @@ router.post('/', authenticateUser, uploadFile, async (req: RequestWithID, res) =
   }
 });
 
-router.put('/', authenticateUser, upload.single('image'), async (req: RequestWithID, res) => {
+router.put('/', authenticateUser, uploadFile, async (req: RequestWithID, res) => {
   const { dateUTC, title, tag, location, notes } = req.body;
   const dateFixed = new Date(dateUTC);
   const userID = req.userID;

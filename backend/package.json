@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "dev": "tsx watch ./src/index.ts",
-    "serve": "node ./dist/index.js",
+    "serve": "node ./dist/src/index.js",
     "prettier": "prettier ./src --write .",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix "
+    "lint:fix": "eslint ./src --fix ",
+    "start": "yarn build && yarn serve && ls dist"
   },
   "keywords": [],
   "author": "",

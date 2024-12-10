@@ -10,6 +10,7 @@ import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import SuggestRoute from './routes/suggest-location';
 import TagsRoute from './routes/tags';
+import * as https from "https";
 
 export interface RequestWithID extends Request {
   userID?: string;
@@ -20,7 +21,7 @@ const port = process.env.PORT || 3000;
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173']
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://memrys.netlify.app/']
   }),
   express.json()
 );

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { authenticateUser } from '../utils/authenticateUser';
 import { getLocations } from './locations';
+import { uploadFile } from "./memrys";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '');
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-router.post('/', authenticateUser, upload.single('image'), async (req, res) => {
+router.post('/', authenticateUser, uploadFile, async (req, res) => {
   if (req.file) {
     try {
       const locations = await getLocations();
