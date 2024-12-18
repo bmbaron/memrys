@@ -45,8 +45,8 @@ const Authentication = () => {
   const myForm = useForm({
     initialValues: {
       name: 'a',
-      email: 'test@tester.com',
-      password: '111111',
+      email: 'lara@croft.com',
+      password: '12345678',
       password2: '111111',
       terms: true
     },
@@ -105,7 +105,7 @@ const Authentication = () => {
       toggle();
     } else {
       console.log('logged in');
-      navigate('/');
+      navigate('/home');
     }
   };
   const handleSubmit = async (e: FormEvent) => {
