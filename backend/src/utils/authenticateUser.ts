@@ -8,6 +8,8 @@ export const authenticateUser = (req: RequestWithID, res: Response, next: NextFu
     token = req.headers.cookie.split('=')[1];
   }
   if (!token) {
+    console.log('request', req);
+    console.log('request headers', req.headers);
     return res.status(401).json({ message: 'Authentication token not found' });
   }
   try {
