@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
                 res.cookie('token', token, {
                   httpOnly: true,
                   secure: process.env.NODE_ENV === 'production',
-                  sameSite: 'strict',
+                  sameSite: 'none',
                   path: '/'
                 });
                 res.json({ message: `Welcome back ${user.name}!`, name: user.name, token: token});
