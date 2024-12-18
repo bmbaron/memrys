@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
                   sameSite: 'strict',
                   path: '/'
                 });
-                res.json({ message: `Welcome back ${user.name}!`, name: user.name });
+                res.json({ message: `Welcome back ${user.name}!`, name: user.name, token: token});
               }
             }
           );
