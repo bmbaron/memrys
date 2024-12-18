@@ -1,7 +1,7 @@
 import '@mantine/carousel/styles.css';
 import { Box, Loader } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import {Navigate, Route, BrowserRouter, Routes, useNavigate} from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import MainLayout from './MainLayout';
 import About from './pages/About';
 import Authentication from './pages/Authentication.tsx';
@@ -71,10 +71,10 @@ const Root = () => {
 
 const App = () => {
   return (
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
+    <BrowserRouter>
+      <Root />
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

@@ -208,8 +208,6 @@ const MemryForm = ({
     } catch (err: unknown) {
       console.error(err as Error);
     }
-    // TODO
-    // change to the view mode and reload with latest values
   };
 
   const labelStyle = {
@@ -273,6 +271,7 @@ const MemryForm = ({
                     key={index}
                     label={tag}
                     onClick={() => handleCheckbox(index)}
+                    styles={{ input: { cursor: 'pointer' }, label: { cursor: 'pointer' } }}
                   />
                 ))}
               {seedData &&
@@ -284,6 +283,7 @@ const MemryForm = ({
                     key={index}
                     label={tag}
                     onClick={() => handleCheckbox(index)}
+                    styles={{ input: { cursor: 'pointer' }, label: { cursor: 'pointer' } }}
                   />
                 ))}
             </Flex>
