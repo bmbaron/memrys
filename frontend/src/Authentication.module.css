@@ -1,13 +1,31 @@
 .wrapper {
-  min-height: 900px;
+  height: 100vh;
   background-size: cover;
   background-image: url('./sign-up-image.png');
 }
 
 .form {
-  min-height: 900px;
+  height: 100%;
   max-width: 450px;
   padding-top: 80px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .wrapper {
+    position: relative;
+    width: 100vw;
+  }
+
+  .form {
+    position: absolute;
+    height: fit-content;
+    bottom: 0;
+    min-height: unset;
+    overflow: hidden;
+    padding-top: unset;
+    max-width: unset;
+    width: 100%;
+  }
 }
 
 .title {
