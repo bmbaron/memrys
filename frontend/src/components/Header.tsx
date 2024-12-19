@@ -4,20 +4,11 @@ import classes from '../Header.module.css';
 const Header = () => {
   const current_user = localStorage.getItem('current_user');
   return (
-    <Card shadow={'lg'} style={{ zIndex: 1 }}>
+    <Card shadow={'lg'} style={{ zIndex: 1 }} p={{ xs: 40, sm: 0 }} pt={{ xs: 20, sm: 0 }}>
       <header className={classes.header}>
         <Group justify={'space-between'} h={'100%'}>
-          <Group h={'100%'} gap={0} visibleFrom={'sm'}>
-            <a href={'#'} className={classes.link}>
-              Home
-            </a>
-            <a href={'#'} className={classes.link}>
-              Features
-            </a>
-          </Group>
-          <Flex>
+          <Flex m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>
             <Title order={3}>{'Welcome back'}&nbsp;</Title>
-            {/*{getGradientColorText(current_user || 'friend', 'orange', 'cyan', 3)}*/}
             <Title order={3} c={'#FF00A1'}>
               {current_user}
             </Title>
@@ -25,10 +16,7 @@ const Header = () => {
           </Flex>
           <Group m={{ xs: 'auto', sm: 'auto', md: 'unset' }}>
             <Link to={'/auth?mode=login'}>
-              <Button variant={'default'}>Log in</Button>
-            </Link>
-            <Link to={'/auth?mode=register'}>
-              <Button bg={'green'}>Sign up</Button>
+              <Button variant={'default'}>Log out</Button>
             </Link>
           </Group>
         </Group>

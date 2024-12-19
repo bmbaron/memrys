@@ -56,7 +56,7 @@ const SingleDayCard = (data: {
   return (
     <DayCard
       shadow={'sm'}
-      p={{ xs: 'sm', md: 0 }}
+      p={0}
       h={{ base: 100, xs: 70, md: 100 }}
       w={{ base: 100, xs: 70, md: 100 }}
       m={5}
@@ -70,9 +70,9 @@ const SingleDayCard = (data: {
       {showTitle && (
         <Card
           pos={'absolute'}
-          h={{ base: 100, xs: 70, md: 100 }}
-          w={{ base: 100, xs: 70, md: 100 }}
-          p={10}
+          h={{ xs: 70, md: 100 }}
+          w={{ xs: 70, md: 100 }}
+          p={{ base: 0, lg: 10 }}
           m={'auto'}
           ta={'center'}
           display={'flex'}
@@ -112,7 +112,6 @@ const SingleDayCard = (data: {
       )}
       <Flex
         direction={'column'}
-        w={100}
         ta={'center'}
         justify={'space-evenly'}
         align={'center'}
@@ -120,8 +119,9 @@ const SingleDayCard = (data: {
         h={'100%'}
         my={5}
         mx={'auto'}
+        w={'100%'}
       >
-        <Box pos={'absolute'} top={0} right={5}>
+        <Box pos={'absolute'} top={{ base: -5, md: 0 }} right={5}>
           {day}
         </Box>
         {dayData && (

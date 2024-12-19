@@ -125,7 +125,15 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
 
   return (
     <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
-      <Flex ta={'left'} mx={25} my={20} justify={'space-between'} align={'center'}>
+      <Flex
+        ta={'left'}
+        mx={25}
+        my={20}
+        justify={'space-between'}
+        align={'center'}
+        direction={{ base: 'column', sm: 'row' }}
+        gap={{ base: 30, sm: 'unset' }}
+      >
         <Title order={1} c={theme.black}>
           {month}
         </Title>
@@ -189,10 +197,12 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
       <Container
         style={{
           display: 'flex',
+          justifyContent: 'center',
           flexWrap: 'wrap',
-          justifyContent: 'left',
           alignItems: 'center'
         }}
+        m={'auto'}
+        ta={'center'}
       >
         {dayCards}
       </Container>

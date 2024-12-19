@@ -13,7 +13,7 @@ const MyCarousel = () => {
   return (
     <Carousel
       slideSize={'100%'}
-      height={'100vh'}
+      mih={'100vh'}
       slideGap={'sm'}
       controlsOffset={'xs'}
       controlSize={100}
@@ -25,7 +25,7 @@ const MyCarousel = () => {
     >
       {monthNames.map((month, index) => (
         <Carousel.Slide key={index}>
-          <Card bg={'white'} h={'100%'} px={140}>
+          <Card bg={'white'} h={'100%'} px={{ xs: 'unset', sm: 140 }}>
             <MonthGrid monthNumber={index} month={month} shouldLoad={currentSlide === index} />
           </Card>
         </Carousel.Slide>
