@@ -84,8 +84,13 @@ const Authentication = () => {
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) =>
-        value.length < 6 ? 'Password should include at least 6 characters' : null,
+      password: (value, values) => {
+        if (value.length < 6) {
+          return 'Password should include at least 6 characters';
+        } else if (values.password2 !== '' && value !== values.password2) {
+          return 'Passwords do not match';
+        } else return null;
+      },
       password2: (value, values) => (value !== values.password ? 'Passwords do not match' : null),
       terms: (value) => !value && 'Please accept the terms'
     },
@@ -139,6 +144,16 @@ const Authentication = () => {
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (JSON.stringify(myForm.errors) !== '{}') {
+      const errors = Object.keys(myForm.errors).map((key) => myForm.errors[key]);
+      alert(errors);
+      return;
+    }
+    if (!myForm.getValues().terms) {
+      myForm.validateField('terms');
+      alert('Please accept the terms');
+      return;
+    }
     if (formType === 'register') {
       const register = await handleRegister();
       if (register) {
@@ -159,12 +174,12 @@ const Authentication = () => {
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30} pt={30}>
         <Flex direction={'column'} gap={20}>
-          <Flex style={{ fontSize: 40 }}>
+          <Flex className={classes.titleWrapper} style={{ fontSize: 40 }}>
             <Title order={1}>let&apos;s make&nbsp;</Title>
             {getGradientColorText('memrys', 'orange', 'cyan', 1)}
           </Flex>
           <form onSubmit={handleSubmit}>
-            <Stack mt={20}>
+            <Stack className={classes.formWrapper} mt={20}>
               {formType === 'register' && (
                 <TextInput
                   required
@@ -228,7 +243,7 @@ const Authentication = () => {
                 </>
               )}
             </Stack>
-            <Group justify={'space-between'} mt={60}>
+            <Group className={classes.bottomWrapper} justify={'space-between'} mt={60}>
               <Anchor
                 component={'button'}
                 type={'button'}

@@ -10,7 +10,7 @@
   padding-top: 80px;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 800px) {
   .wrapper {
     position: relative;
     width: 100vw;
@@ -25,6 +25,19 @@
     padding-top: unset;
     max-width: unset;
     width: 100%;
+  }
+  .titleWrapper {
+    margin: auto;
+  }
+
+  .form .formWrapper {
+    max-width: 400px;
+    margin: auto;
+  }
+
+  .bottomWrapper {
+    margin: auto;
+    max-width: 400px;
   }
 }
 
