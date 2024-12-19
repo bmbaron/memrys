@@ -149,7 +149,7 @@ const Authentication = () => {
       alert(errors);
       return;
     }
-    if (!myForm.getValues().terms) {
+    if (formType === 'register' && !myForm.getValues().terms) {
       myForm.validateField('terms');
       alert('Please accept the terms');
       return;
