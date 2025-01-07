@@ -3,7 +3,7 @@ import { Card } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { monthNames } from '../utils/getMonth.ts';
+import { monthNames } from '../utils/getMonthInfo.ts';
 import MonthGrid from './MonthGrid.tsx';
 
 const MyCarousel = () => {

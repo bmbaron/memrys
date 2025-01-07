@@ -14,7 +14,7 @@ import localeData from 'dayjs/plugin/localeData';
 import React, { useEffect, useState } from 'react';
 import { PlusCircle } from 'react-feather';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
-import { getMonthName } from '../utils/getMonth.ts';
+import { getMonthName } from '../utils/getMonthInfo.ts';
 import { getSuffix } from '../utils/getSuffix.ts';
 import { dayData, ModalDataType } from './MonthGrid.tsx';
 const SingleDayCard = (data: {

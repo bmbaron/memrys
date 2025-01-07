@@ -2,7 +2,6 @@ import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import { authenticateUser } from './utils/authenticateUser';
-// import ImageRoute from './routes/imageUpload';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
 import MemrysRoute from './routes/memrys';
@@ -10,7 +9,6 @@ import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import SuggestRoute from './routes/suggest-location';
 import TagsRoute from './routes/tags';
-import * as https from "https";
 
 export interface RequestWithID extends Request {
   userID?: string;
@@ -37,7 +35,6 @@ app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
 app.use('/suggest-location', SuggestRoute);
-// app.use('/imageUpload', ImageRoute);
 
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

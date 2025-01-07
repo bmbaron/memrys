@@ -20,6 +20,7 @@ import { fetchMonthMemrys } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
 import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
+import { getMonthDays } from '../utils/getMonthInfo.ts';
 
 export type ModalDataType = {
   title: string;
@@ -33,10 +34,7 @@ export type dayData = {
   title: string;
   notes?: string;
 };
-const getMonthDays = (index: number) => {
-  const date = dayjs().month(index);
-  return date.daysInMonth();
-};
+
 const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boolean }) => {
   const { monthNumber, month, shouldLoad } = data;
   const monthDays = getMonthDays(monthNumber);
@@ -58,7 +56,6 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
       console.error((err as Error).message);
     }
   };
-
   const getDayCards = (numDays: number, month: number) => {
     const monthTwoDigits = month < 9 ? `0${month + 1}` : `${month + 1}`;
     const days = [];
@@ -124,7 +121,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
   }
 
   return (
-    <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} h={'100%'}>
+    <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} mih={'120vh'}>
       <Flex
         ta={'left'}
         mx={25}
