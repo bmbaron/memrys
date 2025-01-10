@@ -49,13 +49,22 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
 
   const fetchMonthData = async () => {
     try {
-      const data = await fetchMonthMemrys(`2024-${monthNumber + 1}-01`);
+      const data = await fetchMonthMemrys(`${dayjs().year()}-${monthNumber + 1}-01`);
       setMonthData(data);
     } catch (err: unknown) {
       navigate('/auth?mode=login');
       console.error((err as Error).message);
     }
   };
+
+  const handleSearch = () => {
+    if (monthData.length > 0) {
+      setShowSearch(!showSearch);
+      setFilterWord('');
+    }
+    else alert('This month doesn\'t have memories yet. \nClick on a date to add something.');
+  }
+
   const getDayCards = (numDays: number, month: number) => {
     const monthTwoDigits = month < 9 ? `0${month + 1}` : `${month + 1}`;
     const days = [];
@@ -121,7 +130,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
   }
 
   return (
-    <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} mih={'120vh'}>
+    <Paper w={{ base: 700, xs: '100vw', md: 700 }} m={'auto'} bg={'inherit'} mih={'fit-content'}>
       <Flex
         ta={'left'}
         mx={25}
@@ -184,10 +193,7 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
             Type={showSearch ? X : Search}
             hasHover
             style={{ color: 'white' }}
-            onClick={() => {
-              setShowSearch(!showSearch);
-              setFilterWord('');
-            }}
+            onClick={handleSearch}
           />
         </Flex>
       </Flex>
