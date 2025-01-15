@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 export const monthNames = [
   'January',
@@ -28,4 +28,3 @@ export const getMonthDays = (index: number) => {
   const date = dayjs().month(index);
   return date.daysInMonth();
 };
-

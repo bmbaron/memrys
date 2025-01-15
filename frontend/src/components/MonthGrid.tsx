@@ -18,9 +18,9 @@ import { useNavigate } from 'react-router-dom';
 import classes from '../Styles.module.css';
 import { fetchMonthMemrys } from '../utils/getDataFromDB.ts';
 import FeatherIcon from '../utils/getFeatherIcon.tsx';
+import { getMonthDays } from '../utils/getMonthInfo.ts';
 import ModalContent from './ModalContent.tsx';
 import SingleDayCard from './SingleDayCard.tsx';
-import { getMonthDays } from '../utils/getMonthInfo.ts';
 
 export type ModalDataType = {
   title: string;
@@ -61,9 +61,8 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
     if (monthData.length > 0) {
       setShowSearch(!showSearch);
       setFilterWord('');
-    }
-    else alert('This month doesn\'t have memories yet. \nClick on a date to add something.');
-  }
+    } else alert("This month doesn't have memories yet. \nClick on a date to add something.");
+  };
 
   const getDayCards = (numDays: number, month: number) => {
     const monthTwoDigits = month < 9 ? `0${month + 1}` : `${month + 1}`;

@@ -110,7 +110,16 @@ const SavedMemrys = ({
             </Badge>
           </Flex>
           <Space h={'sm'} />
-          <Flex mb={40} w={'100%'}>
+          <Title ta={'left'} order={5} mr={10} mb={10}>
+            Low res image:
+          </Title>
+          <Center h={400} p={0}>
+            {data.thumbnailURL && (
+              <Image loading={'eager'} h={'100%'} w={'100%'} src={data.thumbnailURL} />
+            )}
+          </Center>
+          <Space h={'lg'} />
+          <Flex mb={40} w={'100%'} gap={10} direction={'column'}>
             <Title ta={'left'} order={5} mr={10}>
               Notes:
             </Title>{' '}
@@ -120,14 +129,6 @@ const SavedMemrys = ({
               </Text>
             </Paper>
           </Flex>
-          <Title ta={'left'} order={5} mr={10}>
-            Low res image:
-          </Title>
-          <Center h={400} p={0}>
-            {data.thumbnailURL && (
-              <Image loading={'eager'} h={'100%'} w={'100%'} src={data.thumbnailURL} />
-            )}
-          </Center>
         </>
       )}
     </Box>

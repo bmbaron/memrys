@@ -1,9 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { getMonthName, getMonthDays } from '../getMonthInfo.ts';
+import { describe, expect, it } from 'vitest';
+import { getMonthDays, getMonthName } from '../getMonthInfo.ts';
 
 describe('get month name', () => {
-
-  it('should return the string name of a month for an input of the month\'s array index', () => {
+  it("should return the string name of a month for an input of the month's array index", () => {
     const JanuaryIndex = 0;
     const JulyIndex = 6;
     expect(getMonthName(JanuaryIndex)).toBe('January');
@@ -16,11 +15,9 @@ describe('get month name', () => {
     expect(() => getMonthName(negativeIndex)).toThrowError('Invalid month index');
     expect(() => getMonthName(tooHighIndex)).toThrowError('Invalid month index');
   });
-
 });
 
 describe('get month days', () => {
-
   it('should return the number of days in a month', () => {
     const JanuaryIndex = 0;
     const FebruaryIndex = 1;
@@ -34,5 +31,4 @@ describe('get month days', () => {
     expect(() => getMonthDays(negativeIndex)).toThrowError('Invalid month index');
     expect(() => getMonthDays(tooHighIndex)).toThrowError('Invalid month index');
   });
-
 });

@@ -262,7 +262,7 @@ const MemryForm = ({
             }
           />
           {tags[0] && (
-            <Flex gap={20} h={20}>
+            <Flex gap={20} h={20} wrap={'wrap'} mb={20}>
               {!seedData &&
                 tags.map((tag, index) => (
                   <Checkbox
