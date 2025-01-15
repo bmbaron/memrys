@@ -25,7 +25,7 @@ app.use(
 );
 
 app.get('/', authenticateUser, (req: RequestWithID, res: Response) => {
-  res.send('Hello, TypeScript Express!');
+  res.send({ status: 200, message: 'authenticated'});
 });
 
 app.use('/tags', TagsRoute);
