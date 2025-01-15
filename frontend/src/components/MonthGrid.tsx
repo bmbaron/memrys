@@ -183,7 +183,8 @@ const MonthGrid = (data: { monthNumber: number; month: string; shouldLoad: boole
                   value={filterWord}
                   w={210}
                   variant={'default'}
-                  placeholder={'title name location (any order)'}
+                  size={'md'}
+                  placeholder={'title / name / location'}
                   onChange={(text) => setFilterWord(text.currentTarget.value)}
                 />
               )}
