@@ -11,7 +11,7 @@ import {
   Title
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { upperFirst, useToggle } from '@mantine/hooks';
+import { upperFirst, useDisclosure, useToggle } from '@mantine/hooks';
 import React, { FormEvent, useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from '../../src/Authentication.module.css';
@@ -21,19 +21,16 @@ import showConfirmation from '../utils/showConfirmation.tsx';
 import { UserContext } from '../utils/UserContext.tsx';
 
 const Authentication = () => {
+  const { setCurrentUser } = useContext(UserContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('mode');
-  const [formType, toggle] = useToggle(['login', 'register']);
+  const [formType, toggleFormType] = useToggle(['login', 'register']);
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser } = useContext(UserContext);
-
-  useEffect(() => {
-    localStorage.setItem('current_user', currentUser);
-  }, [currentUser]);
+  const [loading, handlers] = useDisclosure();
 
   useEffect(() => {
     if (query && formType !== query) {
-      toggle(query);
+      toggleFormType(query);
     }
   }, []);
 
@@ -55,7 +52,7 @@ const Authentication = () => {
         });
       }
     }
-    toggle();
+    toggleFormType();
   };
 
   const handleTesting = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,14 +133,16 @@ const Authentication = () => {
     myForm.reset();
     if (isRegister) {
       setSearchParams('mode=login');
-      toggle();
+      toggleFormType();
     } else {
       console.log('logged in');
       navigate('/home');
     }
   };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    handlers.open();
     if (JSON.stringify(myForm.errors) !== '{}') {
       const errors = Object.keys(myForm.errors).map((key) => myForm.errors[key]);
       alert(errors);
@@ -169,6 +168,7 @@ const Authentication = () => {
         alert('there was a problem logging you in');
       }
     }
+    handlers.close();
   };
   return (
     <div className={classes.wrapper}>
@@ -255,7 +255,12 @@ const Authentication = () => {
                   ? 'Already have an account? Login'
                   : "Don't have an account? Register"}
               </Anchor>
-              <Button type={'submit'} radius={'xl'}>
+              <Button
+                type={'submit'}
+                radius={'xl'}
+                loading={loading}
+                loaderProps={{ type: 'dots' }}
+              >
                 {upperFirst(formType)}
               </Button>
             </Group>

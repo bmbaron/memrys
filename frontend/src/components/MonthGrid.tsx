@@ -1,3 +1,5 @@
+// TODO Change the font sizes on mobile so it doesn't scale the application when clicking into fields
+
 import {
   Badge,
   Container,
