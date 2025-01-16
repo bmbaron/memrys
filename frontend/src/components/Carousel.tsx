@@ -18,8 +18,7 @@ const MyCarousel = () => {
       controlsOffset={'xs'}
       controlSize={isMobile ? 50 : 100}
       loop
-      withControls
-      initialSlide={dayjs().month()}
+      initialSlide={currentSlide}
       onSlideChange={(index: number) => setCurrentSlide(index)}
       withKeyboardEvents={false}
     >

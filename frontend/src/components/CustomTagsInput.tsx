@@ -67,6 +67,7 @@ const CustomTagsInput = ({
       }}
       required={!loading}
       maxTags={1}
+      size={'md'}
     />
   );
 };

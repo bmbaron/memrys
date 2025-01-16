@@ -1,25 +1,33 @@
+import '@mantine/carousel/styles.css';
+import '@mantine/core/styles.css';
 import { useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
+import MainLayout from './MainLayout.tsx';
 import Authentication from './pages/Authentication.tsx';
 import Home from './pages/Home';
 import { UserContext } from './utils/UserContext.tsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Authentication />
-  },
-  {
-    path: 'auth',
-    element: <Authentication />
-  },
-  {
-    element: <ProtectedRoute />,
+    element: <MainLayout />,
     children: [
       {
-        path: 'home',
-        element: <Home />
+        path: '/',
+        element: <Authentication />
+      },
+      {
+        path: 'auth',
+        element: <Authentication />
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: 'home',
+            element: <Home />
+          }
+        ]
       }
     ]
   }

@@ -188,6 +188,7 @@ const Authentication = () => {
                   value={myForm.values.name}
                   onChange={(event) => myForm.setFieldValue('name', event.currentTarget.value)}
                   radius={'md'}
+                  size={'md'}
                   styles={{ input: { border: '1px solid var(--mantine-color-gray-4)' } }}
                 />
               )}
@@ -208,6 +209,7 @@ const Authentication = () => {
                 onChange={(event) => myForm.setFieldValue('email', event.currentTarget.value)}
                 error={myForm.errors.email}
                 radius={'md'}
+                size={'md'}
                 styles={{ input: { border: '1px solid var(--mantine-color-gray-4)' } }}
               />
               <PasswordInput
@@ -218,6 +220,7 @@ const Authentication = () => {
                 onChange={(event) => myForm.setFieldValue('password', event.currentTarget.value)}
                 error={myForm.errors.password}
                 radius={'md'}
+                size={'md'}
               />
               {formType === 'register' && (
                 <>
@@ -231,6 +234,7 @@ const Authentication = () => {
                     }
                     error={myForm.errors.password2}
                     radius={'md'}
+                    size={'md'}
                   />
                   <Checkbox
                     label={

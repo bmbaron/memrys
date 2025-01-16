@@ -246,6 +246,7 @@ const MemryForm = ({
           value={form.getValues().title}
           onChange={(e) => form.setFieldValue('title', e.target.value)}
           labelProps={{ style: labelStyle }}
+          size={'md'}
         />
         <Flex direction={'column'} gap={20}>
           <TextInput
@@ -255,6 +256,7 @@ const MemryForm = ({
             placeholder={'Select an option or write in your own'}
             key={form.key('tag')}
             value={form.getValues().tag}
+            size={'md'}
             onChange={
               tags.length > 0
                 ? handleTagChange
@@ -369,6 +371,7 @@ const MemryForm = ({
           key={form.key('notes')}
           value={form.getValues().notes || ''}
           onChange={(e) => form.setFieldValue('notes', e.currentTarget.value)}
+          size={'md'}
         />
         <Group justify={'flex-end'} mt={'md'}>
           <Button
