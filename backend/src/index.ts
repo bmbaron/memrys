@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 import { authenticateUser } from './utils/authenticateUser';
 import LocationsRoute from './routes/locations';
 import LoginRoute from './routes/login';
+import LogoutRoute from './routes/logout';
 import MemrysRoute from './routes/memrys';
 import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
@@ -34,6 +35,7 @@ app.use('/memrys', MemrysRoute);
 app.use('/month-memrys', MonthMemrysRoute);
 app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
+app.use('/logout', LogoutRoute);
 app.use('/suggest-location', SuggestRoute);
 
 const server = app.listen(port, () => {
