@@ -10,6 +10,7 @@ import MonthMemrysRoute from './routes/month-memrys';
 import RegisterRoute from './routes/register';
 import SuggestRoute from './routes/suggest-location';
 import TagsRoute from './routes/tags';
+import HealthCheck from './routes/healthcheck';
 
 export interface RequestWithID extends Request {
   userID?: string;
@@ -25,10 +26,6 @@ app.use(
   express.json()
 );
 
-app.get('/', authenticateUser, (req: RequestWithID, res: Response) => {
-  res.send({ status: 200, message: 'authenticated'});
-});
-
 app.use('/tags', TagsRoute);
 app.use('/locations', LocationsRoute);
 app.use('/memrys', MemrysRoute);
@@ -37,6 +34,7 @@ app.use('/register', RegisterRoute);
 app.use('/login', LoginRoute);
 app.use('/logout', LogoutRoute);
 app.use('/suggest-location', SuggestRoute);
+app.use('/healthcheck', HealthCheck);
 
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
