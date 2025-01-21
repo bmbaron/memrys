@@ -26,6 +26,10 @@ app.use(
   express.json()
 );
 
+app.get('/', authenticateUser, (req: RequestWithID, res: Response) => {
+  res.send({ status: 200, message: 'authenticated'});
+});
+
 app.use('/tags', TagsRoute);
 app.use('/locations', LocationsRoute);
 app.use('/memrys', MemrysRoute);
