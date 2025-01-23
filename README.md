@@ -1,6 +1,6 @@
 # memrys
 
-Memories preserved, moments cherished
+Memories preserved, moments cherished. Check it out on https://memrys.netlify.app
 
 ## Description
 
