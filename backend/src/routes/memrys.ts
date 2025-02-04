@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { Router } from 'express';
 import multer from 'multer';
-import pool from '../dbConfig';
-import { RequestWithID } from '../index';
-import { authenticateUser } from '../utils/authenticateUser';
-import { getURLsFromS3, removeOldImage, uploadToS3 } from '../utils/imageOperations';
+import pool from '../dbConfig.js';
+import { RequestWithID } from '../index.js';
+import { authenticateUser } from '../utils/authenticateUser.js';
+import { getURLsFromS3, removeOldImage, uploadToS3 } from '../utils/imageOperations.js';
 
 const router = Router();
 const storage = multer.memoryStorage();

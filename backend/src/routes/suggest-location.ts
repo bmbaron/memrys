@@ -1,14 +1,14 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Router } from 'express';
 import multer from 'multer';
-import { authenticateUser } from '../utils/authenticateUser';
-import { getLocations } from './locations';
-import { uploadFile } from "./memrys";
+import { authenticateUser } from '../utils/authenticateUser.js';
+import { getLocations } from './locations.js';
+import { uploadFile } from './memrys.js';
 
 const router = Router();
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '');
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 router.post('/', authenticateUser, uploadFile, async (req, res) => {

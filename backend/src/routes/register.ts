@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../dbConfig';
+import pool from '../dbConfig.js';
 
 const router = Router();
 router.post('/', async (req, res) => {
@@ -12,11 +12,10 @@ router.post('/', async (req, res) => {
   } else {
     const hashedPassword = await bcrypt.hash(password, 10);
     const values = [name, email, hashedPassword];
-    const queryText = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3)';
+    const queryText = 'INSERT INTO enrolled_users (name, email, password) VALUES ($1, $2, $3)';
     await newPool.query(queryText, values);
     newPool.release();
     return res.status(201).json({ message: 'success' });
   }
-
 });
 export default router;

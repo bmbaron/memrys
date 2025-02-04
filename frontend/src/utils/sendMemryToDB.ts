@@ -16,7 +16,6 @@ export const sendMemryToDB = async (data: MemryData, updated: boolean) => {
   formData.append('location', data.location);
   formData.append('notes', data.notes || '');
   if (data.image) {
-    console.log(data.image);
     formData.append('image', data.image);
   }
   try {

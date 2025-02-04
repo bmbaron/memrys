@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import pool from '../dbConfig';
+import pool from '../dbConfig.js';
 
 const router = Router();
 router.get('/', async (req, res) => {
@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   const password = req.query.password as string;
   const newPool = await pool.connect();
   try {
-    const query = 'SELECT * FROM users WHERE email = $1';
+    const query = 'SELECT * FROM enrolled_users WHERE email = $1';
     const values = [email];
     const result = await newPool.query(query, values);
     if (result.rows.length > 0) {
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
                   sameSite: 'strict', //needs to be strict for local backend, none for production
                   path: '/'
                 });
-                res.json({ message: `Welcome back ${user.name}!`, name: user.name, token: token});
+                res.json({ message: `Welcome back ${user.name}!`, name: user.name, token: token });
               }
             }
           );

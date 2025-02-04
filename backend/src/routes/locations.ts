@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../dbConfig';
+import pool from '../dbConfig.js';
 
 const router = Router();
 export const getLocations = async () => {

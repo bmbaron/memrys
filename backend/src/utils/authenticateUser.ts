@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { RequestWithID } from '../index';
+import { RequestWithID } from '../index.js';
 
 export const authenticateUser = (req: RequestWithID, res: Response, next: NextFunction) => {
   let token = undefined;

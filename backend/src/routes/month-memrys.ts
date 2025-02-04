@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { Router } from 'express';
-import pool from '../dbConfig';
-import { RequestWithID } from '../index';
-import { authenticateUser } from '../utils/authenticateUser';
+import pool from '../dbConfig.js';
+import { RequestWithID } from '../index.js';
+import { authenticateUser } from '../utils/authenticateUser.js';
 
 const router = Router();
 router.get('/', authenticateUser, async (req: RequestWithID, res) => {

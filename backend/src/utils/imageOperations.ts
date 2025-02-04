@@ -7,7 +7,7 @@ import {
 import { Upload } from '@aws-sdk/lib-storage';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import 'dotenv/config';
-import pool from '../dbConfig';
+import pool from '../dbConfig.js';
 
 const client = new S3Client({
   region: process.env.AWS_REGION ?? '',

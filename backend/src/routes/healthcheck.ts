@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
   const healthStatus = {
     status: 'OK',
     uptime: process.uptime(),
-    timestamp: new Date(),
+    timestamp: new Date()
   };
   res.status(200).json(healthStatus);
 });
