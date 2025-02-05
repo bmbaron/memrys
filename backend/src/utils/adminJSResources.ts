@@ -3,6 +3,7 @@ import { Adapter, Database, Resource } from '@adminjs/sql';
 import AdminJS from 'adminjs';
 import Connect from 'connect-pg-simple';
 import session from 'express-session';
+import { componentLoader, Components } from '../adminjs-components/components.js';
 import { connectionString } from '../dbConfig.js';
 
 const ConnectSession = Connect(session);
@@ -53,7 +54,11 @@ export const admin = new AdminJS({
       schema: 'public',
       options: {}
     }
-  ]
+  ],
+  componentLoader,
+  dashboard: {
+    component: Components.Dashboard
+  }
 });
 
 const authenticate = async (email: string, password: string) => {
@@ -77,9 +82,13 @@ export const adminJSRouter = AdminJSExpress.buildAuthenticatedRouter(
     saveUninitialized: true,
     secret: 'sessionsecret',
     cookie: {
-      httpOnly: process.env.NODE_ENV === 'production',
-      secure: process.env.NODE_ENV === 'production'
+      httpOnly: false,
+      secure: false
     },
     name: 'adminjs'
   }
 );
+
+if (process.env.NODE_ENV === 'development') {
+  admin.watch();
+}
