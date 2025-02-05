@@ -1,19 +1,19 @@
-import Styled from 'styled-components';
+import React from "react";
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   return (
-    <Wrapper>
-      <Label>User activity at a glance</Label>
-      <TableWrapper>
-        <Table>
-          <Thread>
+    <div>
+      <h1>User activity at a glance</h1>
+      <div>
+        <table>
+          <thead>
             <tr>
               <th>User ID</th>
               <th>Username</th>
               <th>Location</th>
               <th>Time</th>
             </tr>
-          </Thread>
+          </thead>
           <tbody>
             <tr>
               <td>1</td>
@@ -34,37 +34,11 @@ const Dashboard = () => {
               <td>12:00 PM</td>
             </tr>
           </tbody>
-        </Table>
-      </TableWrapper>
-    </Wrapper>
+        </table>
+      </div>
+    </div>
   );
 };
 
 export default Dashboard;
 
-const Wrapper = Styled('div')`
-  width: auto;
-  height: 100%;
-  padding: 20px;
-`;
-
-const Label = Styled('h1')`
-  margin-top: 50px;
-  text-align: center;
-  font-weight: 500;
-  font-size: 24px;
-`;
-
-const TableWrapper = Styled('div')`
-  width: 100%;
-`;
-
-const Table = Styled('table')`
-  width: 80%;
-  margin: 70px auto;
-  border: 1px solid black;
-`;
-
-const Thread = Styled('thead')`
-  font-weight: 500;
-`;
