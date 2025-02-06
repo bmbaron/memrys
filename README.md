@@ -10,18 +10,20 @@ A full-stack web application to create, view, and manage memories. Emphasis on a
 
 ### Dependencies
 
-* Frontend
-  * React
+* Frontend -> deployed to Netlify
+  * React 
   * Styled Components
   * Mantine UI (styling library)
 
-* Backend
+* Backend -> deployed to Render
   * NodeJS
   * Express
+  * AdminJS 
 
-* Database
-  * Postgres
+* Database -> hosted on Supabase
+  * Postgres 
  
 * Cloud Infra
   * AWS - S3 and Lambda
+
 
