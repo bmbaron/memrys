@@ -10,7 +10,7 @@ const ConnectSession = Connect(session);
 const sessionStore = new ConnectSession({
   conObject: {
     connectionString: connectionString,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
   },
   tableName: 'session',
   createTableIfMissing: true
